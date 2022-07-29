@@ -1,0 +1,21 @@
+{
+  "name": "strago",
+  "version": "1.0.0",
+  "description": "Bot for performing fun functions in Blue Academy.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Liam Galt",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^1.0.0",
+    "@supercharge/promise-pool": "^2.3.0",
+    "@xivapi/nodestone": "^0.2.5",
+    "axios": "^0.27.2",
+    "discord.js": "^14.0.3",
+    "sequelize": "^6.21.3",
+    "sqlite3": "^5.0.10"
+  }
+}

@@ -1,0 +1,78 @@
+{
+    "achievementIds": {
+        "2209": "The Harder They Fall",
+        "2210": "Octopath Traveler",
+        "2211": "Something Borrowed",
+        "2449": "Smokin' VII",
+        "2450": "None More Blue",
+        "2453": "Jack Of All Trades III",
+        "2454": "Mightier Than The Inferno",
+        "2455": "Mightier Than The Crag",
+        "2456": "Mightier Than The Vortex",
+        "2457": "Mightier Than The King",
+        "2458": "Mightier Than The Whorl",
+        "2459": "Mightier Than The Levin",
+        "2460": "Mightier Than The Frost",
+        "2464": "Mightier Than The Hive",
+        "2465": "Mightier Than The Expanse",
+        "2466": "Mightier Than The Round",
+        "2467": "Mightier Than The Fiend",
+        "2468": "Mightier Than The Horde",
+        "2469": "Mightier Than The Goddess",
+        "2470": "Mightier Than The Demon",
+        "2476": "True Blue",
+        "2726": "The More You Know VIII",
+        "2727": "Violets Are Violet",
+        "2728": "Jack Of All Trades IV",
+        "2729": "Mightier Than The Revel",
+        "2730": "Mightier Than Bliss",
+        "2731": "Mightier Than The Worm",
+        "2732": "Mightier Than The Moon",
+        "2733": "Mightier Than The White",
+        "2734": "Mightier Than The Vermilion",
+        "2735": "Mightier Than The Azure",
+        "2739": "Omega Blue"
+    },
+    "roles": [
+        {
+            "name": "Blue Legend",
+            "required": ["2209", "2210", "2211", "2449", "2450", "2454", "2455", "2456", "2457", "2458", "2459", "2460", "2464", "2465", "2466", "2467", "2468", "2469", "2470", "2476", "2726", "2727", "2728", "2729", "2730", "2731", "2732", "2733", "2734", "2735", "2739"],
+            "blockedBy": []
+        },
+        {
+            "name": "Blue Luminary",
+            "required": ["2453"],
+            "blockedBy": ["Blue Legend", "Blue Ranger"]
+        },
+        {
+            "name": "Blue Ranger",
+            "required": ["2728"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Mightier Than The Realm",
+            "required": ["2454", "2455", "2456", "2457", "2458", "2459", "2460"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Mightier Than The Heavens",
+            "required": ["2464", "2465", "2466", "2467", "2468", "2469", "2470"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Mightier Than The Storm",
+            "required": ["2729", "2730", "2731", "2732", "2733", "2734", "2735"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Morbol Owner",
+            "required": ["2476"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Omega Blue",
+            "required": ["2739"],
+            "blockedBy": ["Blue Legend"]
+        }
+    ]
+}
