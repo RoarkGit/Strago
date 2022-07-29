@@ -1,6 +1,6 @@
 <h1 align="center">Strago</h1>
-<img src="https://static.wikia.nocookie.net/finalfantasy/images/4/40/FFVI_Strago_Magus_Menu_iOS.png/revision/latest?cb=20140219011107" style="display: block; margin: auto; padding: 10px">
 <p align="center">
+<img src="https://static.wikia.nocookie.net/finalfantasy/images/4/40/FFVI_Strago_Magus_Menu_iOS.png/revision/latest?cb=20140219011107"></br>
 <a href="https://discord.gg/blueacademy"><img alt="Discord Server" src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
 </p>
 <h3 align="center">A (simple) bot for running various functions for Blue Academy.</h3>
