@@ -1,4 +1,4 @@
-node_modules
-config-dev.json
-config-prod.json
-data/storage.db
+/node_modules/
+/src/data/storage.db
+/prod/
+.env
