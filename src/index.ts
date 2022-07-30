@@ -1,15 +1,16 @@
-import { Client, Collection, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 
 import { handleEvents } from "./events/handleEvents";
 import { Strago } from "./interfaces/Strago";
-
-import { join } from "path";
 import achievementData from "./data/achievementData.json";
 import { connectDatabase } from "./database/connectDatabase";
 import { validateEnv } from "./modules/validateEnv";
 import { loadCommands } from "./utils/loadCommands";
 import { registerCommands } from "./utils/registerCommands";
 
+/**
+ * Main entry point for Strago.
+ */
 (async () => {
     const strago = new Client({intents: GatewayIntentBits.Guilds }) as Strago;
 
@@ -32,6 +33,7 @@ import { registerCommands } from "./utils/registerCommands";
     const commands = await loadCommands();
     strago.commands = commands;
 
+    // Register globally if prod, locally if dev.
     if (process.env.NODE_ENV !== "prod") {
         console.debug("Registering commands.");
         const success = await registerCommands(strago);

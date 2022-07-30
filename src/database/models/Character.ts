@@ -1,5 +1,8 @@
 import { DataTypes } from "sequelize";
 
+/**
+ * Represents a row in the Characters table.
+ */
 export const Character = {
     discordId: {
         type: DataTypes.STRING,

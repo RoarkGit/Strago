@@ -1,8 +1,13 @@
-import { Interaction } from "discord.js";
-
 import { Strago } from "../interfaces/Strago";
 
-export const interactionCreate = async (interaction: Interaction, strago: Strago): Promise<void> => {
+import { Interaction } from "discord.js";
+
+/**
+ * Handles slash command interaction.
+ * @param interaction the interaction that triggered the event
+ * @param strago Strago client instance
+ */
+export const interactionCreate = async (interaction: Interaction, strago: Strago) => {
     if (interaction.isChatInputCommand()) {
         const command = strago.commands.get(interaction.commandName);
 

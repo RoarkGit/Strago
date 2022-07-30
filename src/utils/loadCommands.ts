@@ -4,6 +4,10 @@ import { join } from "path";
 
 import { Command } from "../interfaces/Command";
 
+/**
+ * Attempts to load all Commands stored in the commands folder.
+ * @returns A Collection of name:Command pairs.
+ */
 export const loadCommands = async (): Promise<Collection<string, Command>> => {
     try {
         const result: Collection<string, Command> = new Collection<string, Command>();

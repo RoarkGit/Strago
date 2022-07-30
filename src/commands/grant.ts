@@ -4,6 +4,13 @@ import { CommandInteraction, GuildMemberRoleManager, SlashCommandBuilder, TextCh
 import { Command } from "../interfaces/Command";
 import * as xivlib from "../modules/xivlib";
 
+/**
+ * Runs the grant workflow:
+ *   1. Checks for registration
+ *   2. Checks that achievements are visible
+ *   3. Checks achievement completion for achievements stored in achievementData.
+ *   4. Grants/revokes achievements according to completion and role blockers.
+ */
 export const grant: Command = {
     data: new SlashCommandBuilder()
         .setName("grant")

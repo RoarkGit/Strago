@@ -1,9 +1,15 @@
 import { Strago } from "../interfaces/Strago";
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, SlashCommandBuilder } from "discord.js";
+
 import { Command } from "../interfaces/Command";
 import * as xivlib from "../modules/xivlib";
 
+/**
+ * Converts a string to title case.
+ * @param str the input string
+ * @returns title cased version of str
+ */
 const titleCase = (str: string): string => {
     return str.toLowerCase().split(' ')
         .filter(s => s)
@@ -13,6 +19,9 @@ const titleCase = (str: string): string => {
         .join(' ');
 };
 
+/**
+ * Runs the character registration workflow.
+ */
 export const register: Command = {
     data: new SlashCommandBuilder()
         .setName("register")

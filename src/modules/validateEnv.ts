@@ -1,5 +1,10 @@
 import { Strago } from "../interfaces/Strago";
 
+/**
+ * Reads and validate .env file for required values and correctness.
+ * @param strago Strago client instance
+ * @returns Whether or not the environment variables were valid.
+ */
 export const validateEnv = (strago: Strago): { valid: boolean, message: string } => {
     try {
         if (!process.env.BOT_TOKEN) {

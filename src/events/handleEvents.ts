@@ -3,7 +3,11 @@ import { Strago } from "../interfaces/Strago"
 import { interactionCreate } from "./interactionCreate";
 import { ready } from "./ready";
 
-export const handleEvents = (strago: Strago): void => {
+/**
+ * Loads event handlers for Strago.
+ * @param strago Strago client instance
+ */
+export const handleEvents = (strago: Strago) => {
     strago.on("ready", async () => {
         await ready(strago);
     });

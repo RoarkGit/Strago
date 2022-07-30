@@ -2,8 +2,13 @@ import { Strago } from "../interfaces/Strago";
 
 import { readdir } from "fs/promises";
 import { join } from "path";
-import { DataTypes, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 
+/**
+ * Attempts to connect to the bot's database.
+ * @param strago Strago client instance
+ * @returns Whether the connection was successful or not.
+ */
 export const connectDatabase = async (strago: Strago): Promise<boolean> => {
     try {
         strago.db = new Sequelize({
