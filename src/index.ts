@@ -1,8 +1,8 @@
 import { Client, GatewayIntentBits } from "discord.js";
 
+import achievementData from "./data/achievementData.json";
 import { handleEvents } from "./events/handleEvents";
 import { Strago } from "./interfaces/Strago";
-import achievementData from "./data/achievementData.json";
 import { connectDatabase } from "./database/connectDatabase";
 import { validateEnv } from "./modules/validateEnv";
 import { loadCommands } from "./utils/loadCommands";

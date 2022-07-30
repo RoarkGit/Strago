@@ -13,7 +13,7 @@ export const connectDatabase = async (strago: Strago): Promise<boolean> => {
     try {
         strago.db = new Sequelize({
             dialect: "sqlite",
-            storage: join(process.cwd(), "data", "storage.db")
+            storage: join(process.cwd(), "prod", "data", "storage.db")
         });
 
         const files = await readdir(
