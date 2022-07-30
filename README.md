@@ -10,6 +10,7 @@
 ## Development Requirements
 - [discord.js](https://github.com/discordjs/discord.js)
 - `applications.commands` scope enabled for bot (to use Slash commands)
+- TypeScript
 
 ## Supported commands
 - `/grant`: run workflow for granting roles based on character achievements
@@ -23,16 +24,28 @@ Commands are implemented using [command handlers](https://discordjs.guide/creati
 ### Events
 Events are implemented using [event handlers](https://discordjs.guide/creating-your-bot/event-handling.html) and stored in `./events`
 
-### Helper Libraries
-Helper libraries, such as `xivlib.js` for scraping Lodestone, are stored in `./libs`.
+### Helper Modules
+Helper modules, such as `xivlib.js` for scraping Lodestone, are stored in `./modules`.
+
+### Bot Utilities
+Bot utilities, such as those for loading and registering commands, are stored in `./utils`.
 
 ### Configuration
-Configuration is stored in `./config-prod.json` and `./config-dev.json`. Eventually this will be more convenient to use rather than having to swap around hardcoded strings in the actual code.
+Configuration is stored in `.env`. Eventually this will be more convenient to use rather than having to swap around hardcoded strings in the actual code.
+
+The following values are required:
+
+|Value          |Description|
+|---------------|----------------------------------------------------------|
+|`BOT_TOKEN`    |Discord bot API token.                                    |
+|`CLIENT_ID`    |The bot application ID.                                   |
+|`NODE_ENV`     |The environment in which the bot is running (e.g. `prod`).|
+|`TEST_GUILD_ID`|The ID of the guild used for testing.                     |
 
 ### Data
 Any data, static or otherwise, exists inside `./data`.
 
-The bot expects a SQLite database located at `./data/storage.db`. Currently there is just a single table which stores `discordId`, `characterId` (from Lodestone), and `characterName`.
+The bot expects a SQLite database located at `./data/storage.db`. Currently there is just a single table `Characters` which stores `discordId`, `characterId` (from Lodestone), and `characterName`.
 
 ## Contributing
 I'm happy to help any folks out who want to contribute here (even with minimal experience). Just ping me in Discord first so I have some idea of what to expect and we can figure out where to go from there.

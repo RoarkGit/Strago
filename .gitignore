@@ -1,4 +1,4 @@
 /node_modules/
-/src/data/storage.db
+/data/storage.db
 /prod/
 .env
