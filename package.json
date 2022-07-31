@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && node -r copyfiles src/data/*.json prod/data",
     "start:dev": "nodemon -r dotenv/config ./src/index.ts dotenv_config_path=.env.dev",
-    "start:prod": "ts-node -r dotenv/config ./prod/index.js dotenv_config_path=.env.prod"
+    "start:prod": "node -r dotenv/config ./prod/index.js dotenv_config_path=.env.prod"
   },
   "keywords": [],
   "author": "Liam Galt",
