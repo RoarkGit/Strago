@@ -12,12 +12,11 @@ export const loadCommands = async (commandsPath: string): Promise<Collection<str
     try {
         const result: Collection<string, Command> = new Collection<string, Command>();
         const files = await readdir(commandsPath);
-        console.log(process.cwd());
 
         for (const file of files) {
             const name = file.split(".")[0];
             const module = await import(
-                join(process.cwd(), "prod", "commands", file)
+                join(commandsPath, file)
             );
             result.set(name, module[name] as Command);
         }
