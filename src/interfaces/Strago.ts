@@ -15,6 +15,7 @@ export interface Strago extends Client {
      */
     config: {
         databaseUri: string,
+        env: string,
         id: string,
         testGuildId: string,
         token: string

@@ -1,6 +1,7 @@
 import { Strago } from "./interfaces/Strago";
 
 import { Client, GatewayIntentBits } from "discord.js";
+import { join } from "path";
 
 import achievementData from "./data/achievementData.json";
 import { handleEvents } from "./events/handleEvents";
@@ -31,11 +32,14 @@ import { registerCommands } from "./utils/registerCommands";
     };
 
     // Load commands.
-    const commands = await loadCommands();
+    const commandsPath = strago.config.env === "prod" ?
+        join(process.cwd(), "prod", "commands") :
+        join(process.cwd(), "src", "commands");
+    const commands = await loadCommands(commandsPath);
     strago.commands = commands;
 
     // Register globally if prod, locally if dev.
-    if (process.env.NODE_ENV !== "prod") {
+    if (strago.config.env !== "prod") {
         console.debug("Registering commands.");
         const success = await registerCommands(strago);
         if (!success) {
