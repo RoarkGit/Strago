@@ -1,6 +1,8 @@
 import { Strago } from "../interfaces/Strago";
 
 import { CommandInteraction, GuildMemberRoleManager, SlashCommandBuilder, TextChannel} from "discord.js";
+
+import CharacterModel from "../database/models/CharacterModel";
 import { Command } from "../interfaces/Command";
 import * as xivlib from "../modules/xivlib";
 
@@ -20,10 +22,8 @@ export const grant: Command = {
             const member = await interaction.guild!.members.fetch(interaction.user.id);
              console.log(`Grant command from ${member.nickname || member.user.username}`);
             await interaction.reply({ content: "Checking registration...", ephemeral: true });
-            const character = await strago.db.models["Character"].findOne({
-                where: {
+            const character = await CharacterModel.findOne({
                     discordId: interaction.user.id
-                },
             });
 
             if (character === null) {

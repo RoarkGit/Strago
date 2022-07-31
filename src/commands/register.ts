@@ -2,6 +2,7 @@ import { Strago } from "../interfaces/Strago";
 
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, SlashCommandBuilder } from "discord.js";
 
+import CharacterModel from "../database/models/CharacterModel";
 import { Command } from "../interfaces/Command";
 import * as xivlib from "../modules/xivlib";
 
@@ -69,7 +70,7 @@ export const register: Command = {
                     if (await xivlib.verifyCharacter(characterId)) {
                         console.log(`Successfully registered ${characterId}`);
                         await interaction.editReply({ content: 'You have successfully registered your character!', components: [] });
-                        await strago.db.models["Character"].upsert({ discordId: i.user.id, characterId: characterId, characterName: character });
+                        await CharacterModel.create({ discordId: i.user.id, characterId: characterId, characterName: character });
                     } else {
                         console.log(`Registration failed for ${characterId}`);
                         await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] });

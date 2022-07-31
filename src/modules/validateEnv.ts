@@ -19,7 +19,12 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
             return { valid: false, message: "Missing test guild ID." };
         }
 
+        if (!process.env.DATABASE_URI) {
+            return { valid: false, message: "Missing database URI." };
+        }
+
         strago.config = {
+            databaseUri: process.env.DATABASE_URI,
             id: process.env.CLIENT_ID,
             testGuildId: process.env.TEST_GUILD_ID,
             token: process.env.BOT_TOKEN

@@ -1,5 +1,4 @@
 import { Client, Collection } from "discord.js";
-import { Sequelize } from "sequelize";
 
 import { Command } from "./Command";
 
@@ -15,6 +14,7 @@ export interface Strago extends Client {
      * Various config values.
      */
     config: {
+        databaseUri: string,
         id: string,
         testGuildId: string,
         token: string
@@ -34,8 +34,4 @@ export interface Strago extends Client {
             }[]
         }
     };
-    /**
-     * Database connection.
-     */
-    db: Sequelize;
 };

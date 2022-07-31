@@ -45,7 +45,7 @@ The following values are required:
 ### Data
 Any data, static or otherwise, exists inside `./data`.
 
-The bot expects a SQLite database located at `./data/storage.db`. Currently there is just a single table `Characters` which stores `discordId`, `characterId` (from Lodestone), and `characterName`.
+The bot expects a MongoDB instance running at `DATABASE_URI` specified in. There should be two databases: `prod` and `dev`. Currently there is just a single collection in each `characters` which stores `discordId`, `characterId` (from Lodestone), and `characterName`.
 
 ## Contributing
 I'm happy to help any folks out who want to contribute here (even with minimal experience). Just ping me in Discord first so I have some idea of what to expect and we can figure out where to go from there.
