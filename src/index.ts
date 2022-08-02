@@ -38,14 +38,12 @@ import { registerCommands } from "./utils/registerCommands";
     const commands = await loadCommands(commandsPath);
     strago.commands = commands;
 
-    // Register globally if prod, locally if dev.
-    if (strago.config.env !== "prod") {
-        console.debug("Registering commands.");
-        const success = await registerCommands(strago);
-        if (!success) {
-            console.error("Failed to register commands.");
-            return;
-        }
+    // Register commands.
+    console.debug("Registering commands.");
+    const success = await registerCommands(strago);
+    if (!success) {
+        console.error("Failed to register commands.");
+        return;
     }
 
     // Load event handlers.
