@@ -1,0 +1,6 @@
+services:
+    strago:
+      container_name: strago
+      image:  ${REGISTRY_HOST}/strago:latest
+      restart: always
+      build: .
