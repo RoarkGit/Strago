@@ -49,15 +49,8 @@ export const grant: Command = {
             updateState(`Beginning achievement scan for ${character.get("characterName")}...`);
 
             const granted = new Set<string>();
-            try {
-                const characterAchievements = await xivlib.getAchievementsComplete(
-                    character.get("characterId") as string, Object.keys(strago.data.achievementData.achievementIds));
-            } catch (error) {
-                strago.logger.error(error);
-                await interaction.editReply("I encountered an error trying to retrieve your achievements.\n" +
-                                            "Please try again and if the issue persists contact Liam Galt.");
-                return;
-            }
+            const characterAchievements = await xivlib.getAchievementsComplete(
+                character.get("characterId") as string, Object.keys(strago.data.achievementData.achievementIds));
             const memberRoles: GuildMemberRoleManager = interaction.member!.roles as GuildMemberRoleManager;
 
             strago.data.achievementData.roles.forEach(async (role) => {
@@ -110,7 +103,10 @@ export const grant: Command = {
                 }
             });
         } catch (error) {
-            strago.logger.info("Failed to grant roles.", error);
+            strago.logger.error("Failed to grant roles", error);
+            await interaction.editReply("I encountered an error trying to retrieve your achievements.\n" +
+                                        "Please try again and if the issue persists contact Liam Galt.");
+            return;
         }
     }
 };
