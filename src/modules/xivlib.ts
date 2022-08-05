@@ -52,17 +52,18 @@ export const getCharacterId = async (character: string, server: string): Promise
  * @returns A Set representing the completed achievements from achievementIds.
  */
 export const getAchievementsComplete = async (characterId: string, achievementIds: string[]): Promise<Set<string>> => {
-    console.log(characterId, achievementIds);
     const achievementSet = new Set<string>();
-    const { errors } = await PromisePool
+    await PromisePool
         .for(achievementIds)
-        .withConcurrency(10)
+        .withConcurrency(5)
+        .handleError(async (error) => {
+            throw error // Throw any errors, we only want to execute on full achievement sets.
+        })
         .process(async (achievementId) => {
             if (await getAchievementComplete(characterId, achievementId)) {
                 achievementSet.add(achievementId);
             };
         });
-    errors.forEach(error => console);
     return achievementSet;
 };
 
@@ -91,7 +92,7 @@ export const getAchievementsPublic = async (characterId: string): Promise<boolea
                 .catch(error => {
                     // Private achievement pages return a 403, so we should only print other errors that occur.
                     if (error.response.status != 403) {
-                        console.log(error);
+                        console.error(error);
                     }
                     return false;
                 });

@@ -13,7 +13,7 @@ export const connectDatabase = async (strago: Strago): Promise<boolean> => {
 
         return true;
     } catch(error) {
-        console.error("Failed to conenct to database:", error);
+        strago.logger.error("Failed to connect to database:", error);
         return false;
     }
 };

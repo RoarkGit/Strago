@@ -24,12 +24,12 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
         });
 
         if (process.env.NODE_ENV === "prod") {
-            console.debug("Registering commands globally.");
+            strago.logger.info("Registering commands globally.");
             await rest.put(Routes.applicationCommands(strago.config.id), {
                 body: commandData
             });
         } else {
-            console.debug("Registering commands to test guild.");
+            strago.logger.info("Registering commands to test guild.");
             await rest.put(Routes.applicationGuildCommands(strago.config.id, strago.config.testGuildId), {
                 body: commandData
             });
@@ -37,7 +37,7 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
 
         return true;
     } catch (error) {
-        console.error("Failed to register commands:", error);
+        strago.logger.error("Failed to register commands:", error);
         return false;
     }
 };

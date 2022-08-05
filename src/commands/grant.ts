@@ -20,7 +20,7 @@ export const grant: Command = {
     run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
         try {
             const member = await interaction.guild!.members.fetch(interaction.user.id);
-             console.log(`Grant command from ${member.nickname || member.user.username}`);
+             strago.logger.info(`Grant command from ${member.nickname || member.user.username}`);
             await interaction.reply({ content: "Checking registration...", ephemeral: true });
             const character = await CharacterModel.findOne({
                     discordId: interaction.user.id
@@ -41,7 +41,7 @@ export const grant: Command = {
             const lines: string[] = [];
 
             const updateState = async (line: string): Promise<void> => {
-                console.log(line);
+                strago.logger.info(line);
                 lines.push(line);
                 await interaction.editReply({ content: lines.join("\n") })
             };
@@ -49,8 +49,15 @@ export const grant: Command = {
             updateState(`Beginning achievement scan for ${character.get("characterName")}...`);
 
             const granted = new Set<string>();
-            const characterAchievements = await xivlib.getAchievementsComplete(
-                character.get("characterId") as string, Object.keys(strago.data.achievementData.achievementIds));
+            try {
+                const characterAchievements = await xivlib.getAchievementsComplete(
+                    character.get("characterId") as string, Object.keys(strago.data.achievementData.achievementIds));
+            } catch (error) {
+                strago.logger.error(error);
+                await interaction.editReply("I encountered an error trying to retrieve your achievements.\n" +
+                                            "Please try again and if the issue persists contact Liam Galt.");
+                return;
+            }
             const memberRoles: GuildMemberRoleManager = interaction.member!.roles as GuildMemberRoleManager;
 
             strago.data.achievementData.roles.forEach(async (role) => {
@@ -103,7 +110,7 @@ export const grant: Command = {
                 }
             });
         } catch (error) {
-            console.log("Failed to grant roles.", error);
+            strago.logger.info("Failed to grant roles.", error);
         }
     }
 };

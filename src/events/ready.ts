@@ -5,5 +5,5 @@ import { Strago } from "../interfaces/Strago";
  * @param strago Strago client instance
  */
 export const ready = async (strago: Strago) => {
-    console.log("Discord ready!");
+    strago.logger.info("Discord ready!");
 };

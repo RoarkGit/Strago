@@ -1,3 +1,5 @@
+import { Strago } from "../interfaces/Strago";
+
 import { Collection } from "discord.js";
 import { readdir } from "fs/promises";
 import { join } from "path";
@@ -8,9 +10,9 @@ import { Command } from "../interfaces/Command";
  * Attempts to load all Commands stored in the commands folder.
  * @returns A Collection of name:Command pairs.
  */
-export const loadCommands = async (commandsPath: string): Promise<Collection<string, Command>> => {
+export const loadCommands = async (strago: Strago, commandsPath: string): Promise<boolean> => {
     try {
-        const result: Collection<string, Command> = new Collection<string, Command>();
+        const commands: Collection<string, Command> = new Collection<string, Command>();
         const files = await readdir(commandsPath);
 
         for (const file of files) {
@@ -18,12 +20,13 @@ export const loadCommands = async (commandsPath: string): Promise<Collection<str
             const module = await import(
                 join(commandsPath, file)
             );
-            result.set(name, module[name] as Command);
+            commands.set(name, module[name] as Command);
         }
 
-        return result;
+        strago.commands = commands;
+        return true;
     } catch (error) {
-        console.error(error);
-        return new Collection<string, Command>();
+        strago.logger.error(error);
+        return false;
     }
 }

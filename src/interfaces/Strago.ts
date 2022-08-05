@@ -1,4 +1,5 @@
 import { Client, Collection } from "discord.js";
+import { Logger } from "winston";
 
 import { Command } from "./Command";
 
@@ -17,6 +18,7 @@ export interface Strago extends Client {
         databaseUri: string,
         env: string,
         id: string,
+        loggerUri: string | undefined;
         testGuildId: string,
         token: string
     };
@@ -35,4 +37,5 @@ export interface Strago extends Client {
             }[]
         }
     };
+    logger: Logger;
 };

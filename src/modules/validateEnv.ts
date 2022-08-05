@@ -31,6 +31,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
             databaseUri: process.env.DATABASE_URI,
             env: process.env.NODE_ENV,
             id: process.env.CLIENT_ID,
+            loggerUri: process.env.LOKI_URI,
             testGuildId: process.env.TEST_GUILD_ID,
             token: process.env.BOT_TOKEN
         }

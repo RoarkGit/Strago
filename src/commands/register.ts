@@ -45,7 +45,7 @@ export const register: Command = {
             await interaction.reply({ content: 'Searching for character...', ephemeral: true });
             const character = titleCase(interaction.options.getString("character", true));
             const server = titleCase(interaction.options.getString("server", true));
-            console.log(`Registration attempt from ${member.nickname || member.user.username} for ${character}@${server}.`)
+            strago.logger.info(`Registration attempt from ${member.nickname || member.user.username} for ${character}@${server}.`)
             const challenge = xivlib.generateChallenge(character, server);
             const characterId = await xivlib.getCharacterId(character, server);
             
@@ -68,14 +68,14 @@ export const register: Command = {
             interaction.channel!.awaitMessageComponent({ filter } as any)
                 .then(async i => {
                     if (await xivlib.verifyCharacter(characterId)) {
-                        console.log(`Successfully registered ${characterId}`);
+                        strago.logger.info(`Successfully registered ${characterId}`);
                         await interaction.editReply({ content: 'You have successfully registered your character!', components: [] });
                         await CharacterModel.create({ discordId: i.user.id, characterId: characterId, characterName: character });
                     } else {
-                        console.log(`Registration failed for ${characterId}`);
+                        strago.logger.info(`Registration failed for ${characterId}`);
                         await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] });
                     }})
-                .catch(err => console.error(err));
+                .catch(err => strago.logger.error(err));
             
             await interaction.editReply({
                 content: [`I found this character: <${xivlib.getUrl([characterId])}>`,
@@ -87,7 +87,7 @@ export const register: Command = {
                 ephemeral: true} as any
             );
         } catch (error) {
-            console.error(error);
+            strago.logger.error(error);
         }
     },
 };
