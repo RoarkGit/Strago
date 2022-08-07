@@ -9,6 +9,10 @@ import { Interaction } from "discord.js";
  */
 export const interactionCreate = async (interaction: Interaction, strago: Strago) => {
     if (interaction.isChatInputCommand()) {
+        if (!interaction.inGuild()) {
+            await interaction.reply("Sorry, direct messages are unsupported!");
+            return;
+        }
         const command = strago.commands.get(interaction.commandName);
 
         if (!command) return;
