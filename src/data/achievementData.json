@@ -40,14 +40,14 @@
             "blockedBy": []
         },
         {
-            "name": "Blue Luminary",
-            "required": ["2453"],
-            "blockedBy": ["Blue Legend", "Blue Ranger"]
-        },
-        {
             "name": "Blue Ranger",
             "required": ["2728"],
             "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Blue Luminary",
+            "required": ["2453"],
+            "blockedBy": ["Blue Legend", "Blue Ranger"]
         },
         {
             "name": "Mightier Than The Realm",
