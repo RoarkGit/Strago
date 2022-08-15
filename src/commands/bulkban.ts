@@ -36,7 +36,7 @@ export const bulkban: Command = {
 
         interaction.channel!.awaitMessageComponent({ filter } as any)
             .then(async i => {
-                filtered.forEach(m => console.log("Banning" + m.user.username));
+                filtered.forEach(m => m.ban());
                 await interaction.editReply({ components: [] });
             })
             .catch(err => strago.logger.error(err));
