@@ -8,5 +8,5 @@ import { userPrune } from "../modules/userPrune";
  */
 export const ready = async (strago: Strago) => {
     strago.logger.info("Discord ready!");
-    setInterval(userPrune, 1000 * 60);
+    setInterval(userPrune, 1000 * 60, strago);
 };
