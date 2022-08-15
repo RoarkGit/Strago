@@ -16,6 +16,12 @@
 - `/grant`: run workflow for granting roles based on character achievements
 - `/register [character] [server]`: register a character to a Discord user
 
+## Moderator commands
+- `/bulkban [prefix]`: bans all users whose name starts with a given prefix
+
+## Moderation features
+- **User pruning**: kicks all users who have not completed verification and joined more than ten minutes ago
+
 ## Technical Information
 
 ### Commands
