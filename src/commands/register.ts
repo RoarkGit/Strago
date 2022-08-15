@@ -83,8 +83,7 @@ export const register: Command = {
                           `\`\`\`${challenge}\`\`\``,
                           'Once finished, please click the Verify button to begin verification.']
                           .join('\n'),
-                components: [row],
-                ephemeral: true} as any
+                components: [row]} as any
             );
         } catch (error) {
             strago.logger.error(error);

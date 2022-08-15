@@ -15,7 +15,7 @@ import { initLogger } from "./utils/initLogger";
  * Main entry point for Strago.
  */
 (async () => {
-    const strago = new Client({intents: GatewayIntentBits.Guilds }) as Strago;
+    const strago = new Client({intents: GatewayIntentBits.Guilds | GatewayIntentBits.GuildMembers }) as Strago;
 
     // Validate and load environment variables.
     const validatedEnvironment = validateEnv(strago);
