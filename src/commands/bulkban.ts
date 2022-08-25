@@ -40,9 +40,19 @@ export const bulkban: Command = {
                 await interaction.editReply({ components: [] });
             })
             .catch(err => strago.logger.error(err));
+
+
+        // Only list unique usernames, check if message length exceeds 2000.
+        const usernames = new Set();
+        filtered.forEach(m => usernames.add(m.user.username.split("#")[0]));
+
+        let usernameString = "I found these users:\n" + Array.from(usernames).join("\n");
+        if (usernameString.length > 2000) {
+            usernameString = "There were too many usernames to list. Ban anyway?";
+        }
         
         await interaction.reply({
-            content: "I found these users:\n" + filtered.map(m => m.user).join("\n"),
+            content: usernameString,
             components: [row]} as any
         );
     }
