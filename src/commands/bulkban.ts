@@ -41,7 +41,6 @@ export const bulkban: Command = {
             })
             .catch(err => strago.logger.error(err));
 
-
         // Only list unique usernames, check if message length exceeds 2000.
         const usernames = new Set();
         filtered.forEach(m => usernames.add(m.user.username.split("#")[0]));
