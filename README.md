@@ -15,6 +15,7 @@
 ## Supported commands
 - `/grant`: run workflow for granting roles based on character achievements
 - `/register [character] [server]`: register a character to a Discord user
+- `/spell [name] [silent:optional]`: returns info about a given Blue Mage spell
 
 ## Moderator commands
 - `/bulkban [prefix]`: bans all users whose name starts with a given prefix
