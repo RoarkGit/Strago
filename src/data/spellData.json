@@ -1,0 +1,450 @@
+[
+  {
+    "apiId": "11383",
+    "name": "Snort",
+    "notes": "Only the ability actually called *Snort* will teach the spell; it is cast quite late into The Dragon's Neck."
+  },
+  {
+    "apiId": "11384",
+    "name": "4-tonze Weight"
+  },
+  {
+    "apiId": "11385",
+    "name": "Water Cannon"
+  },
+  {
+    "apiId": "11386",
+    "name": "Song of Torment"
+  },
+  {
+    "apiId": "11387",
+    "name": "High Voltage"
+  },
+  {
+    "apiId": "11388",
+    "name": "Bad Breath"
+  },
+  {
+    "apiId": "11389",
+    "name": "Flying Frenzy"
+  },
+  {
+    "apiId": "11390",
+    "name": "Aqua Breath"
+  },
+  {
+    "apiId": "11391",
+    "name": "Plaincracker"
+  },
+  {
+    "apiId": "11392",
+    "name": "Acorn Bomb",
+    "notes": "Largely irrelevant due to the Sleep role action."
+  },
+  {
+    "apiId": "11393",
+    "name": "Bristle",
+    "notes": "Buffs *spells*, not *abilities*. Spells are *usually* tied to the GCD, while abilities are not (usually Primal spells)."
+  },
+  {
+    "apiId": "11394",
+    "name": "Mind Blast",
+    "notes": "Guaranteed learn even when running unsynced."
+  },
+  {
+    "apiId": "11395",
+    "name": "Blood Drain"
+  },
+  {
+    "apiId": "11396",
+    "name": "Bomb Toss"
+  },
+  {
+    "apiId": "11397",
+    "name": "1000 Needles",
+    "notes": "Always deals exactly 1,000 damage unless the enemy is invulnerable."
+  },
+  {
+    "apiId": "11398",
+    "name": "Drill Cannons"
+  },
+  {
+    "apiId": "11399",
+    "name": "the Look",
+    "notes": "Largely irrelevant due to Mighty Guard threat modifier."
+  },
+  {
+    "apiId": "11400",
+    "name": "Sharpened Knife"
+  },
+  {
+    "apiId": "11401",
+    "name": "Loom",
+    "notes": "Loom is easiest to learn from Flame Sergeant Dalvag. Using Loom is not faster than just running normally."
+  },
+  {
+    "apiId": "11402",
+    "name": "Flame Thrower"
+  },
+  {
+    "apiId": "11403",
+    "name": "Faze"
+  },
+  {
+    "apiId": "11404",
+    "name": "Glower",
+    "notes": "Guaranteed learn even when running unsynced."
+  },
+  {
+    "apiId": "11405",
+    "name": "Missile",
+    "notes": "Has approximately 67% accuracy."
+  },
+  {
+    "apiId": "11406",
+    "name": "White Wind"
+  },
+  {
+    "apiId": "11407",
+    "name": "Final Sting"
+  },
+  {
+    "apiId": "11408",
+    "name": "Self-destruct"
+  },
+  {
+    "apiId": "11409",
+    "name": "Transfusion"
+  },
+  {
+    "apiId": "11410",
+    "name": "Toad Oil",
+    "notes": "Largely irrelevant due to most bosses having 100% accuracy."
+  },
+  {
+    "apiId": "11411",
+    "name": "Off-guard",
+    "notes": "Stacks with Peculiar Light."
+  },
+  {
+    "apiId": "11412",
+    "name": "Sticky Tongue"
+  },
+  {
+    "apiId": "11413",
+    "name": "Tail Screw",
+    "notes": "Has approximately 10% accuracy."
+  },
+  {
+    "apiId": "11414",
+    "name": "Level 5 Petrify",
+    "location": "Manor Sentry (*before* the first boss) / Haukke Manor"
+  },
+  {
+    "apiId": "11415",
+    "name": "Moon Flute",
+    "notes": "Yes, it is worth using even with the Waning Nocturne debuff. The damage we gain during Moon Flute outweighs the handful of Sonic Booms we would miss during Waning Nocturne."
+  },
+  {
+    "apiId": "11416",
+    "name": "Doom",
+    "notes": "Has approximately 33% accuracy."
+  },
+  {
+    "apiId": "11417",
+    "name": "Mighty Guard"
+  },
+  {
+    "apiId": "11418",
+    "name": "Ice Spikes"
+  },
+  {
+    "apiId": "11419",
+    "name": "the Ram's Voice"
+  },
+  {
+    "apiId": "11420",
+    "name": "the Dragon's Voice"
+  },
+  {
+    "apiId": "11421",
+    "name": "Peculiar Light",
+    "notes": "Stacks with Off-guard."
+  },
+  {
+    "apiId": "11422",
+    "name": "Ink Jet"
+  },
+  {
+    "apiId": "11423",
+    "name": "Flying Sardine"
+  },
+  {
+    "apiId": "11424",
+    "name": "Diamondback",
+    "location": "Cuca Fera (vulnerable to Death effects) / The Stone Vigil (Hard)"
+  },
+  {
+    "apiId": "11425",
+    "name": "Fire Angon"
+  },
+  {
+    "apiId": "11426",
+    "name": "Feather Rain"
+  },
+  {
+    "apiId": "11427",
+    "name": "Eruption",
+    "notes": "Can trivially be learned solo synced on normal difficulty with 1000 Needles."
+  },
+  {
+    "apiId": "11428",
+    "name": "Mountain Buster"
+  },
+  {
+    "apiId": "11429",
+    "name": "Shock Strike"
+  },
+  {
+    "apiId": "11430",
+    "name": "Glass Dance"
+  },
+  {
+    "apiId": "11431",
+    "name": "Veil of the Whorl",
+    "notes": "This is inferior to Glass Dance."
+  },
+  {
+    "apiId": "18295",
+    "name": "Alpine Draft"
+  },
+  {
+    "apiId": "18296",
+    "name": "Protean Wave",
+    "notes": "Can be learned from the tornadoes during Act 2 of Red, Fraught, and Blue (Stage 29)."
+  },
+  {
+    "apiId": "18297",
+    "name": "Northerlies"
+  },
+  {
+    "apiId": "18298",
+    "name": "Electrogenesis"
+  },
+  {
+    "apiId": "18299",
+    "name": "Kaltstrahl"
+  },
+  {
+    "apiId": "18300",
+    "name": "Abyssal Transfixion"
+  },
+  {
+    "apiId": "18301",
+    "name": "Chirp",
+    "notes": "Largely irrelevant due to the Sleep role action."
+  },
+  {
+    "apiId": "18302",
+    "name": "Eerie Soundwave"
+  },
+  {
+    "apiId": "18303",
+    "name": "Pom Cure"
+  },
+  {
+    "apiId": "18304",
+    "name": "Gobskin",
+    "location": "Alexandrian Hider / Alexander - The Breath of the Creator"
+  },
+  {
+    "apiId": "18305",
+    "name": "Magic Hammer"
+  },
+  {
+    "apiId": "18306",
+    "name": "Avail"
+  },
+  {
+    "apiId": "18307",
+    "name": "Frog Legs",
+    "notes": "This is not a proper provoke; it has a very small range and only sets your enmity to 1 more than the current highest enmity."
+  },
+  {
+    "apiId": "18308",
+    "name": "Sonic Boom"
+  },
+  {
+    "apiId": "18309",
+    "name": "Whistle",
+    "notes": "Buffs *spells*, not *abilities*. Spells are *usually* tied to the GCD, while abilities are not (usually Primal spells)."
+  },
+  {
+    "apiId": "18310",
+    "name": "White Knight's Tour"
+  },
+  {
+    "apiId": "18311",
+    "name": "Black Knight's Tour"
+  },
+  {
+    "apiId": "18312",
+    "name": "Level 5 Death",
+    "notes": "Has approximately 90% accuracy."
+  },
+  {
+    "apiId": "18313",
+    "name": "Launcher",
+    "notes": "Has 100% accuracy, but MP cost makes it a bad choice."
+  },
+  {
+    "apiId": "18314",
+    "name": "Perpetual Ray"
+  },
+  {
+    "apiId": "18315",
+    "name": "Cactguard",
+    "notes": "Largely irrelevant due since it can only be cast on other players."
+  },
+  {
+    "apiId": "18316",
+    "name": "Revenge Blast"
+  },
+  {
+    "apiId": "18317",
+    "name": "Angel Whisper"
+  },
+  {
+    "apiId": "18318",
+    "name": "Exuviation"
+  },
+  {
+    "apiId": "18319",
+    "name": "Reflux"
+  },
+  {
+    "apiId": "18320",
+    "name": "Devour"
+  },
+  {
+    "apiId": "18321",
+    "name": "Condensed Libra",
+    "notes": "Largely irrelevant with level 70 spells since we don't have the slots for three filler spells."
+  },
+  {
+    "apiId": "18322",
+    "name": "Aetheric Mimicry",
+    "notes": "Can easily be learned solo. Unsynced is fine here, since we just keep killing adds on the first boss until it's learned."
+  },
+  {
+    "apiId": "18323",
+    "name": "Surpanakha"
+  },
+  {
+    "apiId": "18324",
+    "name": "Quasar"
+  },
+  {
+    "apiId": "18325",
+    "name": "J Kick"
+  },
+  {
+    "apiId": "23264",
+    "name": "Triple Trident"
+  },
+  {
+    "apiId": "23265",
+    "name": "Tingle"
+  },
+  {
+    "apiId": "23266",
+    "name": "Tatami-gaeshi"
+  },
+  {
+    "apiId": "23267",
+    "name": "Cold Fog",
+    "notes": "In order to learn the spell you must *fail* the three heads mechanic during Mist Dragon."
+  },
+  {
+    "apiId": "23269",
+    "name": "Stotram"
+  },
+  {
+    "apiId": "23270",
+    "name": "Saintly Beam",
+    "notes": "A decent list of vulnerable enemies can be found [here](https://finalfantasy.fandom.com/wiki/Final_Fantasy_XIV_enemies/Ashkin)."
+  },
+  {
+    "apiId": "23271",
+    "name": "Feculent Flood"
+  },
+  {
+    "apiId": "23272",
+    "name": "Angel's Snack"
+  },
+  {
+    "apiId": "23273",
+    "name": "Chelonian Gate"
+  },
+  {
+    "apiId": "23275",
+    "name": "The Rose of Destruction"
+  },
+  {
+    "apiId": "23276",
+    "name": "Basic Instinct"
+  },
+  {
+    "apiId": "23277",
+    "name": "Ultravibration"
+  },
+  {
+    "apiId": "23278",
+    "name": "Blaze"
+  },
+  {
+    "apiId": "23279",
+    "name": "Mustard Bomb"
+  },
+  {
+    "apiId": "23280",
+    "name": "Dragon Force"
+  },
+  {
+    "apiId": "23281",
+    "name": "Aetherial Spark"
+  },
+  {
+    "apiId": "23282",
+    "name": "Hydro Pull"
+  },
+  {
+    "apiId": "23283",
+    "name": "Malediction of Water"
+  },
+  {
+    "apiId": "23284",
+    "name": "Choco Meteor",
+    "notes": "This is our best spell in the overworld (outside of duties), but only does 200 potency inside duties."
+  },
+  {
+    "apiId": "23285",
+    "name": "Matra Magic"
+  },
+  {
+    "apiId": "23286",
+    "name": "Peripheral Synthesis"
+  },
+  {
+    "apiId": "23287",
+    "name": "Both Ends"
+  },
+  {
+    "apiId": "23288",
+    "name": "Phantom Flurry"
+  },
+  {
+    "apiId": "23290",
+    "name": "Nightbloom"
+  }
+]

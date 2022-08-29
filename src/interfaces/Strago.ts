@@ -2,6 +2,7 @@ import { Client, Collection } from "discord.js";
 import { Logger } from "winston";
 
 import { Command } from "./Command";
+import { Spell } from "./Spell";
 
 /**
  * Implementation of Discord client.
@@ -35,7 +36,8 @@ export interface Strago extends Client {
                     required: string[];
                     blockedBy: string[];
             }[]
-        }
+        },
+        spellData: Collection<string, Spell>;
     };
     logger: Logger;
 };

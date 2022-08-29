@@ -8,7 +8,7 @@ import { Command } from "../interfaces/Command";
 
 /**
  * Attempts to load all Commands stored in the commands folder.
- * @returns A Collection of name:Command pairs.
+ * @returns Boolean indicating success.
  */
 export const loadCommands = async (strago: Strago, commandsPath: string): Promise<boolean> => {
     try {
