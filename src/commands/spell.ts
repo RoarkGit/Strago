@@ -28,13 +28,13 @@ export const spell: Command = {
                   .setDescription("The spell's name.")
                   .setRequired(true))
         .addBooleanOption(option =>
-            option.setName("silent")
+            option.setName("send_to_chat")
                   .setDescription("If true, response is only visible to the person running the command.")),
     run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
         if (!interaction.isChatInputCommand()) return;
 
         const name = interaction.options.getString("name", true).toLowerCase();
-        const silent = interaction.options.getBoolean("silent") || false;
+        const print = interaction.options.getBoolean("send_to_chat") || false;
 
         const spell = strago.data.spellData.get(name);
         if (!spell) {
@@ -73,6 +73,6 @@ export const spell: Command = {
             embed.addFields({ name: "Notes", value: spell.notes });
         }
         
-        await interaction.reply({ embeds: [embed], ephemeral: silent });
+        await interaction.reply({ embeds: [embed], ephemeral: !print });
     }
 };
