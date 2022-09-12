@@ -23,6 +23,10 @@ export const interactionCreate = async (interaction: Interaction, strago: Strago
 
         if (!command || !command.autocomplete) return;
 
-        await command.autocomplete(interaction, strago);
+        const prefix = interaction.options.getFocused();
+        const choices = command.autocomplete(strago, prefix);
+        choices.sort();
+
+        await interaction.respond(choices.slice(0, 25).map(c => ({ name: c, value: c })));
     }
 };

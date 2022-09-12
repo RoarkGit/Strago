@@ -6,6 +6,86 @@ import CharacterModel from "../database/models/CharacterModel";
 import { Command } from "../interfaces/Command";
 import * as xivlib from "../modules/xivlib";
 
+const SERVER_NAMES = [
+    "Adamantoise",
+    "Aegis",
+    "Alexander",
+    "Alpha",
+    "Anima",
+    "Asura",
+    "Atomos",
+    "Bahamut",
+    "Balmung",
+    "Behemoth",
+    "Belias",
+    "Bismarck",
+    "Brynhildr",
+    "Cactuar",
+    "Carbuncle",
+    "Cerberus",
+    "Chocobo",
+    "Coeurl",
+    "Diabolos",
+    "Durandal",
+    "Excalibur",
+    "Exodus",
+    "Faerie",
+    "Famfrit",
+    "Fenrir",
+    "Garuda",
+    "Gilgamesh",
+    "Goblin",
+    "Gungnir",
+    "Hades",
+    "Hyperion",
+    "Ifrit",
+    "Ixion",
+    "Jenova",
+    "Kujata",
+    "Lamia",
+    "Leviathan",
+    "Lich",
+    "Louisoix",
+    "Malboro",
+    "Mandragora",
+    "Masamune",
+    "Mateus",
+    "Midgardsormr",
+    "Moogle",
+    "Odin",
+    "Omega",
+    "Pandaemonium",
+    "Phantom",
+    "Phoenix",
+    "Ragnarok",
+    "Raiden",
+    "Ramuh",
+    "Ravana",
+    "Ridill",
+    "Sagittarius",
+    "Sargatanas",
+    "Sephirot",
+    "Shinryu",
+    "Shiva",
+    "Siren",
+    "Sophia",
+    "Spriggan",
+    "Tiamat",
+    "Titan",
+    "Tonberry",
+    "Twintania",
+    "Typhon",
+    "Ultima",
+    "Ultros",
+    "Unicorn",
+    "Valefor",
+    "Yojimbo",
+    "Zalera",
+    "Zeromus",
+    "Zodiark",
+    "Zurvan"
+];
+
 /**
  * Converts a string to title case.
  * @param str the input string
@@ -34,7 +114,8 @@ export const register: Command = {
         .addStringOption(option =>
             option.setName("server")
                   .setDescription("The server (e.g. Balmung) on which your character resides.")
-                  .setRequired(true)),
+                  .setRequired(true)
+                  .setAutocomplete(true)),
     run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
         try {
             // This line is needed to access interaction options.
@@ -88,5 +169,8 @@ export const register: Command = {
         } catch (error) {
             strago.logger.error(error);
         }
+    },
+    autocomplete: (strago: Strago, prefix: string): string[] => {
+        return SERVER_NAMES.filter(s => s.toLowerCase().startsWith(prefix.toLowerCase()));
     },
 };

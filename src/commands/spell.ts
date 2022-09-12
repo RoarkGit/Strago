@@ -76,11 +76,9 @@ export const spell: Command = {
         
         await interaction.reply({ embeds: [embed], ephemeral: !print });
     },
-    autocomplete: async (interaction: AutocompleteInteraction, strago: Strago): Promise<void> => {
-        const focusedValue = interaction.options.getFocused();
+    autocomplete: (strago: Strago, prefix: string): string[] => {
         const choices = strago.data.spellData.map(s => s.name);
-        choices.sort();
-        const filtered = choices.filter(c => c.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 25);
-        await interaction.respond(filtered.map(c => ({ name: c, value: c })));
-    }
+        const filtered = choices.filter(c => c.toLowerCase().startsWith(prefix.toLowerCase()));
+        return filtered;
+    },
 };

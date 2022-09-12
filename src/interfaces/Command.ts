@@ -16,5 +16,5 @@ export interface Command {
      * Command action to run.
      */
     run: (interaction: CommandInteraction, strago: Strago) => Promise<void>,
-    autocomplete?: (interaction: AutocompleteInteraction, strago: Strago) => Promise<void>;
+    autocomplete?: (strago: Strago, prefix: string) => string[];
 };
