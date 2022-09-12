@@ -1,6 +1,6 @@
 import { Strago } from "../interfaces/Strago";
 
-import { CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 
 /**
  * Represents an abstract Slash command.
@@ -15,5 +15,6 @@ export interface Command {
     /**
      * Command action to run.
      */
-    run: (interaction: CommandInteraction, strago: Strago) => Promise<void>;
+    run: (interaction: CommandInteraction, strago: Strago) => Promise<void>,
+    autocomplete?: (interaction: AutocompleteInteraction, strago: Strago) => Promise<void>;
 };

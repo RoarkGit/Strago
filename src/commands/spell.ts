@@ -1,7 +1,7 @@
 import { Strago } from "../interfaces/Strago";
 
 const XIVAPI =  require("@xivapi/js");
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 import { Command } from "../interfaces/Command";
 
@@ -26,7 +26,8 @@ export const spell: Command = {
         .addStringOption(option =>
             option.setName("name")
                   .setDescription("The spell's name.")
-                  .setRequired(true))
+                  .setRequired(true)
+                  .setAutocomplete(true))
         .addBooleanOption(option =>
             option.setName("send_to_chat")
                   .setDescription("If true, response is only visible to the person running the command.")),
@@ -74,5 +75,12 @@ export const spell: Command = {
         }
         
         await interaction.reply({ embeds: [embed], ephemeral: !print });
+    },
+    autocomplete: async (interaction: AutocompleteInteraction, strago: Strago): Promise<void> => {
+        const focusedValue = interaction.options.getFocused();
+        const choices = strago.data.spellData.map(s => s.name);
+        choices.sort();
+        const filtered = choices.filter(c => c.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 25);
+        await interaction.respond(filtered.map(c => ({ name: c, value: c })));
     }
 };
