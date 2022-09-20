@@ -4,20 +4,11 @@ import { createLogger, format, transports } from "winston";
 import TransportStream from "winston-transport";
 import LokiTransport from "winston-loki";
 
-const logFormat = format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-    format.printf((log) => {
-        return `${log.timestamp} [${log.level}]: ${log.message}`;
-    })
-);
-
 export const initLogger = async (strago: Strago): Promise<void> => {
     if (strago.logger) return;
 
     const winstonTransports: TransportStream[] = [
-        new transports.Console({
-            format: format.combine(logFormat, format.colorize())
-        })
+        new transports.Console()
     ];
 
     if (strago.config.loggerUri) {
@@ -30,6 +21,7 @@ export const initLogger = async (strago: Strago): Promise<void> => {
     };
 
     strago.logger = createLogger({
-        transports: winstonTransports
+        transports: winstonTransports,
+        format: format.combine(format.errors({ stack: true }), format.json()),
     });
 };
