@@ -15,4 +15,8 @@ export const handleEvents = (strago: Strago) => {
     strago.on("interactionCreate", async (interaction) => {
         await interactionCreate(interaction, strago);
     });
+    
+    process.on("uncaughtException", (error) => {
+        strago.logger.error(error);
+    });
 };
