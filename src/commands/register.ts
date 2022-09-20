@@ -121,12 +121,9 @@ export const register: Command = {
             // This line is needed to access interaction options.
             if (!interaction.isChatInputCommand()) return;
 
-            const member = await interaction.guild!.members.fetch(interaction.user.id);
-
             await interaction.reply({ content: 'Searching for character...', ephemeral: true });
             const character = titleCase(interaction.options.getString("character", true));
             const server = titleCase(interaction.options.getString("server", true));
-            strago.logger.info(`Registration attempt from ${member.nickname || member.user.username} for ${character}@${server}.`)
             const challenge = xivlib.generateChallenge(character, server);
             const characterId = await xivlib.getCharacterId(character, server);
             

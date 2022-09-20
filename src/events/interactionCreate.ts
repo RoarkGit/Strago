@@ -16,6 +16,11 @@ export const interactionCreate = async (interaction: Interaction, strago: Strago
         const command = strago.commands.get(interaction.commandName);
 
         if (!command) return;
+        
+        // Log command usage with entered options.
+        const member = await interaction.guild!.members.fetch(interaction.user.id);
+        const opts = interaction.options.data.map(o => o.name + ": " + o.value);
+        strago.logger.info(`${member.nickname || member.user.username} executing ${interaction.commandName}(${opts.join(", ")})`);
 
         await command.run(interaction, strago);
     } else if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
