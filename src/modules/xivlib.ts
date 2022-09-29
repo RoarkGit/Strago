@@ -2,19 +2,19 @@
  * Library for retrieving assorted information about FFXIV characters.
  */
 
-import axios from "axios";
-import crypto from "crypto";
-import path from "path";
-import  { PromisePool } from "@supercharge/promise-pool";
-import * as nodestone from "@xivapi/nodestone";
+import axios from 'axios'
+import crypto from 'crypto'
+import path from 'path'
+import { PromisePool } from '@supercharge/promise-pool'
+import * as nodestone from '@xivapi/nodestone'
 
 const parsers = {
-    character: new nodestone.Character(),
-    characterSearch: new nodestone.CharacterSearch()
-};
+  character: new nodestone.Character(),
+  characterSearch: new nodestone.CharacterSearch()
+}
 
-const ACHIEVEMENT_COMPLETE = 'entry__achievement__view--complete';
-const LODESTONE_URL = 'https://na.finalfantasyxiv.com/lodestone/character/';
+const ACHIEVEMENT_COMPLETE = 'entry__achievement__view--complete'
+const LODESTONE_URL = 'https://na.finalfantasyxiv.com/lodestone/character/'
 
 /**
  * Generates simple SHA-1 hash of character info.
@@ -23,11 +23,11 @@ const LODESTONE_URL = 'https://na.finalfantasyxiv.com/lodestone/character/';
  * @returns SHA-1(character+server)
  */
 export const generateChallenge = (character: string, server: string): string => {
-    const charString = (character + server).toLowerCase();
-    const hash = crypto.createHash('sha1');
-    hash.update(charString);
-    return hash.digest('base64')
-};
+  const charString = (character + server).toLowerCase()
+  const hash = crypto.createHash('sha1')
+  hash.update(charString)
+  return hash.digest('base64')
+}
 
 /**
  * Retrieves a given character's Lodestone ID.
@@ -36,14 +36,10 @@ export const generateChallenge = (character: string, server: string): string => 
  * @returns The character's Lodestone ID if it exists, "-1" otherwise.
  */
 export const getCharacterId = async (character: string, server: string): Promise<string> => {
-    const res: any = await parsers.characterSearch.parse({ query: { name: character, server: server }} as any);
-    const charInfo = res.List[0];
-    if (charInfo) {
-        return charInfo.ID.toString();
-    } else {
-        return "-1";
-    }
-};
+  const res = await parsers.characterSearch.parse({ query: { name: character, server } } as any) as any
+  if (res.NoResultsFound !== undefined) return '-1'
+  return res.List[0].ID.toString()
+}
 
 /**
  * Determines which achievements in a given set of achievements a character has completed.
@@ -52,20 +48,20 @@ export const getCharacterId = async (character: string, server: string): Promise
  * @returns A Set representing the completed achievements from achievementIds.
  */
 export const getAchievementsComplete = async (characterId: string, achievementIds: string[]): Promise<Set<string>> => {
-    const achievementSet = new Set<string>();
-    await PromisePool
-        .for(achievementIds)
-        .withConcurrency(5)
-        .handleError(async (error) => {
-            throw error // Throw any errors, we only want to execute on full achievement sets.
-        })
-        .process(async (achievementId) => {
-            if (await getAchievementComplete(characterId, achievementId)) {
-                achievementSet.add(achievementId);
-            };
-        });
-    return achievementSet;
-};
+  const achievementSet = new Set<string>()
+  await PromisePool
+    .for(achievementIds)
+    .withConcurrency(5)
+    .handleError(async (error) => {
+      throw error // Throw any errors, we only want to execute on full achievement sets.
+    })
+    .process(async (achievementId) => {
+      if (await getAchievementComplete(characterId, achievementId)) {
+        achievementSet.add(achievementId)
+      };
+    })
+  return achievementSet
+}
 
 /**
  * Checks if a given character has completed a specified achievement.
@@ -74,11 +70,11 @@ export const getAchievementsComplete = async (characterId: string, achievementId
  * @returns Whether or not the character has completed the achievement.
  */
 export const getAchievementComplete = async (characterId: string, achievementId: string): Promise<boolean> => {
-    const url = getUrl([characterId, 'achievement', 'detail', achievementId]);
-    return axios.get(url)
-                .then(response => response.data.includes(ACHIEVEMENT_COMPLETE))
-                .catch(error => false);
-};
+  const url = getUrl([characterId, 'achievement', 'detail', achievementId])
+  return await axios.get(url)
+    .then(response => response.data.includes(ACHIEVEMENT_COMPLETE))
+    .catch(_ => false)
+}
 
 /**
  * Checks if a given character's achievements are marked public.
@@ -86,17 +82,17 @@ export const getAchievementComplete = async (characterId: string, achievementId:
  * @returns Whether or not the character's achievements are public.
  */
 export const getAchievementsPublic = async (characterId: string): Promise<boolean> => {
-    const url = getUrl([characterId, 'achievement']);
-    return axios.get(url)
-                .then(() => true)
-                .catch(error => {
-                    // Private achievement pages return a 403, so we should only print other errors that occur.
-                    if (error.response.status != 403) {
-                        console.error(error);
-                    }
-                    return false;
-                });
-};
+  const url = getUrl([characterId, 'achievement'])
+  return await axios.get(url)
+    .then(() => true)
+    .catch(error => {
+      // Private achievement pages return a 403, so we should only print other errors that occur.
+      if (error.response.status !== 403) {
+        console.error(error)
+      }
+      return false
+    })
+}
 
 /**
  * Checks if a given character's Lodestone profile contains the challenge string for that character.
@@ -104,12 +100,12 @@ export const getAchievementsPublic = async (characterId: string): Promise<boolea
  * @returns Whether or not the character challenge was successfully verified.
  */
 export const verifyCharacter = async (characterId: string): Promise<boolean> => {
-    const res: any = await parsers.character.parse({ params: { characterId: characterId } } as any);
-    const character = res.Name;
-    const server = res.World;
-    const challenge = generateChallenge(character, server);
-    return res.Bio.includes(challenge);
-};
+  const res: any = await parsers.character.parse({ params: { characterId } } as any)
+  const character = res.Name
+  const server = res.World
+  const challenge = generateChallenge(character, server)
+  return res.Bio.includes(challenge)
+}
 
 /**
  * Joins various parts of a URL into a complete Lodestone URL.
@@ -117,6 +113,6 @@ export const verifyCharacter = async (characterId: string): Promise<boolean> => 
  * @returns A fully joined Lodestone URL.
  */
 export const getUrl = (parts: string[]): string => {
-    const urlPath = path.join.apply(null, parts);
-    return new URL(urlPath, LODESTONE_URL).href;
-};
+  const urlPath = path.join.apply(null, parts)
+  return new URL(urlPath, LODESTONE_URL).href
+}

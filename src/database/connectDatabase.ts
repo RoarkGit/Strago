@@ -1,6 +1,6 @@
-import { Strago } from "../interfaces/Strago";
+import { Strago } from '../interfaces/Strago'
 
-import { connect } from "mongoose";
+import { connect } from 'mongoose'
 
 /**
  * Attempts to connect to the bot's database.
@@ -8,12 +8,12 @@ import { connect } from "mongoose";
  * @returns Whether the connection was successful or not.
  */
 export const connectDatabase = async (strago: Strago): Promise<boolean> => {
-    try {
-        await connect(strago.config.databaseUri);
+  try {
+    await connect(strago.config.databaseUri)
 
-        return true;
-    } catch(error) {
-        strago.logger.error("Failed to connect to database:", error);
-        return false;
-    }
-};
+    return true
+  } catch (error) {
+    strago.logger.error('Failed to connect to database:', error)
+    return false
+  }
+}
