@@ -4,7 +4,7 @@ import { userPrune } from '../modules/userPrune'
 
 const userPruneLoop = (strago: Strago): void => {
   (async (): Promise<void> => await userPrune(strago))().catch(error => strago.logger.error(error))
-  setInterval(userPruneLoop, 1000 * 60, strago)
+  setTimeout(userPruneLoop, 1000 * 60, strago)
 }
 
 /**
