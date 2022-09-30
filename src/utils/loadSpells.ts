@@ -39,9 +39,9 @@ export const loadSpells = async (strago: Strago): Promise<boolean> => {
       .then(async res => await res.json())
       .then(res => res.results)
     const xivcollectInfo = new Collection<string, XivcollectSpell>()
-    xivcollectList.forEach(s => xivcollectInfo.set(s.name, s))
+    xivcollectList.forEach(s => xivcollectInfo.set(s.name.toLowerCase(), s))
     spellData.forEach(s => {
-      const xivcollectSpell = xivcollectInfo.get(s.name)
+      const xivcollectSpell = xivcollectInfo.get(s.name.toLowerCase())
       if (xivcollectSpell == null) return
 
       const spell: Spell = {
