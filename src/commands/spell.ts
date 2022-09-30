@@ -79,7 +79,7 @@ export const spell: Command = {
   },
   autocomplete: (strago: Strago, prefix: string): string[] => {
     const choices = strago.data.spellData.map(s => s.name)
-    const filtered = choices.filter(c => c.toLowerCase().startsWith(prefix.toLowerCase()))
+    const filtered = choices.filter(c => c.toLowerCase().includes(prefix.toLowerCase()))
     return filtered
   },
   guildCommand: false
