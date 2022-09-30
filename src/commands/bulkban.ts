@@ -17,9 +17,8 @@ export const bulkban: Command = {
         .setRequired(true))
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
-    if (!interaction.isChatInputCommand()) return
+    if (!interaction.isChatInputCommand() || interaction.guild === null) return
 
-    if (interaction.guild === null) return
     const members = await interaction.guild.members.fetch()
     const prefix = interaction.options.getString('prefix', true)
     const filtered = members.filter(m => m.user.username.startsWith(prefix))
