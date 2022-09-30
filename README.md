@@ -47,7 +47,7 @@ The following values are required:
 |`BOT_TOKEN`    |Discord bot API token.                                    |
 |`CLIENT_ID`    |The bot application ID.                                   |
 |`NODE_ENV`     |The environment in which the bot is running (e.g. `prod`).|
-|`TEST_GUILD_ID`|The ID of the guild used for testing.                     |
+|`HOME_GUILD_ID`|The ID of the home guild in which the bot is running.     |
 
 ### Data
 Any data, static or otherwise, exists inside `./data`.
