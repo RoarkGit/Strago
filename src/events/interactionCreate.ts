@@ -31,8 +31,8 @@ export const interactionCreate = async (interaction: Interaction, strago: Strago
       }
     }
     if (interaction.guild !== null) {
-      logMessage.guildName = interaction.guild.name
-      logMessage.guildId = interaction.guild.id
+      logMessage.guild.guildName = interaction.guild.name
+      logMessage.guild.guildId = interaction.guild.id
     }
     strago.logger.info(logMessage)
 
