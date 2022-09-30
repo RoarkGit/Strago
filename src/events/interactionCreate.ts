@@ -23,7 +23,7 @@ export const interactionCreate = async (interaction: Interaction, strago: Strago
       options,
       user: {
         userTag: user.tag,
-        userId: user.id,
+        userId: user.id
       },
       guild: {
         guildName: null,
