@@ -171,5 +171,6 @@ export const register: Command = {
   },
   autocomplete: (strago: Strago, prefix: string): string[] => {
     return SERVER_NAMES.filter(s => s.toLowerCase().startsWith(prefix.toLowerCase()))
-  }
+  },
+  guildCommand: true
 }

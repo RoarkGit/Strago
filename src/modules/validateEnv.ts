@@ -15,7 +15,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       return { valid: false, message: 'Missing client ID.' }
     }
 
-    if (process.env.TEST_GUILD_ID === undefined) {
+    if (process.env.HOME_GUILD_ID === undefined) {
       return { valid: false, message: 'Missing test guild ID.' }
     }
 
@@ -32,7 +32,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       env: process.env.NODE_ENV,
       id: process.env.CLIENT_ID,
       loggerUri: process.env.LOKI_URI,
-      testGuildId: process.env.TEST_GUILD_ID,
+      homeGuildId: process.env.HOME_GUILD_ID,
       token: process.env.BOT_TOKEN
     }
 

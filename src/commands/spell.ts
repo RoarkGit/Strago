@@ -81,5 +81,6 @@ export const spell: Command = {
     const choices = strago.data.spellData.map(s => s.name)
     const filtered = choices.filter(c => c.toLowerCase().startsWith(prefix.toLowerCase()))
     return filtered
-  }
+  },
+  guildCommand: false
 }

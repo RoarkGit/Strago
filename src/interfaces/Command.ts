@@ -15,4 +15,5 @@ export interface Command {
    */
   run: (interaction: CommandInteraction, strago: Strago) => Promise<void>
   autocomplete?: (strago: Strago, prefix: string) => string[]
+  guildCommand: boolean
 };

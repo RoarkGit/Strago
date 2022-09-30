@@ -9,19 +9,28 @@ import { Interaction, InteractionType } from 'discord.js'
  */
 export const interactionCreate = async (interaction: Interaction, strago: Strago): Promise<void> => {
   if (interaction.isChatInputCommand()) {
-    if (!interaction.inGuild()) {
-      await interaction.reply('Sorry, direct messages are unsupported!')
-      return
-    }
     const command = strago.commands.get(interaction.commandName)
 
-    if (command === undefined || interaction.guild === null) return
+    if (command === undefined) return
 
     // Log command usage with entered options.
-    const member = await interaction.guild.members.fetch(interaction.user.id)
+    const user = await strago.users.fetch(interaction.user.id)
     const options: { [name: string]: string | number | boolean | undefined } = {}
     interaction.options.data.forEach(o => { options[o.name] = o.value })
-    strago.logger.info({ message: 'Processing command.', command: interaction.commandName, options, member: member.nickname ?? member.user.username, user: member.user.id })
+    const logMessage: any = {
+      message: 'Processing command',
+      command: interaction.commandName,
+      options,
+      usertag: user.tag,
+      userId: user.id,
+      guildName: null,
+      guildId: null
+    }
+    if (interaction.guild !== null) {
+      logMessage.guildName = interaction.guild.name
+      logMessage.guildId = interaction.guild.id
+    }
+    strago.logger.info(logMessage)
 
     await command.run(interaction, strago)
   } else if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {

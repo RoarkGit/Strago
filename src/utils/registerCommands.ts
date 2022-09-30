@@ -12,25 +12,28 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
   try {
     const rest = new REST({ version: '10' }).setToken(strago.config.token)
 
-    const commandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
+    const globalCommandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
+    const guildCommandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
 
     strago.commands.forEach((command) => {
       const data = command.data.toJSON()
 
-      commandData.push(data)
+      if (command.guildCommand) {
+        guildCommandData.push(data)
+      } else {
+        globalCommandData.push(data)
+      }
     })
 
-    if (process.env.NODE_ENV === 'prod') {
-      strago.logger.info('Registering commands globally.')
-      await rest.put(Routes.applicationCommands(strago.config.id), {
-        body: commandData
-      })
-    } else {
-      strago.logger.info('Registering commands to test guild.')
-      await rest.put(Routes.applicationGuildCommands(strago.config.id, strago.config.testGuildId), {
-        body: commandData
-      })
-    }
+    strago.logger.info('Registering global commands.')
+    await rest.put(Routes.applicationCommands(strago.config.id), {
+      body: globalCommandData
+    })
+
+    strago.logger.info('Registering guild commands.')
+    await rest.put(Routes.applicationGuildCommands(strago.config.id, strago.config.homeGuildId), {
+      body: guildCommandData
+    })
 
     return true
   } catch (error) {

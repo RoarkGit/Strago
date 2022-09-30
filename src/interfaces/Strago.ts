@@ -20,7 +20,7 @@ export interface Strago extends Client {
     env: string
     id: string
     loggerUri: string | undefined
-    testGuildId: string
+    homeGuildId: string
     token: string
   }
   /**

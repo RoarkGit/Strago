@@ -57,5 +57,6 @@ export const bulkban: Command = {
       components: [row]
     } as any
     )
-  }
+  },
+  guildCommand: true
 }

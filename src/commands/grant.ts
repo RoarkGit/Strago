@@ -115,5 +115,6 @@ export const grant: Command = {
       await interaction.editReply('I encountered an error trying to retrieve your achievements.\n' +
                                         'Please try again and if the issue persists contact Liam Galt.')
     }
-  }
+  },
+  guildCommand: true
 }
