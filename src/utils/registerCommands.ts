@@ -12,8 +12,7 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
   try {
     const rest = new REST({ version: '10' }).setToken(strago.config.token)
 
-    const commandData: Array< | RESTPostAPIApplicationCommandsJSONBody
-    | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
+    const commandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
 
     strago.commands.forEach((command) => {
       const data = command.data.toJSON()

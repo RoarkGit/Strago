@@ -9,12 +9,12 @@ import { Spell } from './Spell'
  */
 export interface Strago extends Client {
   /**
-     * Collection of Commands stored as name:Command pairs.
-     */
+   * Collection of Commands stored as name:Command pairs.
+   */
   commands: Collection<string, Command>
   /**
-     * Various config values.
-     */
+   * Various config values.
+   */
   config: {
     databaseUri: string
     env: string
@@ -24,8 +24,8 @@ export interface Strago extends Client {
     token: string
   }
   /**
-     * Static data.
-     */
+   * Static data.
+   */
   data: {
     achievementData: {
       achievementIds: {
