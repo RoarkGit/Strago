@@ -13,5 +13,12 @@ const userPruneLoop = (strago: Strago): void => {
  */
 export const ready = async (strago: Strago): Promise<void> => {
   strago.logger.info('Discord ready!')
+  const guildList = strago.guilds.cache
+  const guildNames = guildList.map(g => ({ guildName: g.name, guildId: g.id }))
+  const logMessage = {
+    message: `Connected to ${guildList.size} servers.`,
+    guilds: guildNames
+  }
+  strago.logger.info(logMessage)
   userPruneLoop(strago)
 }

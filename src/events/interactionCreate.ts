@@ -21,10 +21,14 @@ export const interactionCreate = async (interaction: Interaction, strago: Strago
       message: 'Processing command',
       command: interaction.commandName,
       options,
-      usertag: user.tag,
-      userId: user.id,
-      guildName: null,
-      guildId: null
+      user: {
+        userTag: user.tag,
+        userId: user.id,
+      },
+      guild: {
+        guildName: null,
+        guildId: null
+      }
     }
     if (interaction.guild !== null) {
       logMessage.guildName = interaction.guild.name
