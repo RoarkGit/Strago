@@ -22,7 +22,6 @@ export const grant: Command = {
       if (interaction.guild === null) return
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
-      strago.logger.info(`Grant command from ${member.nickname ?? member.user.username}`)
       await interaction.reply({ content: 'Checking registration...', ephemeral: true })
       const character = await CharacterModel.findOne({
         discordId: interaction.user.id
