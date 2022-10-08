@@ -55,11 +55,11 @@ export const grant: Command = {
         character.get('characterId') as string, Object.keys(strago.data.achievementData.achievementIds))
       const memberRoles: GuildMemberRoleManager = member.roles
 
-      await Promise.all(strago.data.achievementData.roles.map(async (role) => {
+      for (const role of strago.data.achievementData.roles) {
         const discordRole = guild.roles.cache.find(r => r.name === role.name)
         if (discordRole === undefined) {
           strago.logger.error(`Undefined role: ${role.name}`)
-          return
+          continue
         }
 
         // Check for blocking roles first.
@@ -74,13 +74,13 @@ export const grant: Command = {
         if (blockers.length > 0) {
           await updateState(`${role.name}: You already have ${blockers.join(', ')}`)
           await memberRoles.remove(discordRole)
-          return
+          continue
         }
 
         // Check if role already exists.
         if (memberRoles.cache.some(r => r.name === role.name)) {
           await updateState(`${role.name}: You already have it!`)
-          return
+          continue
         }
 
         await updateState(`Checking eligibility for ${role.name}`)
@@ -95,7 +95,7 @@ export const grant: Command = {
 
         if (missing.length > 0) {
           await updateState(`Skipping ${role.name} since you are missing: ${missing.join(', ')}`)
-          return
+          continue
         }
 
         await updateState(`${role.name}: Granted!`)
@@ -108,7 +108,7 @@ export const grant: Command = {
           const role: string = discordRole?.toString() as string
           await channel.send(`<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`)
         }
-      }))
+      }
     } catch (error) {
       strago.logger.error('Failed to grant roles', error)
       await interaction.editReply('I encountered an error trying to retrieve your achievements.\n' +
