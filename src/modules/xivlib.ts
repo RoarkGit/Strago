@@ -39,7 +39,7 @@ export const getCharacterId = async (character: string, server: string): Promise
   const res = await parsers.characterSearch.parse({ query: { name: character, server } } as any) as any
   if (res.NoResultsFound !== undefined) return '-1'
   for (const char of res.List) {
-    if (char.Name === character) return char.ID
+    if (char.Name === character) return char.ID.toString()
   }
   return '-1'
 }
