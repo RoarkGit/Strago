@@ -38,7 +38,10 @@ export const generateChallenge = (character: string, server: string): string => 
 export const getCharacterId = async (character: string, server: string): Promise<string> => {
   const res = await parsers.characterSearch.parse({ query: { name: character, server } } as any) as any
   if (res.NoResultsFound !== undefined) return '-1'
-  return res.List[0].ID.toString()
+  for (const char of res.List) {
+    if (char.Name === character) return char.ID
+  }
+  return '-1'
 }
 
 /**
