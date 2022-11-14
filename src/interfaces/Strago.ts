@@ -21,6 +21,7 @@ export interface Strago extends Client {
     id: string
     loggerUri: string | undefined
     homeGuildId: string
+    pruneChannels: string[]
     token: string
   }
   /**

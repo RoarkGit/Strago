@@ -33,6 +33,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       id: process.env.CLIENT_ID,
       loggerUri: process.env.LOKI_URI,
       homeGuildId: process.env.HOME_GUILD_ID,
+      pruneChannels: process.env.PRUNE_CHANNELS === undefined ? [] : process.env.PRUNE_CHANNELS.split(','),
       token: process.env.BOT_TOKEN
     }
 
