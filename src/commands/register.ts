@@ -144,7 +144,7 @@ export const register: Command = {
       }
 
       interaction.channel.awaitMessageComponent({ filter } as any)
-        .then(async i => {
+        .then(async (i: any) => {
           if (await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)
             await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
