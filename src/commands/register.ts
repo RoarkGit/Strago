@@ -109,28 +109,37 @@ export const register: Command = {
     .setDescription('Register a character with Strago for achievement scanning.')
     .addStringOption(option =>
       option.setName('character')
-        .setDescription("Your character's name.")
-        .setRequired(true))
+        .setDescription('Your character\'s name.'))
     .addStringOption(option =>
       option.setName('server')
         .setDescription('The server (e.g. Balmung) on which your character resides.')
-        .setRequired(true)
-        .setAutocomplete(true)),
+        .setAutocomplete(true))
+    .addStringOption(option =>
+      option.setName('id')
+        .setDescription('Your character\'s Lodestone ID. Use this if name search fails.')),
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
     try {
       // This line is needed to access interaction options.
       if (!interaction.isChatInputCommand() || interaction.channel === null) return
 
       await interaction.reply({ content: 'Searching for character...', ephemeral: true })
-      const character = titleCase(interaction.options.getString('character', true))
-      const server = titleCase(interaction.options.getString('server', true))
-      const challenge = xivlib.generateChallenge(character, server)
-      const characterId = await xivlib.getCharacterId(character, server)
 
-      if (characterId === '-1') {
+      // Either characterId needs to be set, or character and server need to be set. Populate the other variables accordingly.
+      let characterId = interaction.options.getString('id', false)
+      let character = interaction.options.getString('character', false)
+      let server = interaction.options.getString('server', false)
+      if (characterId === null && character !== null && server !== null) {
+        character = titleCase(character)
+        server = titleCase(server)
+        characterId = await xivlib.getCharacterId(character, server)
+      } else if (characterId !== null) {
+        [character, server] = await xivlib.getCharacterInfo(characterId)
+      }
+      if (characterId === null || characterId === '-1' || character === null || server === null) {
         await interaction.editReply({ content: 'I was unable to locate that character.' })
         return
       }
+      console.log(character, server)
 
       const row = new ActionRowBuilder()
         .addComponents(
@@ -144,8 +153,8 @@ export const register: Command = {
       }
 
       interaction.channel.awaitMessageComponent({ filter } as any)
-        .then(async (i: any) => {
-          if (await xivlib.verifyCharacter(characterId)) {
+        .then(async i => {
+          if (characterId != null && await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)
             await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
             await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
@@ -155,6 +164,8 @@ export const register: Command = {
           }
         })
         .catch(err => strago.logger.error(err))
+      
+      const challenge = xivlib.generateChallenge(character, server)
 
       await interaction.editReply({
         content: [`I found this character: <${xivlib.getUrl([characterId])}>`,
