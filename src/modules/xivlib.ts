@@ -45,6 +45,17 @@ export const getCharacterId = async (character: string, server: string): Promise
 }
 
 /**
+ * Retrieves a given character's name and server by ID.
+ * @param characterId The character's Lodestone ID
+ * @returns The character's name and server if they exist, '-1' otherwise.
+ */
+export const getCharacterInfo = async (characterId: string): Promise<[string, string]> => {
+  const res = await parsers.character.parse({ params: { characterId } } as any) as any
+  if (res === undefined) return ['-1', '-1']
+  return [res.Name, res.World]
+}
+
+/**
  * Determines which achievements in a given set of achievements a character has completed.
  * @param characterId The character's ID
  * @param achievementIds List of achievements to check
