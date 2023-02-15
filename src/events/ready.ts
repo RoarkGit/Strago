@@ -27,5 +27,4 @@ export const ready = async (strago: Strago): Promise<void> => {
   }
   strago.logger.info(logMessage)
   channelPruneLoop(strago)
-  userPruneLoop(strago)
 }
