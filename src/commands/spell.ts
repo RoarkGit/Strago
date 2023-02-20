@@ -31,7 +31,7 @@ export const spell: Command = {
         .setAutocomplete(true))
     .addBooleanOption(option =>
       option.setName('send_to_chat')
-        .setDescription('If true, response is only visible to the person running the command.')),
+        .setDescription('If true, response will be sent to chat (visible to all).')),
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
     if (!interaction.isChatInputCommand()) return
 
