@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, Interaction, PermissionFlagsBits, SlashCommandBuilder, TextBasedChannelMixin } from 'discord.js'
 
 import { Command } from '../interfaces/Command'
 
@@ -30,17 +30,7 @@ export const bulkban: Command = {
           .setLabel('Ban')
           .setStyle(ButtonStyle.Primary))
 
-    const filter = (i: ButtonInteraction): boolean => {
-      return i.customId === i.user.id
-    }
-
     if (interaction.channel === null) return
-    interaction.channel.awaitMessageComponent({ filter } as any)
-      .then(async i => {
-        await Promise.all(filtered.map(async m => await m.ban().catch(error => strago.logger.error(error))))
-        await interaction.editReply({ components: [] })
-      })
-      .catch(err => strago.logger.error(err))
 
     // Only list unique usernames, check if message length exceeds 2000.
     const usernames = new Set()
@@ -51,11 +41,21 @@ export const bulkban: Command = {
       usernameString = 'There were too many usernames to list. Ban anyway?'
     }
 
-    await interaction.reply({
+    const message = await interaction.reply({
       content: usernameString,
       components: [row]
     } as any
     )
+
+    const filter = (i: ButtonInteraction): boolean => {
+      return i.customId === i.user.id
+    }
+    message.awaitMessageComponent({ filter } as any)
+      .then(async i => {
+        await Promise.all(filtered.map(async m => await m.ban().catch(error => strago.logger.error(error))))
+        await interaction.editReply({ components: [] })
+      })
+      .catch(err => strago.logger.error(err))
   },
   guildCommand: true
 }

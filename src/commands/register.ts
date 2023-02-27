@@ -147,27 +147,10 @@ export const register: Command = {
             .setCustomId('verify')
             .setLabel('Verify')
             .setStyle(ButtonStyle.Primary))
-
-      const filter = (i: ButtonInteraction): boolean => {
-        return i.customId === 'verify'
-      }
-
-      interaction.channel.awaitMessageComponent({ filter } as any)
-        .then(async i => {
-          if (characterId != null && await xivlib.verifyCharacter(characterId)) {
-            strago.logger.info(`Successfully registered ${characterId}`)
-            await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
-            await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
-          } else {
-            strago.logger.info(`Registration failed for ${characterId}`)
-            await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] })
-          }
-        })
-        .catch(err => strago.logger.error(err))
       
       const challenge = xivlib.generateChallenge(character, server)
 
-      await interaction.editReply({
+      const message = await interaction.editReply({
         content: [`I found this character: <${xivlib.getUrl([characterId])}>`,
           'Please update your character profile to include this challenge: ',
                           `\`\`\`${challenge}\`\`\``,
@@ -176,6 +159,22 @@ export const register: Command = {
         components: [row]
       } as any
       )
+
+      const filter = (i: ButtonInteraction): boolean => {
+        return i.customId === 'verify'
+      }
+      message.awaitMessageComponent({ filter } as any)
+      .then(async i => {
+        if (characterId != null && await xivlib.verifyCharacter(characterId)) {
+          strago.logger.info(`Successfully registered ${characterId}`)
+          await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
+          await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
+        } else {
+          strago.logger.info(`Registration failed for ${characterId}`)
+          await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] })
+        }
+      })
+      .catch(err => strago.logger.error(err))
     } catch (error) {
       strago.logger.error(error)
     }
