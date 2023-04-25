@@ -54,7 +54,9 @@ export const loadSpells = async (strago: Strago): Promise<boolean> => {
         notes: s.notes,
         number: xivcollectSpell.order.toString(),
         rank: '★'.repeat(xivcollectSpell.rank),
-        type: xivcollectSpell.type.name
+        type: xivcollectSpell.type.name,
+        range: s.range,
+        radius: s.radius
       }
       if (spell.aspect === 'None') {
         spell.aspect = 'Unaspected'

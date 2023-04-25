@@ -12,4 +12,6 @@ export interface Spell {
   number: string
   rank: string
   type: string
+  range: number | undefined
+  radius: number | undefined
 }

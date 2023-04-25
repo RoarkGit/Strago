@@ -2,44 +2,57 @@
   {
     "apiId": "11383",
     "name": "Snort",
-    "notes": "Only the ability actually called *Snort* will teach the spell; it is cast quite late into The Dragon's Neck."
+    "notes": "Only the ability actually called *Snort* will teach the spell; it is cast quite late into The Dragon's Neck.",
+    "radius": 6
   },
   {
     "apiId": "11384",
-    "name": "4-tonze Weight"
+    "name": "4-tonze Weight",
+    "range": 25,
+    "radius": 4
   },
   {
     "apiId": "11385",
-    "name": "Water Cannon"
+    "name": "Water Cannon",
+    "range": 25
   },
   {
     "apiId": "11386",
-    "name": "Song of Torment"
+    "name": "Song of Torment",
+    "range": 25
   },
   {
     "apiId": "11387",
-    "name": "High Voltage"
+    "name": "High Voltage",
+    "radius": 12
   },
   {
     "apiId": "11388",
-    "name": "Bad Breath"
+    "name": "Bad Breath",
+    "radius": 8
   },
   {
     "apiId": "11389",
-    "name": "Flying Frenzy"
+    "name": "Flying Frenzy",
+    "range": 20,
+    "radius": 6
   },
   {
     "apiId": "11390",
-    "name": "Aqua Breath"
+    "name": "Aqua Breath",
+    "radius": 8
   },
   {
     "apiId": "11391",
-    "name": "Plaincracker"
+    "name": "Plaincracker",
+    "radius": 6
   },
   {
     "apiId": "11392",
     "name": "Acorn Bomb",
-    "notes": "Largely irrelevant due to the Sleep role action."
+    "notes": "Largely irrelevant due to the Sleep role action.",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "11393",
@@ -49,72 +62,91 @@
   {
     "apiId": "11394",
     "name": "Mind Blast",
-    "notes": "Guaranteed learn even when running unsynced."
+    "notes": "Guaranteed learn even when running unsynced.",
+    "radius": 6
   },
   {
     "apiId": "11395",
-    "name": "Blood Drain"
+    "name": "Blood Drain",
+    "range": 25
   },
   {
     "apiId": "11396",
-    "name": "Bomb Toss"
+    "name": "Bomb Toss",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "11397",
     "name": "1000 Needles",
-    "notes": "Always deals exactly 1,000 damage unless the enemy is invulnerable."
+    "notes": "Always deals exactly 1,000 damage unless the enemy is invulnerable.",
+    "radius": 4
   },
   {
     "apiId": "11398",
-    "name": "Drill Cannons"
+    "name": "Drill Cannons",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "11399",
     "name": "the Look",
-    "notes": "Largely irrelevant due to Mighty Guard threat modifier."
+    "notes": "Largely irrelevant due to Mighty Guard threat modifier.",
+    "radius": 6
   },
   {
     "apiId": "11400",
-    "name": "Sharpened Knife"
+    "name": "Sharpened Knife",
+    "range": 3
   },
   {
     "apiId": "11401",
     "name": "Loom",
-    "notes": "Loom is easiest to learn from Flame Sergeant Dalvag. Using Loom is not faster than just running normally."
+    "notes": "Loom is easiest to learn from Flame Sergeant Dalvag. Using Loom is not faster than just running normally.",
+    "range": 15
   },
   {
     "apiId": "11402",
-    "name": "Flame Thrower"
+    "name": "Flame Thrower",
+    "range": 8
   },
   {
     "apiId": "11403",
-    "name": "Faze"
+    "name": "Faze",
+    "range": 4
   },
   {
     "apiId": "11404",
     "name": "Glower",
-    "notes": "Guaranteed learn even when running unsynced."
+    "notes": "Guaranteed learn even when running unsynced.",
+    "range": 15,
+    "radius": 15
   },
   {
     "apiId": "11405",
     "name": "Missile",
-    "notes": "Has approximately 67% accuracy."
+    "notes": "Has approximately 67% accuracy.",
+    "range": 25
   },
   {
     "apiId": "11406",
-    "name": "White Wind"
+    "name": "White Wind",
+    "radius": 15
   },
   {
     "apiId": "11407",
-    "name": "Final Sting"
+    "name": "Final Sting",
+    "range": 3
   },
   {
     "apiId": "11408",
-    "name": "Self-destruct"
+    "name": "Self-destruct",
+    "radius": 20
   },
   {
     "apiId": "11409",
-    "name": "Transfusion"
+    "name": "Transfusion",
+    "range": 25
   },
   {
     "apiId": "11410",
@@ -124,21 +156,25 @@
   {
     "apiId": "11411",
     "name": "Off-guard",
-    "notes": "Stacks with Peculiar Light."
+    "notes": "Stacks with Peculiar Light.",
+    "range": 25
   },
   {
     "apiId": "11412",
-    "name": "Sticky Tongue"
+    "name": "Sticky Tongue",
+    "range": 25
   },
   {
     "apiId": "11413",
     "name": "Tail Screw",
-    "notes": "Has approximately 10% accuracy."
+    "notes": "Has approximately 10% accuracy.",
+    "range": 25
   },
   {
     "apiId": "11414",
     "name": "Level 5 Petrify",
-    "location": "Manor Sentry (*before* the first boss) / Haukke Manor"
+    "location": "Manor Sentry (*before* the first boss) / Haukke Manor",
+    "radius": 6
   },
   {
     "apiId": "11415",
@@ -148,7 +184,8 @@
   {
     "apiId": "11416",
     "name": "Doom",
-    "notes": "Has approximately 33% accuracy."
+    "notes": "Has approximately 33% accuracy.",
+    "range": 25
   },
   {
     "apiId": "11417",
@@ -160,24 +197,29 @@
   },
   {
     "apiId": "11419",
-    "name": "the Ram's Voice"
+    "name": "the Ram's Voice",
+    "radius": 6
   },
   {
     "apiId": "11420",
-    "name": "the Dragon's Voice"
+    "name": "the Dragon's Voice",
+    "radius": 20
   },
   {
     "apiId": "11421",
     "name": "Peculiar Light",
-    "notes": "Stacks with Off-guard."
+    "notes": "Stacks with Off-guard.",
+    "radius": 6
   },
   {
     "apiId": "11422",
-    "name": "Ink Jet"
+    "name": "Ink Jet",
+    "radius": 6
   },
   {
     "apiId": "11423",
-    "name": "Flying Sardine"
+    "name": "Flying Sardine",
+    "range": 25
   },
   {
     "apiId": "11424",
@@ -186,28 +228,38 @@
   },
   {
     "apiId": "11425",
-    "name": "Fire Angon"
+    "name": "Fire Angon",
+    "range": 25,
+    "radius": 4
   },
   {
     "apiId": "11426",
-    "name": "Feather Rain"
+    "name": "Feather Rain",
+    "range": 30,
+    "radius": 5
   },
   {
     "apiId": "11427",
     "name": "Eruption",
-    "notes": "Can trivially be learned solo synced on normal difficulty with 1000 Needles."
+    "notes": "Can trivially be learned solo synced on normal difficulty with 1000 Needles.",
+    "range": 25,
+    "radius": 5
   },
   {
     "apiId": "11428",
-    "name": "Mountain Buster"
+    "name": "Mountain Buster",
+    "radius": 6
   },
   {
     "apiId": "11429",
-    "name": "Shock Strike"
+    "name": "Shock Strike",
+    "range": 25,
+    "radius": 3
   },
   {
     "apiId": "11430",
-    "name": "Glass Dance"
+    "name": "Glass Dance",
+    "radius": 12
   },
   {
     "apiId": "11431",
@@ -216,63 +268,80 @@
   },
   {
     "apiId": "18295",
-    "name": "Alpine Draft"
+    "name": "Alpine Draft",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "18296",
     "name": "Protean Wave",
-    "notes": "Can be learned from the tornadoes during Act 2 of Red, Fraught, and Blue (Stage 29)."
+    "notes": "Can be learned from the tornadoes during Act 2 of Red, Fraught, and Blue (Stage 29).",
+    "radius": 15
   },
   {
     "apiId": "18297",
-    "name": "Northerlies"
+    "name": "Northerlies",
+    "radius": 6
   },
   {
     "apiId": "18298",
-    "name": "Electrogenesis"
+    "name": "Electrogenesis",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "18299",
-    "name": "Kaltstrahl"
+    "name": "Kaltstrahl",
+    "radius": 6
   },
   {
     "apiId": "18300",
-    "name": "Abyssal Transfixion"
+    "name": "Abyssal Transfixion",
+    "range": 25
   },
   {
     "apiId": "18301",
     "name": "Chirp",
-    "notes": "Largely irrelevant due to the Sleep role action."
+    "notes": "Largely irrelevant due to the Sleep role action.",
+    "radius": 3
   },
   {
     "apiId": "18302",
-    "name": "Eerie Soundwave"
+    "name": "Eerie Soundwave",
+    "radius": 6
   },
   {
     "apiId": "18303",
-    "name": "Pom Cure"
+    "name": "Pom Cure",
+    "range": 30
   },
   {
     "apiId": "18304",
     "name": "Gobskin",
-    "location": "Alexandrian Hider / Alexander - The Breath of the Creator"
+    "location": "Alexandrian Hider / Alexander - The Breath of the Creator",
+    "radius": 20
   },
   {
     "apiId": "18305",
-    "name": "Magic Hammer"
+    "name": "Magic Hammer",
+    "range": 25,
+    "radius": 8
   },
   {
     "apiId": "18306",
-    "name": "Avail"
+    "name": "Avail",
+    "range": 10
   },
   {
     "apiId": "18307",
     "name": "Frog Legs",
-    "notes": "This is not a proper provoke; it has a very small range and only sets your enmity to 1 more than the current highest enmity."
+    "notes": "This is not a proper provoke; it has a very small range and only sets your enmity to 1 more than the current highest enmity.",
+    "radius": 4
   },
   {
     "apiId": "18308",
-    "name": "Sonic Boom"
+    "name": "Sonic Boom",
+    "range": 25
   },
   {
     "apiId": "18309",
@@ -281,114 +350,147 @@
   },
   {
     "apiId": "18310",
-    "name": "White Knight's Tour"
+    "name": "White Knight's Tour",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "18311",
-    "name": "Black Knight's Tour"
+    "name": "Black Knight's Tour",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "18312",
     "name": "Level 5 Death",
-    "notes": "Has approximately 90% accuracy."
+    "notes": "Has approximately 90% accuracy.",
+    "radius": 6
   },
   {
     "apiId": "18313",
     "name": "Launcher",
-    "notes": "Has 100% accuracy, but MP cost makes it a bad choice."
+    "notes": "Has 100% accuracy, but MP cost makes it a bad choice.",
+    "radius": 15
   },
   {
     "apiId": "18314",
-    "name": "Perpetual Ray"
+    "name": "Perpetual Ray",
+    "range": 25
   },
   {
     "apiId": "18315",
     "name": "Cactguard",
-    "notes": "Largely irrelevant since it can only be cast on other players."
+    "notes": "Largely irrelevant since it can only be cast on other players.",
+    "range": 25
   },
   {
     "apiId": "18316",
-    "name": "Revenge Blast"
+    "name": "Revenge Blast",
+    "range": 3
   },
   {
     "apiId": "18317",
-    "name": "Angel Whisper"
+    "name": "Angel Whisper",
+    "range": 25
   },
   {
     "apiId": "18318",
-    "name": "Exuviation"
+    "name": "Exuviation",
+    "radius": 6
   },
   {
     "apiId": "18319",
-    "name": "Reflux"
+    "name": "Reflux",
+    "range": 25
   },
   {
     "apiId": "18320",
-    "name": "Devour"
+    "name": "Devour",
+    "range": 3
   },
   {
     "apiId": "18321",
     "name": "Condensed Libra",
-    "notes": "Largely irrelevant with level 70 spells since we don't have the slots for three filler spells."
+    "notes": "Largely irrelevant with level 70 spells since we don't have the slots for three filler spells.",
+    "range": 25
   },
   {
     "apiId": "18322",
     "name": "Aetheric Mimicry",
-    "notes": "Can easily be learned solo. Unsynced is fine here, since we just keep killing adds on the first boss until it's learned."
+    "notes": "Can easily be learned solo. Unsynced is fine here, since we just keep killing adds on the first boss until it's learned.",
+    "range": 25
   },
   {
     "apiId": "18323",
-    "name": "Surpanakha"
+    "name": "Surpanakha",
+    "radius": 16
   },
   {
     "apiId": "18324",
-    "name": "Quasar"
+    "name": "Quasar",
+    "radius": 15
   },
   {
     "apiId": "18325",
-    "name": "J Kick"
+    "name": "J Kick",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "23264",
-    "name": "Triple Trident"
+    "name": "Triple Trident",
+    "range": 2
   },
   {
     "apiId": "23265",
-    "name": "Tingle"
+    "name": "Tingle",
+    "range": 20,
+    "radius": 6
   },
   {
     "apiId": "23266",
-    "name": "Tatami-gaeshi"
+    "name": "Tatami-gaeshi",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "23267",
     "name": "Cold Fog",
-    "notes": "In order to learn the spell you must *fail* the three heads mechanic during Mist Dragon."
+    "notes": "In order to learn the spell you must *fail* the three heads mechanic during Mist Dragon.",
+    "range": 25
   },
   {
     "apiId": "23269",
-    "name": "Stotram"
+    "name": "Stotram",
+    "radius": 15
   },
   {
     "apiId": "23270",
     "name": "Saintly Beam",
-    "notes": "A decent list of vulnerable enemies can be found [here](https://finalfantasy.fandom.com/wiki/Final_Fantasy_XIV_enemies/Ashkin)."
+    "notes": "A decent list of vulnerable enemies can be found [here](https://finalfantasy.fandom.com/wiki/Final_Fantasy_XIV_enemies/Ashkin).",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "23271",
-    "name": "Feculent Flood"
+    "name": "Feculent Flood",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "23272",
-    "name": "Angel's Snack"
+    "name": "Angel's Snack",
+    "radius": 20
   },
   {
     "apiId": "23273",
-    "name": "Chelonian Gate"
+    "name": "Chelonian Gate",
+    "radius": 10
   },
   {
     "apiId": "23275",
-    "name": "The Rose of Destruction"
+    "name": "The Rose of Destruction",
+    "range": 25
   },
   {
     "apiId": "23276",
@@ -396,15 +498,20 @@
   },
   {
     "apiId": "23277",
-    "name": "Ultravibration"
+    "name": "Ultravibration",
+    "radius": 6
   },
   {
     "apiId": "23278",
-    "name": "Blaze"
+    "name": "Blaze",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "23279",
-    "name": "Mustard Bomb"
+    "name": "Mustard Bomb",
+    "range": 25,
+    "radius": 6
   },
   {
     "apiId": "23280",
@@ -412,39 +519,51 @@
   },
   {
     "apiId": "23281",
-    "name": "Aetherial Spark"
+    "name": "Aetherial Spark",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "23282",
-    "name": "Hydro Pull"
+    "name": "Hydro Pull",
+    "radius": 15
   },
   {
     "apiId": "23283",
-    "name": "Malediction of Water"
+    "name": "Malediction of Water",
+    "radius": 15
   },
   {
     "apiId": "23284",
     "name": "Choco Meteor",
-    "notes": "This is our best spell in the overworld (outside of duties), but only does 200 potency inside duties."
+    "notes": "This is our best spell in the overworld (outside of duties), but only does 200 potency inside duties.",
+    "range": 25,
+    "radius": 8
   },
   {
     "apiId": "23285",
-    "name": "Matra Magic"
+    "name": "Matra Magic",
+    "range": 25
   },
   {
     "apiId": "23286",
-    "name": "Peripheral Synthesis"
+    "name": "Peripheral Synthesis",
+    "range": 20,
+    "radius": 20
   },
   {
     "apiId": "23287",
-    "name": "Both Ends"
+    "name": "Both Ends",
+    "radius": 20
   },
   {
     "apiId": "23288",
-    "name": "Phantom Flurry"
+    "name": "Phantom Flurry",
+    "radius": 8
   },
   {
     "apiId": "23290",
-    "name": "Nightbloom"
+    "name": "Nightbloom",
+    "radius": 10
   }
 ]

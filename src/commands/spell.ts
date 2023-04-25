@@ -28,15 +28,11 @@ export const spell: Command = {
       option.setName('name')
         .setDescription("The spell's name.")
         .setRequired(true)
-        .setAutocomplete(true))
-    .addBooleanOption(option =>
-      option.setName('send_to_chat')
-        .setDescription('If true, response will be sent to chat (visible to all).')),
+        .setAutocomplete(true)),
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
     if (!interaction.isChatInputCommand()) return
 
     const name = interaction.options.getString('name', true).toLowerCase()
-    const print = interaction.options.getBoolean('send_to_chat') ?? false
 
     const spell = strago.data.spellData.get(name)
     if (spell == null) {
@@ -54,6 +50,8 @@ export const spell: Command = {
     }
     const recast = (Number(spellInfo.Recast100ms) / 10).toFixed(2)
     const mpCost = (Number(spellInfo.PrimaryCostValue) * 100).toString()
+    const range = spell.range ? `${spell.range}y` : '-'
+    const radius = spell.radius ? `${spell.radius}y` : '-'
 
     const embed = new EmbedBuilder()
       .setTitle(`${spell.number}: ${spell.name} ${spell.rank}`)
@@ -61,10 +59,10 @@ export const spell: Command = {
       .addFields(
         { name: 'Cast', value: cast, inline: true },
         { name: 'Recast', value: recast, inline: true },
-        EMPTY_COLUMN,
+        { name: 'Range', value: range, inline: true },
         { name: 'MP Cost', value: mpCost, inline: true },
         { name: 'Spell Info', value: `${spell.type} / ${spell.aspect}`, inline: true },
-        EMPTY_COLUMN,
+        { name: 'Radius', value: radius, inline: true },
         { name: 'Description', value: spell.description },
         { name: 'Location', value: spell.location }
       )
@@ -75,7 +73,7 @@ export const spell: Command = {
       embed.addFields({ name: 'Notes', value: spell.notes })
     }
 
-    await interaction.reply({ embeds: [embed], ephemeral: !print })
+    await interaction.reply({ embeds: [embed] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] => {
     const choices = strago.data.spellData.map(s => s.name)
