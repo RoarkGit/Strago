@@ -1,12 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
 import { channelPrune } from '../modules/channelPrune'
-import { userPrune } from '../modules/userPrune'
-
-const userPruneLoop = (strago: Strago): void => {
-  (async (): Promise<void> => await userPrune(strago))().catch(error => strago.logger.error(error))
-  setTimeout(userPruneLoop, 1000 * 60, strago)
-}
 
 const channelPruneLoop = (strago: Strago): void => {
   (async (): Promise<void> => await channelPrune(strago))().catch(error => strago.logger.error(error))
