@@ -31,7 +31,7 @@ void (async () => {
 
   // Connect to the database.
   if (!await connectDatabase(strago)) {
-    strago.logger.error('Failed to conenct to database.')
+    strago.logger.error('Failed to connect to database.')
     return
   }
 
