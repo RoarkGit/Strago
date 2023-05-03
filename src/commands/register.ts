@@ -147,7 +147,7 @@ export const register: Command = {
             .setCustomId('verify')
             .setLabel('Verify')
             .setStyle(ButtonStyle.Primary))
-      
+
       const challenge = xivlib.generateChallenge(character, server)
 
       const message = await interaction.editReply({
@@ -164,17 +164,21 @@ export const register: Command = {
         return i.customId === 'verify'
       }
       message.awaitMessageComponent({ filter } as any)
-      .then(async i => {
-        if (characterId != null && await xivlib.verifyCharacter(characterId)) {
-          strago.logger.info(`Successfully registered ${characterId}`)
-          await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
-          await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
-        } else {
-          strago.logger.info(`Registration failed for ${characterId}`)
-          await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] })
-        }
-      })
-      .catch(err => strago.logger.error(err))
+        .then(async i => {
+          if (characterId != null && await xivlib.verifyCharacter(characterId)) {
+            strago.logger.info(`Successfully registered ${characterId}`)
+            await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
+            await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
+          } else {
+            if (characterId != null) {
+              strago.logger.info(`Registration failed for ${characterId}`)
+            } else {
+              strago.logger.info('Missing character ID.')
+            }
+            await interaction.editReply({ content: 'I could not verify the challenge on your Lodestone profile.', components: [] })
+          }
+        })
+        .catch(err => strago.logger.error(err))
     } catch (error) {
       strago.logger.error(error)
     }

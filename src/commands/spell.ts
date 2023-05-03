@@ -15,8 +15,6 @@ const ASPECT_COLORS: { [key: string]: number } = {
   Earth: 0xFFFFAA
 }
 
-const EMPTY_COLUMN = { name: '\u200b', value: '\u200b', inline: true }
-
 /**
  * Retrieves information about a given spell.
  */
@@ -50,8 +48,8 @@ export const spell: Command = {
     }
     const recast = (Number(spellInfo.Recast100ms) / 10).toFixed(2)
     const mpCost = (Number(spellInfo.PrimaryCostValue) * 100).toString()
-    const range = spell.range ? `${spell.range}y` : '-'
-    const radius = spell.radius ? `${spell.radius}y` : '-'
+    const range = spell.range !== undefined ? `${spell.range}y` : '-'
+    const radius = spell.radius !== undefined ? `${spell.radius}y` : '-'
 
     const embed = new EmbedBuilder()
       .setTitle(`${spell.number}: ${spell.name} ${spell.rank}`)

@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, Interaction, PermissionFlagsBits, SlashCommandBuilder, TextBasedChannelMixin } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
 import { Command } from '../interfaces/Command'
 
