@@ -17,7 +17,7 @@ import { initLogger } from './utils/initLogger'
  * Main entry point for Strago.
  */
 void (async () => {
-  const strago = new Client({ intents: GatewayIntentBits.Guilds | GatewayIntentBits.GuildMembers }) as Strago
+  const strago = new Client({ intents: GatewayIntentBits.Guilds | GatewayIntentBits.GuildMembers | GatewayIntentBits.GuildMessages }) as Strago
 
   // Validate and load environment variables.
   const validatedEnvironment = validateEnv(strago)
@@ -61,6 +61,9 @@ void (async () => {
     strago.logger.error('Failed to register commands.')
     return
   }
+
+  // Instantiate values.
+  strago.lfgSpamSet = new Set<string>()
 
   // Load event handlers.
   handleEvents(strago)

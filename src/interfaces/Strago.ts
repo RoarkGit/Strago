@@ -19,8 +19,8 @@ export interface Strago extends Client {
     databaseUri: string
     env: string
     id: string
-    loggerUri: string | undefined
     homeGuildId: string
+    loggerUri: string | undefined
     pruneChannels: string[]
     token: string
   }
@@ -40,5 +40,6 @@ export interface Strago extends Client {
     }
     spellData: Collection<string, Spell>
   }
+  lfgSpamSet: Set<String>
   logger: Logger
 };
