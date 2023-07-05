@@ -22,6 +22,15 @@ export const grant: Command = {
       if (interaction.guild === null) return
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
+
+      // Check if user recently ran command.
+      if (strago.grantSpamSet.has(member.id)) {
+        await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
+        return
+      } else {
+        strago.grantSpamSet.add(member.id)
+      }
+
       await interaction.reply({ content: 'Checking registration...', ephemeral: true })
       const character = await CharacterModel.findOne({
         discordId: interaction.user.id

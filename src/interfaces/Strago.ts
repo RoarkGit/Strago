@@ -3,6 +3,7 @@ import { Logger } from 'winston'
 
 import { Command } from './Command'
 import { Spell } from './Spell'
+import { RateLimitedSet } from './RateLimitedSet'
 
 /**
  * Implementation of Discord client.
@@ -40,6 +41,7 @@ export interface Strago extends Client {
     }
     spellData: Collection<string, Spell>
   }
-  lfgSpamSet: Set<String>
+  grantSpamSet: RateLimitedSet
+  lfgSpamSet: RateLimitedSet
   logger: Logger
 };

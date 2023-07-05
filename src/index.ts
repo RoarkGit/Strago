@@ -12,6 +12,7 @@ import { loadCommands } from './utils/loadCommands'
 import { loadSpells } from './utils/loadSpells'
 import { registerCommands } from './utils/registerCommands'
 import { initLogger } from './utils/initLogger'
+import { RateLimitedSet } from './interfaces/RateLimitedSet'
 
 /**
  * Main entry point for Strago.
@@ -63,7 +64,8 @@ void (async () => {
   }
 
   // Instantiate values.
-  strago.lfgSpamSet = new Set<string>()
+  strago.lfgSpamSet = new RateLimitedSet(5 * 60)
+  strago.grantSpamSet = new RateLimitedSet(10 * 60)
 
   // Load event handlers.
   handleEvents(strago)

@@ -2,7 +2,6 @@ import { Strago } from '../interfaces/Strago'
 
 import { ChannelType, Message } from 'discord.js'
 
-const slowmodeDuration = 5 * 60 * 1000
 const timeoutDuration = 60 * 60 * 1000
 
 /**
@@ -24,9 +23,7 @@ export const checkLFGSpam = async (message: Message, strago: Strago): Promise<vo
         strago.logger.info(`Timed out ${member.nickname} for spamming LFG.`)
       }
     } else {
-      // Add member to map, but remove them after the slowmode timer would have expired.
       strago.lfgSpamSet.add(member.id)
-      setTimeout(() => strago.lfgSpamSet.delete(member.id), slowmodeDuration)
     }
   }
 }
