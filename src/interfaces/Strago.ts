@@ -3,7 +3,7 @@ import { Logger } from 'winston'
 
 import { Command } from './Command'
 import { Spell } from './Spell'
-import { RateLimitedSet } from './RateLimitedSet'
+import { TimeoutSet } from './TimeoutSet'
 
 /**
  * Implementation of Discord client.
@@ -41,7 +41,7 @@ export interface Strago extends Client {
     }
     spellData: Collection<string, Spell>
   }
-  grantSpamSet: RateLimitedSet
-  lfgSpamSet: RateLimitedSet
+  grantSpamSet: TimeoutSet
+  lfgSpamSet: TimeoutSet
   logger: Logger
 };

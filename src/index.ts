@@ -12,7 +12,7 @@ import { loadCommands } from './utils/loadCommands'
 import { loadSpells } from './utils/loadSpells'
 import { registerCommands } from './utils/registerCommands'
 import { initLogger } from './utils/initLogger'
-import { RateLimitedSet } from './interfaces/RateLimitedSet'
+import { TimeoutSet } from './interfaces/TimeoutSet'
 
 /**
  * Main entry point for Strago.
@@ -64,8 +64,8 @@ void (async () => {
   }
 
   // Instantiate values.
-  strago.lfgSpamSet = new RateLimitedSet(5 * 60)
-  strago.grantSpamSet = new RateLimitedSet(10 * 60)
+  strago.lfgSpamSet = new TimeoutSet(5 * 60)
+  strago.grantSpamSet = new TimeoutSet(10 * 60)
 
   // Load event handlers.
   handleEvents(strago)
