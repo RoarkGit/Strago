@@ -15,10 +15,11 @@
 ## Supported commands
 - `/grant`: run workflow for granting roles based on character achievements
 - `/register [character] [server]`: register a character to a Discord user
-- `/spell [name] [send_to_chat:optional]`: returns info about a given Blue Mage spell
+- `/spell [name]`: returns info about a given Blue Mage spell
 
 ## Moderator commands
 - `/bulkban [prefix]`: bans all users whose name starts with a given prefix
+- `/recreaterole [id]`: recreates a specified role, effectively removing it from all users
 
 ## Moderation features
 - **User pruning**: kicks all users who have not completed verification and joined more than ten minutes ago
