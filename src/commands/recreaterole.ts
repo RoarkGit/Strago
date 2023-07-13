@@ -53,18 +53,20 @@ export const recreaterole: Command = {
     }
     message.awaitMessageComponent({ filter } as any)
       .then(async () => {
-        guild.roles.create({
+        await interaction.editReply({ content: `Cloning role...`, components: [] })
+        const newRole = await guild.roles.create({
             name: role.name,
             color: role.color,
             hoist: role.hoist,
             permissions: role.permissions,
             position: role.position,
             mentionable: role.mentionable,
-            icon: role.icon,
+            icon: role.iconURL(),
             unicodeEmoji: role.unicodeEmoji
         })
-        await role.delete().catch(err => strago.logger.error(err))
-        await interaction.editReply({ components: [] })
+        await interaction.editReply({ content: `Deleting old role...`, components: [] })
+        await role.delete()
+        await interaction.editReply({ content: `I deleted the old role and created ${newRole} in its place.`, components: [] })
       })
       .catch(err => strago.logger.error(err))
   },
