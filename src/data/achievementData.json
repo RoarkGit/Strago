@@ -31,18 +31,34 @@
         "2733": "Mightier Than The White",
         "2734": "Mightier Than The Vermilion",
         "2735": "Mightier Than The Azure",
-        "2739": "Omega Blue"
+        "AAAA": "Mightier Than Titania",
+        "BBBB": "Mightier Than Innocence",
+        "CCCC": "Mightier Than Hades",
+        "DDDD": "Mightier Than Ruby Weapon",
+        "EEEE": "Mightier Than Varis",
+        "FFFF": "Mightier Than Elidibus",
+        "GGGG": "Mightier Than Emerald Weapon",
+        "HHHH": "Mightier Than Diamond Weapon",
+        "IIII": "The More You Know IX",
+        "JJJJ": "Carnivale Achievement Placeholder",
+        "KKKK": "Jack of All Trades V",
+        "XXXX": "Omega + Eden Placeholder"
     },
     "roles": [
         {
             "name": "Blue Legend",
-            "required": ["2209", "2210", "2211", "2449", "2450", "2454", "2455", "2456", "2457", "2458", "2459", "2460", "2464", "2465", "2466", "2467", "2468", "2469", "2470", "2476", "2726", "2727", "2728", "2729", "2730", "2731", "2732", "2733", "2734", "2735", "2739"],
+            "required": ["2209", "2210", "2211", "2449", "2450", "2454", "2455", "2456", "2457", "2458", "2459", "2460", "2464", "2465", "2466", "2467", "2468", "2469", "2470", "2476", "2726", "2727", "2728", "2729", "2730", "2731", "2732", "2733", "2734", "2735", "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "XXXX"],
             "blockedBy": []
+        },
+        {
+            "name": "Blue Explorer Placeholder",
+            "required": ["KKKK"],
+            "blockedBy": ["Blue Legend"]
         },
         {
             "name": "Blue Ranger",
             "required": ["2728"],
-            "blockedBy": ["Blue Legend"]
+            "blockedBy": ["Blue Legend", "Blue Explorer Placeholder"]
         },
         {
             "name": "Blue Luminary",
@@ -65,13 +81,18 @@
             "blockedBy": ["Blue Legend"]
         },
         {
+            "name": "Mightier Than The Shadows",
+            "required": ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
             "name": "Morbol Owner",
             "required": ["2476"],
             "blockedBy": ["Blue Legend"]
         },
         {
-            "name": "Omega Blue",
-            "required": ["2739"],
+            "name": "Mount Owner Placeholder",
+            "required": ["XXXX"],
             "blockedBy": ["Blue Legend"]
         }
     ]
