@@ -23,6 +23,10 @@ export const grant: Command = {
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
 
+      await interaction.reply({ content: 'This is temporarily disabled until 6.45 achievement IDs are available and can be included here.', ephemeral: true })
+      return
+
+      /*
       // Check if user recently ran command.
       if (strago.grantSpamSet.has(member.id)) {
         await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
@@ -118,6 +122,7 @@ export const grant: Command = {
           await channel.send(`<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`)
         }
       }
+      */
     } catch (error) {
       strago.logger.error('Failed to grant roles', error)
       await interaction.editReply('I encountered an error trying to retrieve your achievements.\n' +
