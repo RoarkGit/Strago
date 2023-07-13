@@ -63,7 +63,7 @@ export const recreaterole: Command = {
             icon: role.icon,
             unicodeEmoji: role.unicodeEmoji
         })
-        await role.delete()
+        await role.delete().catch(err => strago.logger.error(err))
         await interaction.editReply({ components: [] })
       })
       .catch(err => strago.logger.error(err))
