@@ -31,34 +31,33 @@
         "2733": "Mightier Than The White",
         "2734": "Mightier Than The Vermilion",
         "2735": "Mightier Than The Azure",
-        "AAAA": "Mightier Than Titania",
-        "BBBB": "Mightier Than Innocence",
-        "CCCC": "Mightier Than Hades",
-        "DDDD": "Mightier Than Ruby Weapon",
-        "EEEE": "Mightier Than Varis",
-        "FFFF": "Mightier Than Elidibus",
-        "GGGG": "Mightier Than Emerald Weapon",
-        "HHHH": "Mightier Than Diamond Weapon",
-        "IIII": "The More You Know IX",
-        "JJJJ": "Carnivale Achievement Placeholder",
-        "KKKK": "Jack of All Trades V",
-        "XXXX": "Omega + Eden Placeholder"
+        "2739": "Omega Blue",
+        "3320": "Mightier Than The Monarch",
+        "3321": "Mightier Than Perfection",
+        "3322": "Mightier Than The Underworld",
+        "3323": "Mightier Than Ruby",
+        "3325": "Mightier Than Emerald",
+        "3326": "Mightier Than Diamond",
+        "3317": "The More You Know IX",
+        "3318": "All That Glitters Is Blue",
+        "3319": "Jack of All Trades V",
+        "3330": "Bluetopia"
     },
     "roles": [
         {
             "name": "Blue Legend",
-            "required": ["2209", "2210", "2211", "2449", "2450", "2454", "2455", "2456", "2457", "2458", "2459", "2460", "2464", "2465", "2466", "2467", "2468", "2469", "2470", "2476", "2726", "2727", "2728", "2729", "2730", "2731", "2732", "2733", "2734", "2735", "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "XXXX"],
+            "required": ["2209", "2210", "2211", "2449", "2450", "2454", "2455", "2456", "2457", "2458", "2459", "2460", "2464", "2465", "2466", "2467", "2468", "2469", "2470", "2476", "2727", "2729", "2730", "2731", "2732", "2733", "2734", "2735", "2739", "3320", "3321", "3322", "3323", "3325", "3326", "3317", "3318", "3319", "3330"],
             "blockedBy": []
         },
         {
-            "name": "Blue Explorer Placeholder",
-            "required": ["KKKK"],
+            "name": "Blueblazer",
+            "required": ["3319"],
             "blockedBy": ["Blue Legend"]
         },
         {
             "name": "Blue Ranger",
             "required": ["2728"],
-            "blockedBy": ["Blue Legend", "Blue Explorer Placeholder"]
+            "blockedBy": ["Blue Legend", "Blueblazer"]
         },
         {
             "name": "Blue Luminary",
@@ -82,7 +81,7 @@
         },
         {
             "name": "Mightier Than The Shadows",
-            "required": ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH"],
+            "required": ["3320", "3321", "3322", "3323", "3325", "3326"],
             "blockedBy": ["Blue Legend"]
         },
         {
@@ -91,8 +90,13 @@
             "blockedBy": ["Blue Legend"]
         },
         {
-            "name": "Mount Owner Placeholder",
-            "required": ["XXXX"],
+            "name": "Omega Blue",
+            "required": ["2739"],
+            "blockedBy": ["Blue Legend"]
+        },
+        {
+            "name": "Bluetopia",
+            "required": ["3330"],
             "blockedBy": ["Blue Legend"]
         }
     ]
