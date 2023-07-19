@@ -62,7 +62,7 @@
         {
             "name": "Blue Luminary",
             "required": ["2453"],
-            "blockedBy": ["Blue Legend", "Blue Ranger"]
+            "blockedBy": ["Blue Legend", "Blueblazer", "Blue Ranger"]
         },
         {
             "name": "Mightier Than The Realm",
