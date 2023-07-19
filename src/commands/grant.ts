@@ -102,7 +102,10 @@ export const grant: Command = {
           }
         })
 
-        if (missing.length > 0) {
+        if (missing.length > 3) {
+          await updateState(`Skipping ${role.name} since you are missing many achievements!`) 
+          continue
+        } else if (missing.length > 0) {
           await updateState(`Skipping ${role.name} since you are missing: ${missing.join(', ')}`)
           continue
         }
