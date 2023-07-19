@@ -80,7 +80,7 @@
             "blockedBy": ["Blue Legend"]
         },
         {
-            "name": "Mightier Than The Shadows",
+            "name": "Mightier Than The Shadow",
             "required": ["3320", "3321", "3322", "3323", "3325", "3326"],
             "blockedBy": ["Blue Legend"]
         },
@@ -90,12 +90,12 @@
             "blockedBy": ["Blue Legend"]
         },
         {
-            "name": "Omega Blue",
+            "name": "The Azure and Omega",
             "required": ["2739"],
             "blockedBy": ["Blue Legend"]
         },
         {
-            "name": "Bluetopia",
+            "name": "Forbidden Blue",
             "required": ["3330"],
             "blockedBy": ["Blue Legend"]
         }
