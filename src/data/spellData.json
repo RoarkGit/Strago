@@ -565,5 +565,110 @@
     "apiId": "23290",
     "name": "Nightbloom",
     "radius": 10
+  },
+  {
+    "apiId": "34563",
+    "name": "Goblin Punch",
+    "range": 3
+  },
+  {
+    "apiId": "34564",
+    "name": "Right Round",
+    "radius": 8
+  },
+  {
+    "apiId": "34565",
+    "name": "Schiltron"
+  },
+  {
+    "apiId": "34566",
+    "name": "Rehydration"
+  },
+  {
+    "apiId": "34567",
+    "name": "Breath of Magic",
+    "radius": 10
+  },
+  {
+    "apiId": "34568",
+    "name": "Wild Rage",
+    "notes": "Two casts of this from full health will put you into Revenge Blast range",
+    "radius": 10
+  },
+  {
+    "apiId": "34569",
+    "name": "Peat Pelt",
+    "range": 25,
+    "radius": 6
+  },
+  {
+    "apiId": "34570",
+    "name": "Deep Clean",
+    "range": 25,
+    "radius": 6
+  },
+  {
+    "apiId": "34571",
+    "name": "Ruby Dynamics",
+    "radius": 12
+  },
+  {
+    "apiId": "34572",
+    "name": "Divination Rune",
+    "radius": 15
+  },
+  {
+    "apiId": "34573",
+    "name": "Dimensional Shift",
+    "radius": 10
+  },
+  {
+    "apiId": "34574",
+    "name": "Conviction Marcato",
+    "range": 25,
+    "radius": 25
+  },
+  {
+    "apiId": "34575",
+    "name": "Force Field"
+  },
+  {
+    "apiId": "34576",
+    "name": "Winged Reprobation",
+    "range": 25,
+    "radius": 25
+  },
+  {
+    "apiId": "34577",
+    "name": "Laser Eye",
+    "range": 25,
+    "radius": 8
+  },
+  {
+    "apiId": "34578",
+    "name": "Candy Cane",
+    "range": 25,
+    "radius": 5
+  },
+  {
+    "apiId": "34579",
+    "name": "Mortal Flame",
+    "range": 25
+  },
+  {
+    "apiId": "34580",
+    "name": "Sea Shanty",
+    "radius": 10
+  },
+  {
+    "apiId": "34581",
+    "name": "Apokalypsis",
+    "range": 25,
+    "radius": 25
+  },
+  {
+    "apiId": "34582",
+    "name": "Being Mortal",
+    "radius": 10 
   }
 ]
