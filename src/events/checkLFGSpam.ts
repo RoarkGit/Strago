@@ -25,7 +25,7 @@ export const checkLFGSpam = async (message: Message, strago: Strago): Promise<vo
         await UserModel.create({ discordId: member.id, numTimeouts: 1 })
       } else {
         await user.updateOne({$inc: {numTimeouts: 1}})
-        const numTimeouts = user.get('numTimeouts')
+        const numTimeouts = user.get('numTimeouts') + 1
         await (strago.channels.cache.get(strago.config.modChannelId) as TextChannel).send(
           `Timed out ${member}, they have been timed out ${numTimeouts} times.`
         )
