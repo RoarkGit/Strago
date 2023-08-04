@@ -73,6 +73,7 @@ export const grant: Command = {
 
         // Check for blocking roles first.
         const blockers: string[] = []
+        const hasRole = memberRoles.cache.some(r => r.name === role.name)
 
         role.blockedBy.forEach((blocker) => {
           if (granted.has(blocker) || memberRoles.cache.some(r => r.name === blocker)) {
@@ -82,13 +83,7 @@ export const grant: Command = {
 
         if (blockers.length > 0) {
           await updateState(`${role.name}: You already have ${blockers.join(', ')}`)
-          await memberRoles.remove(discordRole)
-          continue
-        }
-
-        // Check if role already exists.
-        if (memberRoles.cache.some(r => r.name === role.name)) {
-          await updateState(`${role.name}: You already have it!`)
+          if (hasRole) await memberRoles.remove(discordRole)
           continue
         }
 
@@ -103,10 +98,18 @@ export const grant: Command = {
         })
 
         if (missing.length > 3) {
-          await updateState(`Skipping ${role.name} since you are missing many achievements!`) 
+          await updateState(`Skipping ${role.name} since you are missing many achievements!`)
+          if (hasRole) await memberRoles.remove(discordRole)
           continue
         } else if (missing.length > 0) {
           await updateState(`Skipping ${role.name} since you are missing: ${missing.join(', ')}`)
+          if (hasRole) await memberRoles.remove(discordRole)
+          continue
+        }
+
+        // Check if role already exists.
+        if (hasRole) {
+          await updateState(`${role.name}: You already have it!`)
           continue
         }
 
@@ -117,7 +120,7 @@ export const grant: Command = {
         // Special case for Blue Legend
         if (role.name === 'Blue Legend') {
           const channel = guild.channels.cache.find(c => c.name === 'general') as TextChannel
-          const role: string = discordRole?.toString() as string
+          const role: string = discordRole.toString()
           await channel.send(`<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`)
         }
       }
