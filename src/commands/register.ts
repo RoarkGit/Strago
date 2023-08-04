@@ -168,7 +168,10 @@ export const register: Command = {
           if (characterId != null && await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)
             await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
-            await CharacterModel.create({ discordId: i.user.id, characterId, characterName: character })
+            await CharacterModel.findOneAndUpdate(
+              { discordId: i.user.id },
+              { discordId: i.user.id, characterId, characterName: character },
+              { upsert: true })
           } else {
             if (characterId != null) {
               strago.logger.info(`Registration failed for ${characterId}`)
