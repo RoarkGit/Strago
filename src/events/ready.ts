@@ -14,6 +14,7 @@ const channelPruneLoop = (strago: Strago): void => {
 export const ready = async (strago: Strago): Promise<void> => {
   strago.logger.info('Discord ready!')
   const guildList = strago.guilds.cache
+  guildList.forEach(g => g.members.fetch())
   const guildNames = guildList.map(g => ({ guildName: g.name, guildId: g.id }))
   const logMessage = {
     message: `Connected to ${guildList.size} servers.`,
