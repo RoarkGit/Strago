@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
 import { Command } from '../interfaces/Command'
 
@@ -30,7 +30,7 @@ export const recreaterole: Command = {
       return
     }
 
-    const row = new ActionRowBuilder()
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
     .addComponents(
       new ButtonBuilder()
         .setCustomId(interaction.user.id)
@@ -45,13 +45,9 @@ export const recreaterole: Command = {
     const message = await interaction.reply({
       content: response,
       components: [row]
-    } as any
-    )
+    })
 
-    const filter = (i: ButtonInteraction): boolean => {
-      return i.customId === i.user.id
-    }
-    message.awaitMessageComponent({ filter } as any)
+    message.awaitMessageComponent({ filter: i => i.customId === i.user.id, componentType: ComponentType.Button })
       .then(async () => {
         await interaction.editReply({ content: `Cloning role...`, components: [] })
         const newRole = await guild.roles.create({

@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js'
 
 import CharacterModel from '../database/models/CharacterModel'
 import { Command } from '../interfaces/Command'
@@ -141,7 +141,7 @@ export const register: Command = {
       }
       console.log(character, server)
 
-      const row = new ActionRowBuilder()
+      const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
         .addComponents(
           new ButtonBuilder()
             .setCustomId('verify')
@@ -157,13 +157,9 @@ export const register: Command = {
                           'Once finished, please click the Verify button to begin verification.']
           .join('\n'),
         components: [row]
-      } as any
-      )
+      })
 
-      const filter = (i: ButtonInteraction): boolean => {
-        return i.customId === 'verify'
-      }
-      message.awaitMessageComponent({ filter } as any)
+      message.awaitMessageComponent({ filter: i => i.customId === 'verify', componentType: ComponentType.Button })
         .then(async i => {
           if (characterId != null && await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)

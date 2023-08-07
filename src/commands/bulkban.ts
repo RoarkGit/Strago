@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, MessageComponentBuilder, MessageInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
 import { Command } from '../interfaces/Command'
 
@@ -23,7 +23,7 @@ export const bulkban: Command = {
     const prefix = interaction.options.getString('prefix', true)
     const filtered = members.filter(m => m.user.username.startsWith(prefix))
 
-    const row = new ActionRowBuilder()
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
       .addComponents(
         new ButtonBuilder()
           .setCustomId(interaction.user.id)
@@ -44,15 +44,11 @@ export const bulkban: Command = {
     const message = await interaction.reply({
       content: usernameString,
       components: [row]
-    } as any
-    )
+    })
 
-    const filter = (i: ButtonInteraction): boolean => {
-      return i.customId === i.user.id
-    }
-    message.awaitMessageComponent({ filter } as any)
-      .then(async i => {
-        await Promise.all(filtered.map(async m => await m.ban().catch(error => strago.logger.error(error))))
+    message.awaitMessageComponent({ filter: i => i.customId === i.user.id, componentType: ComponentType.Button })
+      .then(async _ => {
+        await Promise.all(filtered.map(async m => await m.ban().catch(err => strago.logger.error(err))))
         await interaction.editReply({ components: [] })
       })
       .catch(err => strago.logger.error(err))
