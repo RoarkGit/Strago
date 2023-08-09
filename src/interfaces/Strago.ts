@@ -1,4 +1,5 @@
 import { Client, Collection } from 'discord.js'
+import { Db } from 'mongodb'
 import { Logger } from 'winston'
 
 import { Command } from './Command'
@@ -42,6 +43,7 @@ export interface Strago extends Client {
     }
     spellData: Collection<string, Spell>
   }
+  db: Db
   grantSpamSet: TimeoutSet
   lfgSpamSet: TimeoutSet
   logger: Logger

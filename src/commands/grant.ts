@@ -2,7 +2,6 @@ import { Strago } from '../interfaces/Strago'
 
 import { CommandInteraction, GuildMemberRoleManager, SlashCommandBuilder, TextChannel } from 'discord.js'
 
-import CharacterModel from '../database/models/CharacterModel'
 import { Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
@@ -25,14 +24,15 @@ export const grant: Command = {
       
       // Check if user recently ran command.
       if (strago.grantSpamSet.has(member.id)) {
-        await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
-        return
+        //await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
+        //return
       } else {
         strago.grantSpamSet.add(member.id)
       }
 
       await interaction.reply({ content: 'Checking registration...', ephemeral: true })
-      const character = await CharacterModel.findOne({
+      const characters = strago.db.collection('characters')
+      const character = await characters.findOne({
         discordId: interaction.user.id
       })
 
@@ -41,7 +41,7 @@ export const grant: Command = {
         return
       }
 
-      const achievementsPublic = await xivlib.getAchievementsPublic(character.get('characterId') as string)
+      const achievementsPublic = await xivlib.getAchievementsPublic(character.characterId as string)
 
       if (!achievementsPublic) {
         await interaction.editReply({ content: 'I could not view your achievements, please make sure they are public and try again.' })
@@ -56,15 +56,16 @@ export const grant: Command = {
         await interaction.editReply({ content: lines.join('\n') })
       }
 
-      const characterName: string = character.get('characterName') as string
+      const characterName: string = character.characterName
       await updateState(`Beginning achievement scan for ${characterName}...`)
 
       const granted = new Set<string>()
       const characterAchievements = await xivlib.getAchievementsComplete(
-        character.get('characterId') as string, Object.keys(strago.data.achievementData.achievementIds))
+        character.characterId, Object.keys(strago.data.achievementData.achievementIds))
       const memberRoles: GuildMemberRoleManager = member.roles
 
       for (const role of strago.data.achievementData.roles) {
+        console.log(role)
         const discordRole = guild.roles.cache.find(r => r.name === role.name)
         if (discordRole === undefined) {
           strago.logger.error(`Undefined role: ${role.name}`)
@@ -114,6 +115,7 @@ export const grant: Command = {
         }
 
         await updateState(`${role.name}: Granted!`)
+        console.log(discordRole)
         await memberRoles.add(discordRole)
         granted.add(role.name)
 

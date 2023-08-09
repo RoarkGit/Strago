@@ -1,8 +1,7 @@
 import { Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js'
 
-import CharacterModel from '../database/models/CharacterModel'
 import { Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
@@ -164,7 +163,8 @@ export const register: Command = {
           if (characterId != null && await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)
             await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
-            await CharacterModel.findOneAndUpdate(
+            const characters = strago.db.collection('characters')
+            await characters.findOneAndReplace(
               { discordId: i.user.id },
               { discordId: i.user.id, characterId, characterName: character },
               { upsert: true })

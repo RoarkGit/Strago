@@ -1,6 +1,6 @@
 import { Strago } from '../interfaces/Strago'
 
-import { connect } from 'mongoose'
+import { MongoClient } from 'mongodb'
 
 /**
  * Attempts to connect to the bot's database.
@@ -9,7 +9,8 @@ import { connect } from 'mongoose'
  */
 export const connectDatabase = async (strago: Strago): Promise<boolean> => {
   try {
-    await connect(strago.config.databaseUri)
+    const client = new MongoClient(strago.config.databaseUri)
+    strago.db = client.db(strago.config.env)
 
     return true
   } catch (error) {

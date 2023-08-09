@@ -5,7 +5,7 @@ import { join } from 'path'
 
 import achievementData from './data/achievementData.json'
 import { handleEvents } from './events/handleEvents'
-import { connectDatabase } from './database/connectDatabase'
+import { connectDatabase } from './utils/connectDatabase'
 import { Spell } from './interfaces/Spell'
 import { validateEnv } from './modules/validateEnv'
 import { loadCommands } from './utils/loadCommands'
