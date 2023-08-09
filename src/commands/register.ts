@@ -138,7 +138,6 @@ export const register: Command = {
         await interaction.editReply({ content: 'I was unable to locate that character.' })
         return
       }
-      console.log(character, server)
 
       const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
         .addComponents(

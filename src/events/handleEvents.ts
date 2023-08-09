@@ -28,10 +28,6 @@ export const handleEvents = (strago: Strago): void => {
     await kickOnBotRole(member, strago)
   })
 
-  strago.on('guildMemberAdd', (member) => {
-    console.log(member)
-  })
-
   process.on('uncaughtException', (error) => {
     strago.logger.error(error)
   })

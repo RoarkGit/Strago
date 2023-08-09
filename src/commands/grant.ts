@@ -65,7 +65,6 @@ export const grant: Command = {
       const memberRoles: GuildMemberRoleManager = member.roles
 
       for (const role of strago.data.achievementData.roles) {
-        console.log(role)
         const discordRole = guild.roles.cache.find(r => r.name === role.name)
         if (discordRole === undefined) {
           strago.logger.error(`Undefined role: ${role.name}`)
@@ -115,7 +114,6 @@ export const grant: Command = {
         }
 
         await updateState(`${role.name}: Granted!`)
-        console.log(discordRole)
         await memberRoles.add(discordRole)
         granted.add(role.name)
 
