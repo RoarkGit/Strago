@@ -1,4 +1,4 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
 /**
  * Reads and validate .env file for required values and correctness.
@@ -32,6 +32,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
     }
 
     strago.config = {
+      shortcutTypes: process.env.SHORTCUT_TYPES === undefined ? [] : process.env.SHORTCUT_TYPES.split(','),
       databaseUri: process.env.DATABASE_URI,
       env: process.env.NODE_ENV,
       id: process.env.CLIENT_ID,

@@ -1,9 +1,9 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
 import { channelPrune } from '../modules/channelPrune'
 
 const channelPruneLoop = (strago: Strago): void => {
-  (async (): Promise<void> => await channelPrune(strago))().catch(error => strago.logger.error(error))
+  (async (): Promise<void> => { await channelPrune(strago) })().catch((err) => { strago.logger.error(err) })
   setTimeout(channelPruneLoop, 1000 * 60 * 10, strago)
 }
 
@@ -14,7 +14,7 @@ const channelPruneLoop = (strago: Strago): void => {
 export const ready = async (strago: Strago): Promise<void> => {
   strago.logger.info('Discord ready!')
   const guildList = strago.guilds.cache
-  guildList.forEach(g => g.members.fetch())
+  await Promise.all(guildList.map(async g => await g.members.fetch()))
   const guildNames = guildList.map(g => ({ guildName: g.name, guildId: g.id }))
   const logMessage = {
     message: `Connected to ${guildList.size} servers.`,

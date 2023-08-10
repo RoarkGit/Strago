@@ -1,9 +1,9 @@
-import { Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { Collection } from 'discord.js'
 
 import spellData from '../data/spellData.json'
-import { Spell } from '../interfaces/Spell'
+import type { Spell } from '../interfaces/Spell'
 
 const FFXIVCOLLECT_URL = 'https://ffxivcollect.com/api/spells'
 

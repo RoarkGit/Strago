@@ -1,6 +1,6 @@
-import { ChannelType, Message } from 'discord.js'
+import { ChannelType, type Message } from 'discord.js'
 
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
 /**
  * Prunes messages more than two weeks old from specified channels.

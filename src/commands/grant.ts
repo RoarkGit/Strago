@@ -1,8 +1,8 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-import { CommandInteraction, GuildMemberRoleManager, SlashCommandBuilder, TextChannel } from 'discord.js'
+import { type CommandInteraction, type GuildMemberRoleManager, SlashCommandBuilder, type TextChannel } from 'discord.js'
 
-import { Command } from '../interfaces/Command'
+import { type Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
 /**
@@ -21,11 +21,11 @@ export const grant: Command = {
       if (interaction.guild === null) return
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
-      
+
       // Check if user recently ran command.
       if (strago.grantSpamSet.has(member.id)) {
-        //await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
-        //return
+        await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
+        return
       } else {
         strago.grantSpamSet.add(member.id)
       }

@@ -1,8 +1,8 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, ComponentType, MessageActionRowComponentBuilder, MessageComponentBuilder, MessageInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ComponentType, type MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
-import { Command } from '../interfaces/Command'
+import { type Command } from '../interfaces/Command'
 
 /**
  * Retrieves list of all users whose name starts with a provided string and provides an option to ban them.

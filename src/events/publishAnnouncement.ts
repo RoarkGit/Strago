@@ -1,6 +1,6 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-import { ChannelType, Message } from 'discord.js'
+import { ChannelType, type Message } from 'discord.js'
 
 /**
  * Publishes any announcements that are sent on the server.

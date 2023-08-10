@@ -1,12 +1,12 @@
-import { Strago } from '../interfaces/Strago'
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import { type Strago } from '../interfaces/Strago'
+import { type CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
-import { Command } from '../interfaces/Command'
+import { type Command } from '../interfaces/Command'
 
 // eslint-disable-next-line
 const XIVAPI = require('@xivapi/js')
 
-const ASPECT_COLORS: { [key: string]: number } = {
+const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xFFAAAA,
   Water: 0xAAAAFF,
   Wind: 0xAAFFAA,

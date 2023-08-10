@@ -1,7 +1,7 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
 import { createLogger, format, transports } from 'winston'
-import TransportStream from 'winston-transport'
+import type TransportStream from 'winston-transport'
 import LokiTransport from 'winston-loki'
 
 export const initLogger = async (strago: Strago): Promise<void> => {
@@ -16,7 +16,7 @@ export const initLogger = async (strago: Strago): Promise<void> => {
       host: strago.config.loggerUri,
       labels: { app: 'Strago' },
       format: format.json(),
-      onConnectionError: (err) => console.error(err)
+      onConnectionError: (err) => { console.error(err) }
     }))
   };
 
