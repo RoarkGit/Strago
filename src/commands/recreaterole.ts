@@ -26,7 +26,7 @@ export const recreaterole: Command = {
     const role = interaction.guild.roles.cache.find(r => r.id === roleId)
 
     if (!role) {
-      await interaction.reply("I couldn't find that role.")
+      await interaction.reply('I couldn\'t find that role.')
       return
     }
 

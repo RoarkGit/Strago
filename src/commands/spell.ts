@@ -24,7 +24,7 @@ export const spell: Command = {
     .setDescription('Retrieves information about a given spell.')
     .addStringOption(option =>
       option.setName('name')
-        .setDescription("The spell's name.")
+        .setDescription('The spell\'s name.')
         .setRequired(true)
         .setAutocomplete(true)),
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
