@@ -1,9 +1,8 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ComponentType, type MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js'
 
-import CharacterModel from '../database/models/CharacterModel'
-import { Command } from '../interfaces/Command'
+import { type Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
 const SERVER_NAMES = [
@@ -139,9 +138,8 @@ export const register: Command = {
         await interaction.editReply({ content: 'I was unable to locate that character.' })
         return
       }
-      console.log(character, server)
 
-      const row = new ActionRowBuilder()
+      const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
         .addComponents(
           new ButtonBuilder()
             .setCustomId('verify')
@@ -157,18 +155,15 @@ export const register: Command = {
                           'Once finished, please click the Verify button to begin verification.']
           .join('\n'),
         components: [row]
-      } as any
-      )
+      })
 
-      const filter = (i: ButtonInteraction): boolean => {
-        return i.customId === 'verify'
-      }
-      message.awaitMessageComponent({ filter } as any)
+      message.awaitMessageComponent({ filter: i => i.customId === 'verify', componentType: ComponentType.Button })
         .then(async i => {
           if (characterId != null && await xivlib.verifyCharacter(characterId)) {
             strago.logger.info(`Successfully registered ${characterId}`)
             await interaction.editReply({ content: 'You have successfully registered your character!', components: [] })
-            await CharacterModel.findOneAndUpdate(
+            const characters = strago.db.collection('characters')
+            await characters.findOneAndReplace(
               { discordId: i.user.id },
               { discordId: i.user.id, characterId, characterName: character },
               { upsert: true })

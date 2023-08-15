@@ -1,8 +1,8 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ComponentType, type MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
-import { Command } from '../interfaces/Command'
+import { type Command } from '../interfaces/Command'
 
 /**
  * Removes a specified role from all users in the server.
@@ -25,48 +25,44 @@ export const recreaterole: Command = {
     const roleId = interaction.options.getString('id', true)
     const role = interaction.guild.roles.cache.find(r => r.id === roleId)
 
-    if (!role) {
-      await interaction.reply("I couldn't find that role.")
+    if (role === undefined) {
+      await interaction.reply('I couldn\'t find that role.')
       return
     }
 
-    const row = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId(interaction.user.id)
-        .setLabel('Remove')
-        .setStyle(ButtonStyle.Primary))
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(interaction.user.id)
+          .setLabel('Remove')
+          .setStyle(ButtonStyle.Primary))
 
     if (interaction.channel === null) return
 
     const members = role.members
-    const response = `I found the role ${role} with ${members.size} members.`
+    const response = `I found the role ${role.toString()} with ${members.size} members.`
 
     const message = await interaction.reply({
       content: response,
       components: [row]
-    } as any
-    )
+    })
 
-    const filter = (i: ButtonInteraction): boolean => {
-      return i.customId === i.user.id
-    }
-    message.awaitMessageComponent({ filter } as any)
+    message.awaitMessageComponent({ filter: i => i.customId === i.user.id, componentType: ComponentType.Button })
       .then(async () => {
-        await interaction.editReply({ content: `Cloning role...`, components: [] })
+        await interaction.editReply({ content: 'Cloning role...', components: [] })
         const newRole = await guild.roles.create({
-            name: role.name,
-            color: role.color,
-            hoist: role.hoist,
-            permissions: role.permissions,
-            position: role.position,
-            mentionable: role.mentionable,
-            icon: role.iconURL(),
-            unicodeEmoji: role.unicodeEmoji
+          name: role.name,
+          color: role.color,
+          hoist: role.hoist,
+          permissions: role.permissions,
+          position: role.position,
+          mentionable: role.mentionable,
+          icon: role.iconURL(),
+          unicodeEmoji: role.unicodeEmoji
         })
-        await interaction.editReply({ content: `Deleting old role...`, components: [] })
+        await interaction.editReply({ content: 'Deleting old role...', components: [] })
         await role.delete()
-        await interaction.editReply({ content: `I deleted the old role and created ${newRole} in its place.`, components: [] })
+        await interaction.editReply({ content: `I deleted the old role and created ${newRole.toString()} in its place.`, components: [] })
       })
       .catch(err => strago.logger.error(err))
   },

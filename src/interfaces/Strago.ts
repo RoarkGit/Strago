@@ -1,9 +1,10 @@
-import { Client, Collection } from 'discord.js'
-import { Logger } from 'winston'
+import type { Client, Collection } from 'discord.js'
+import type { Db } from 'mongodb'
+import type { Logger } from 'winston'
 
-import { Command } from './Command'
-import { Spell } from './Spell'
-import { TimeoutSet } from './TimeoutSet'
+import type { Command } from './Command'
+import type { Spell } from './Spell'
+import type { TimeoutSet } from './TimeoutSet'
 
 /**
  * Implementation of Discord client.
@@ -17,6 +18,7 @@ export interface Strago extends Client {
    * Various config values.
    */
   config: {
+    shortcutTypes: string[]
     databaseUri: string
     env: string
     id: string
@@ -31,9 +33,7 @@ export interface Strago extends Client {
    */
   data: {
     achievementData: {
-      achievementIds: {
-        [key: string]: string
-      }
+      achievementIds: Record<string, string>
       roles: Array<{
         name: string
         required: string[]
@@ -42,6 +42,8 @@ export interface Strago extends Client {
     }
     spellData: Collection<string, Spell>
   }
+  shortcutTitles: Collection<string, Set<string>>
+  db: Db
   grantSpamSet: TimeoutSet
   lfgSpamSet: TimeoutSet
   logger: Logger

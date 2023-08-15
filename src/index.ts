@@ -1,12 +1,12 @@
-import { Strago } from './interfaces/Strago'
+import { type Strago } from './interfaces/Strago'
 
 import { Client, Collection, GatewayIntentBits } from 'discord.js'
 import { join } from 'path'
 
 import achievementData from './data/achievementData.json'
 import { handleEvents } from './events/handleEvents'
-import { connectDatabase } from './database/connectDatabase'
-import { Spell } from './interfaces/Spell'
+import { connectDatabase } from './utils/connectDatabase'
+import { type Spell } from './interfaces/Spell'
 import { validateEnv } from './modules/validateEnv'
 import { loadCommands } from './utils/loadCommands'
 import { loadSpells } from './utils/loadSpells'
@@ -18,7 +18,7 @@ import { TimeoutSet } from './interfaces/TimeoutSet'
  * Main entry point for Strago.
  */
 void (async () => {
-  const strago = new Client({ intents: GatewayIntentBits.Guilds | GatewayIntentBits.GuildMembers | GatewayIntentBits.GuildMessages }) as Strago
+  const strago = new Client({ intents: GatewayIntentBits.Guilds | GatewayIntentBits.GuildMembers | GatewayIntentBits.GuildMessages | GatewayIntentBits.MessageContent }) as Strago
 
   // Validate and load environment variables.
   const validatedEnvironment = validateEnv(strago)
@@ -48,6 +48,7 @@ void (async () => {
   }
 
   // Load commands.
+  strago.shortcutTitles = new Collection<string, Set<string>>()
   const commandsPath = strago.config.env === 'prod'
     ? join(process.cwd(), 'prod', 'commands')
     : join(process.cwd(), 'src', 'commands')

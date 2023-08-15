@@ -1,8 +1,6 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
-
-import { ChannelType, Message, TextChannel } from 'discord.js'
-import UserModel from '../database/models/UserModel'
+import { ChannelType, type Message, type TextChannel } from 'discord.js'
 
 const timeoutDuration = 60 * 60 * 1000
 
@@ -18,24 +16,25 @@ export const checkLFGSpam = async (message: Message, strago: Strago): Promise<vo
   // Check if roles were actually mentioned.
   if (message.mentions.roles.size > 0) {
     if (strago.lfgSpamSet.has(member.id)) {
-      const user = await UserModel.findOne({
+      const users = strago.db.collection('users')
+      const user = await users.findOne({
         discordId: member.id
       })
       if (user === null) {
-        await UserModel.create({ discordId: member.id, numTimeouts: 1 })
+        await users.insertOne({ discordId: member.id, numTimeouts: 1 })
       } else {
-        await user.updateOne({$inc: {numTimeouts: 1}})
-        const numTimeouts = user.get('numTimeouts') + 1
+        await users.updateOne({ discordId: member.id }, { $inc: { numTimeouts: 1 } })
+        const numTimeouts = user.numTimeouts as number + 1
         await (strago.channels.cache.get(strago.config.modChannelId) as TextChannel).send(
-          `Timed out ${member}, they have been timed out ${numTimeouts} times.`
+          `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`
         )
       }
-      await message.reply(`${member}: pinging roles in multiple LFG channels spams people who might be in those channels. You have been timed out for one hour.\n` +
+      await message.reply(`${member.toString()}: pinging roles in multiple LFG channels spams people who might be in those channels. You have been timed out for one hour.\n` +
                           '_Posting_ in multiple channels is fine as long as you do _not_ ping in multiple channels.')
       await message.delete()
       await member.timeout(timeoutDuration, 'Spamming LFG channels with pings.')
       if (member.nickname !== null) {
-        strago.logger.info(`Timed out ${member} for spamming LFG.`)
+        strago.logger.info(`Timed out ${member.toString()} for spamming LFG.`)
       }
     } else {
       strago.lfgSpamSet.add(member.id)

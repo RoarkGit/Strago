@@ -1,7 +1,7 @@
 import { REST } from '@discordjs/rest'
-import { RESTPostAPIApplicationCommandsJSONBody, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js'
+import { type RESTPostAPIApplicationCommandsJSONBody, type RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js'
 
-import { Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 /**
  * Attempts to register all Commands in the commands folder.

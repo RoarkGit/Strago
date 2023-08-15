@@ -1,4 +1,4 @@
-import { Strago } from '../interfaces/Strago'
+import { type Strago } from '../interfaces/Strago'
 
 import { checkLFGSpam } from './checkLFGSpam'
 import { interactionCreate } from './interactionCreate'
@@ -26,10 +26,6 @@ export const handleEvents = (strago: Strago): void => {
 
   strago.on('guildMemberUpdate', async (_, member) => {
     await kickOnBotRole(member, strago)
-  })
-
-  strago.on('guildMemberAdd', (member) => {
-    console.log(member)
   })
 
   process.on('uncaughtException', (error) => {

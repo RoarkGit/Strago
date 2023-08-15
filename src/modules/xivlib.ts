@@ -33,7 +33,7 @@ export const generateChallenge = (character: string, server: string): string => 
  * Retrieves a given character's Lodestone ID.
  * @param character The character's name
  * @param server The character's server
- * @returns The character's Lodestone ID if it exists, "-1" otherwise.
+ * @returns The character's Lodestone ID if it exists, '-1' otherwise.
  */
 export const getCharacterId = async (character: string, server: string): Promise<string> => {
   const res = await parsers.characterSearch.parse({ query: { name: character, server } } as any) as any
