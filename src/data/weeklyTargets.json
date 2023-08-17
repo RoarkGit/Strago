@@ -1,6 +1,6 @@
 {
-  "Carnivale": {
-    "Novice": [
+  "carnivale": {
+    "novice": [
       "10. A Little Knight Music",
       "12. The Plant-om of the Opera",
       "09. To Kill a Mockingslime",
@@ -22,7 +22,7 @@
       "06. Eye Society",
       "13. Beauty and a Beast"
     ],
-    "Moderate": [
+    "moderate": [
       "19. On a Clear Day You Can Smell Forever (Slow and Steady)",
       "02. Much Ado About Pudding (Too Fast, Too Furious)",
       "06. Eye Society (Too Fast, Too Furious)",
@@ -44,7 +44,7 @@
       "11. Some Like It Excruciatingly Hot (Advanced Spellcasting)",
       "17. The Sword of Music (Enfeeble Me Tender)"
     ],
-    "Advanced": [
+    "advanced": [
       "11. Some Like It Excruciatingly Hot (Too Fast, Too Furious, A Walk in the Park, Mastery of Lightning)",
       "15. The Me Nobody Nodes (Modus Interruptus, A Walk in the Park, Four-faced)",
       "18. Midsummer Night's Explosion (Let's Get Physical, A Walk in the Park",
@@ -67,8 +67,8 @@
       "09. To Kill a Mockingslime (Elemental Mastery, Modus Interruptus)"
     ]
   },
-  "Duties": {
-    "A": [
+  "duties": {
+    "arrhw": [
       "Saint Mocianne's Arboretum (Hard)",
       "Sastasha (Hard)",
       "Ala Mhigo",
@@ -90,7 +90,7 @@
       "The Labyrinth of the Ancients",
       "Pharos Sirius (Hard)"
     ],
-    "B": [
+    "sb": [
       "The Weeping City of Mhach",
       "Castrum Fluminus",
       "Thok ast Thok (Hard)",
@@ -112,7 +112,7 @@
       "The Pool of Tribute",
       "The Ridorana Lighthouse"
     ],
-    "C": [
+    "shb": [
       "???",
       "???",
       "???",
@@ -135,8 +135,8 @@
       "???"
     ]
   },
-  "Primes": {
-    "A": [
+  "primes": {
+    "arrhw": [
       "The Minstrel's Ballad: Nidhogg's Rage",
       "The Howling Eye (Extreme)",
       "The Binding Coil of Bahamut - Turn 5",
@@ -158,7 +158,7 @@
       "The Navel (Extreme)",
       "The *Whorleater* (Extreme)"
     ],
-    "B": [
+    "sb": [
       "Alphascape V4.0 (Savage)",
       "Emanation (Extreme)",
       "The Minstrel's Ballad - Shinryu's Domain",
@@ -170,7 +170,7 @@
       "The Jade Stoa (Extreme)",
       "Hells' Kier (Extreme)"
     ],
-    "C": [
+    "shb": [
       "???",
       "???",
       "???",
