@@ -32,14 +32,6 @@ export interface Strago extends Client {
    * Static data.
    */
   data: {
-    achievementData: {
-      achievementIds: Record<string, string>
-      roles: Array<{
-        name: string
-        required: string[]
-        blockedBy: string[]
-      }>
-    }
     spellData: Collection<string, Spell>
   }
   shortcutTitles: Collection<string, Set<string>>

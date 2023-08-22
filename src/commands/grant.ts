@@ -2,6 +2,7 @@ import { type Strago } from '../interfaces/Strago'
 
 import { type CommandInteraction, type GuildMemberRoleManager, SlashCommandBuilder, type TextChannel } from 'discord.js'
 
+import * as achievementData from '../data/achievementData.json'
 import { type Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
@@ -19,6 +20,7 @@ export const grant: Command = {
   run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
     try {
       if (interaction.guild === null) return
+
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
 
@@ -61,10 +63,10 @@ export const grant: Command = {
 
       const granted = new Set<string>()
       const characterAchievements = await xivlib.getAchievementsComplete(
-        character.characterId, Object.keys(strago.data.achievementData.achievementIds))
+        character.characterId, Object.keys(achievementData.achievementIds))
       const memberRoles: GuildMemberRoleManager = member.roles
 
-      for (const role of strago.data.achievementData.roles) {
+      for (const role of achievementData.roles) {
         const discordRole = guild.roles.cache.find(r => r.name === role.name)
         if (discordRole === undefined) {
           strago.logger.error(`Undefined role: ${role.name}`)
@@ -93,7 +95,7 @@ export const grant: Command = {
         const missing: string[] = []
         role.required.forEach((achievement) => {
           if (!characterAchievements.has(achievement)) {
-            missing.push(strago.data.achievementData.achievementIds[achievement])
+            missing.push(achievementData.achievementIds[achievement as keyof typeof achievementData.achievementIds])
           }
         })
 

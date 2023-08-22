@@ -3,7 +3,6 @@ import { type Strago } from './interfaces/Strago'
 import { Client, Collection, GatewayIntentBits } from 'discord.js'
 import { join } from 'path'
 
-import achievementData from './data/achievementData.json'
 import { handleEvents } from './events/handleEvents'
 import { connectDatabase } from './utils/connectDatabase'
 import { type Spell } from './interfaces/Spell'
@@ -38,7 +37,6 @@ void (async () => {
 
   // Load static data.
   strago.data = {
-    achievementData,
     spellData: new Collection<string, Spell>()
   }
 
