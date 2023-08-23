@@ -17,6 +17,7 @@
 - `/register [character] [server] [id]`: register a character to a Discord user using character info or ID
 - `/spell [name]`: returns info about a given Blue Mage spell
 - `/[type] [topic]`: returns a shortcut previously saved under the `type` category
+- `/weeklytargets [weeks]`: returns weekly target info for current week or the week `weeks` away
 
 ## Moderator commands
 - `/bulkban [prefix]`: bans all users whose name starts with a given prefix
