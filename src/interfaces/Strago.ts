@@ -14,9 +14,7 @@ export interface Strago extends Client {
    * Collection of Commands stored as name:Command pairs.
    */
   commands: Collection<string, Command>
-  /**
-   * Various config values.
-   */
+  // Various config values.
   config: {
     shortcutTypes: string[]
     databaseUri: string
@@ -25,12 +23,11 @@ export interface Strago extends Client {
     homeGuildId: string
     loggerUri: string | undefined
     modChannelId: string
+    weeklyTargetChannelId: string
     pruneChannels: string[]
     token: string
   }
-  /**
-   * Static data.
-   */
+  // Static data.
   data: {
     spellData: Collection<string, Spell>
   }

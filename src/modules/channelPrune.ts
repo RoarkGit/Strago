@@ -17,7 +17,7 @@ export const channelPrune = async (strago: Strago): Promise<void> => {
   for (const channelId of strago.config.pruneChannels) {
     await guild.channels.fetch(channelId).then(
       async channel => {
-        if (channel?.type !== ChannelType.GuildText) return
+        if (channel === null || channel.type !== ChannelType.GuildText) return
         const messages = await channel.messages.fetch()
         for (const message of messages.values()) {
           if (!message.pinned && now - message.createdTimestamp > twoWeeksMs) {

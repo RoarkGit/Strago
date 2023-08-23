@@ -23,6 +23,10 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       return { valid: false, message: 'Missing moderator channel ID.' }
     }
 
+    if (process.env.WEEKLY_TARGET_CHANNEL_ID === undefined) {
+      return { valid: false, message: 'Missing weekly target channel ID.' }
+    }
+
     if (process.env.DATABASE_URI === undefined) {
       return { valid: false, message: 'Missing database URI.' }
     }
@@ -39,6 +43,7 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       loggerUri: process.env.LOKI_URI,
       homeGuildId: process.env.HOME_GUILD_ID,
       modChannelId: process.env.MOD_CHANNEL_ID,
+      weeklyTargetChannelId: process.env.WEEKLY_TARGET_CHANNEL_ID,
       pruneChannels: process.env.PRUNE_CHANNELS === undefined ? [] : process.env.PRUNE_CHANNELS.split(','),
       token: process.env.BOT_TOKEN
     }

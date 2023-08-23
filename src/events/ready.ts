@@ -1,11 +1,10 @@
+import { CronJob } from 'cron'
+
 import { type Strago } from '../interfaces/Strago'
 
 import { channelPrune } from '../modules/channelPrune'
-
-const channelPruneLoop = (strago: Strago): void => {
-  (async (): Promise<void> => { await channelPrune(strago) })().catch((err) => { strago.logger.error(err) })
-  setTimeout(channelPruneLoop, 1000 * 60 * 10, strago)
-}
+import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
+import { type TextChannel } from 'discord.js'
 
 /**
  * Prints message when bot is connected and ready.
@@ -16,10 +15,25 @@ export const ready = async (strago: Strago): Promise<void> => {
   const guildList = strago.guilds.cache
   await Promise.all(guildList.map(async g => await g.members.fetch()))
   const guildNames = guildList.map(g => ({ guildName: g.name, guildId: g.id }))
-  const logMessage = {
-    message: `Connected to ${guildList.size} servers.`,
-    guilds: guildNames
-  }
-  strago.logger.info(logMessage)
-  channelPruneLoop(strago)
+  strago.logger.info({ message: `Connected to ${guildList.size} servers.`, guilds: guildNames })
+  // Start channel prune cron.
+  const channelPruneCron = new CronJob({
+    cronTime: '0 */10 * * * *',
+    onTick: () => {
+      channelPrune(strago).catch(err => strago.logger.error(err))
+    },
+    timeZone: 'Etc/UTC'
+  })
+  channelPruneCron.start()
+  // Start weekly targets cron.
+  const weeklyTargetsCron = new CronJob({
+    cronTime: '0 0 8 * * 2',
+    onTick: () => {
+      const embed = generateWeeklyTargetsEmbed(0)
+      const channel = strago.channels.cache.get(strago.config.weeklyTargetChannelId) as TextChannel
+      channel.send({ embeds: [embed] }).catch(err => strago.logger.error(err))
+    },
+    timeZone: 'Etc/UTC'
+  })
+  weeklyTargetsCron.start()
 }
