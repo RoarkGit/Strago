@@ -1,10 +1,9 @@
-import type { Strago } from '../interfaces/Strago'
-
 import { checkLFGSpam } from './checkLFGSpam'
 import { interactionCreate } from './interactionCreate'
 import { kickOnBotRole } from './kickOnBotRole'
 import { publishAnnouncement } from './publishAnnouncement'
 import { ready } from './ready'
+import type { Strago } from '../interfaces/Strago'
 
 /**
  * Loads event handlers for Strago.

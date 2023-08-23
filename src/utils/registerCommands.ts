@@ -1,5 +1,9 @@
 import { REST } from '@discordjs/rest'
-import { type RESTPostAPIApplicationCommandsJSONBody, type RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js'
+import {
+  type RESTPostAPIApplicationCommandsJSONBody,
+  type RESTPostAPIChatInputApplicationCommandsJSONBody,
+  Routes,
+} from 'discord.js'
 
 import type { Strago } from '../interfaces/Strago'
 
@@ -12,8 +16,14 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
   try {
     const rest = new REST({ version: '10' }).setToken(strago.config.token)
 
-    const globalCommandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
-    const guildCommandData: Array<RESTPostAPIApplicationCommandsJSONBody | RESTPostAPIChatInputApplicationCommandsJSONBody> = []
+    const globalCommandData: Array<
+      | RESTPostAPIApplicationCommandsJSONBody
+      | RESTPostAPIChatInputApplicationCommandsJSONBody
+    > = []
+    const guildCommandData: Array<
+      | RESTPostAPIApplicationCommandsJSONBody
+      | RESTPostAPIChatInputApplicationCommandsJSONBody
+    > = []
 
     strago.commands.forEach((command) => {
       const data = command.data.toJSON()
@@ -27,13 +37,19 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
 
     strago.logger.info('Registering global commands.')
     await rest.put(Routes.applicationCommands(strago.config.id), {
-      body: globalCommandData
+      body: globalCommandData,
     })
 
     strago.logger.info('Registering guild commands.')
-    await rest.put(Routes.applicationGuildCommands(strago.config.id, strago.config.homeGuildId), {
-      body: guildCommandData
-    })
+    await rest.put(
+      Routes.applicationGuildCommands(
+        strago.config.id,
+        strago.config.homeGuildId,
+      ),
+      {
+        body: guildCommandData,
+      },
+    )
 
     return true
   } catch (error) {

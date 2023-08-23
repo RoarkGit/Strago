@@ -1,9 +1,8 @@
-import type { Strago } from '../interfaces/Strago'
-
 import { Collection } from 'discord.js'
 
 import spellData from '../data/spellData.json'
 import type { Spell } from '../interfaces/Spell'
+import type { Strago } from '../interfaces/Strago'
 
 const FFXIVCOLLECT_URL = 'https://ffxivcollect.com/api/spells'
 
@@ -24,7 +23,7 @@ interface XivcollectSpell {
   sources: [
     {
       text: string
-    }
+    },
   ]
 }
 
@@ -36,11 +35,11 @@ export const loadSpells = async (strago: Strago): Promise<boolean> => {
   try {
     const spells = new Collection<string, Spell>()
     const xivcollectList: XivcollectSpell[] = await fetch(FFXIVCOLLECT_URL)
-      .then(async res => await res.json())
-      .then(res => res.results)
+      .then(async (res) => await res.json())
+      .then((res) => res.results)
     const xivcollectInfo = new Collection<string, XivcollectSpell>()
-    xivcollectList.forEach(s => xivcollectInfo.set(s.name.toLowerCase(), s))
-    spellData.forEach(s => {
+    xivcollectList.forEach((s) => xivcollectInfo.set(s.name.toLowerCase(), s))
+    spellData.forEach((s) => {
       const xivcollectSpell = xivcollectInfo.get(s.name.toLowerCase())
       if (xivcollectSpell == null) return
 
@@ -49,14 +48,15 @@ export const loadSpells = async (strago: Strago): Promise<boolean> => {
         aspect: xivcollectSpell.aspect.name,
         description: xivcollectSpell.description.replace(/\*/g, ''),
         icon: xivcollectSpell.icon,
-        location: s.location ?? xivcollectSpell.sources.map(s => s.text).join('\n'),
+        location:
+          s.location ?? xivcollectSpell.sources.map((s) => s.text).join('\n'),
         name: xivcollectSpell.name,
         notes: s.notes,
         number: xivcollectSpell.order.toString(),
         rank: '★'.repeat(xivcollectSpell.rank),
         type: xivcollectSpell.type.name,
         range: s.range,
-        radius: s.radius
+        radius: s.radius,
       }
       if (spell.aspect === 'None') {
         spell.aspect = 'Unaspected'

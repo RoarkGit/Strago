@@ -1,7 +1,12 @@
-import type { Strago } from './Strago'
+import {
+  type CommandInteraction,
+  SlashCommandBuilder,
+  SlashCommandStringOption,
+  type SlashCommandSubcommandsOnlyBuilder,
+} from 'discord.js'
 
-import { type CommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
 import type { Command } from './Command'
+import type { Strago } from './Strago'
 
 /**
  * Command for use with shortcuts command, instantiated by 'type.'
@@ -10,9 +15,11 @@ export class ShortcutCommand implements Command {
   guildCommand: boolean
   type: string
   titleOption: SlashCommandStringOption
-  data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder
+  data:
+    | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
+    | SlashCommandSubcommandsOnlyBuilder
 
-  constructor (type: string) {
+  constructor(type: string) {
     this.guildCommand = true
     this.titleOption = new SlashCommandStringOption()
       .setName('title')
@@ -26,27 +33,37 @@ export class ShortcutCommand implements Command {
     this.type = type
   }
 
-  public async run (interaction: CommandInteraction, strago: Strago): Promise<void> {
+  public async run(
+    interaction: CommandInteraction,
+    strago: Strago,
+  ): Promise<void> {
     if (!interaction.isChatInputCommand() || interaction.guild === null) return
 
     const collection = strago.db.collection(this.type)
-    const doc = await collection.findOne({ title: interaction.options.getString('title', true) })
+    const doc = await collection.findOne({
+      title: interaction.options.getString('title', true),
+    })
     if (doc === null) {
-      await interaction.reply({ content: 'I was unable to locate that.', ephemeral: true })
+      await interaction.reply({
+        content: 'I was unable to locate that.',
+        ephemeral: true,
+      })
     } else {
       await interaction.deferReply()
       const response = {
         ...(doc.content !== undefined && { content: doc.content }),
-        files: doc.files
+        files: doc.files,
       }
       await interaction.editReply(response)
     }
   }
 
-  public autocomplete (strago: Strago, prefix: string): string[] {
+  public autocomplete(strago: Strago, prefix: string): string[] {
     const choices = strago.shortcutTitles.get(this.type)
     if (choices === undefined) return []
-    const filtered = Array.from(choices).filter(c => c.toLowerCase().includes(prefix.toLowerCase())).sort()
+    const filtered = Array.from(choices)
+      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase()))
+      .sort()
     return filtered
   }
-};
+}

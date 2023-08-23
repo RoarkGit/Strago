@@ -36,4 +36,4 @@ export interface Strago extends Client {
   grantSpamSet: TimeoutSet
   lfgSpamSet: TimeoutSet
   logger: Logger
-};
+}

@@ -1,18 +1,22 @@
-import type { Strago } from '../interfaces/Strago'
-import { type CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import {
+  type CommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from 'discord.js'
 
 import type { Command } from '../interfaces/Command'
+import type { Strago } from '../interfaces/Strago'
 
 // eslint-disable-next-line
 const XIVAPI = require('@xivapi/js')
 
 const ASPECT_COLORS: Record<string, number> = {
-  Fire: 0xFFAAAA,
-  Water: 0xAAAAFF,
-  Wind: 0xAAFFAA,
-  Lightning: 0xFFAAFF,
-  Ice: 0xFFFFFF,
-  Earth: 0xFFFFAA
+  Fire: 0xffaaaa,
+  Water: 0xaaaaff,
+  Wind: 0xaaffaa,
+  Lightning: 0xffaaff,
+  Ice: 0xffffff,
+  Earth: 0xffffaa,
 }
 
 /**
@@ -22,19 +26,27 @@ export const spell: Command = {
   data: new SlashCommandBuilder()
     .setName('spell')
     .setDescription('Retrieves information about a given spell.')
-    .addStringOption(option =>
-      option.setName('name')
-        .setDescription('The spell\'s name.')
+    .addStringOption((option) =>
+      option
+        .setName('name')
+        .setDescription("The spell's name.")
         .setRequired(true)
-        .setAutocomplete(true)),
-  run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
+        .setAutocomplete(true),
+    ),
+  run: async (
+    interaction: CommandInteraction,
+    strago: Strago,
+  ): Promise<void> => {
     if (!interaction.isChatInputCommand()) return
 
     const name = interaction.options.getString('name', true).toLowerCase()
 
     const spell = strago.data.spellData.get(name)
     if (spell == null) {
-      await interaction.reply({ content: 'I could not locate that spell.', ephemeral: true })
+      await interaction.reply({
+        content: 'I could not locate that spell.',
+        ephemeral: true,
+      })
       return
     }
 
@@ -53,19 +65,25 @@ export const spell: Command = {
 
     const embed = new EmbedBuilder()
       .setTitle(`${spell.number}: ${spell.name} ${spell.rank}`)
-      .setColor(ASPECT_COLORS[spell.aspect] ?? 0xAAAAAA)
+      .setColor(ASPECT_COLORS[spell.aspect] ?? 0xaaaaaa)
       .addFields(
         { name: 'Cast', value: cast, inline: true },
         { name: 'Recast', value: recast, inline: true },
         { name: 'Range', value: range, inline: true },
         { name: 'MP Cost', value: mpCost, inline: true },
-        { name: 'Spell Info', value: `${spell.type} / ${spell.aspect}`, inline: true },
+        {
+          name: 'Spell Info',
+          value: `${spell.type} / ${spell.aspect}`,
+          inline: true,
+        },
         { name: 'Radius', value: radius, inline: true },
         { name: 'Description', value: spell.description },
-        { name: 'Location', value: spell.location }
+        { name: 'Location', value: spell.location },
       )
       .setThumbnail(spell.icon)
-      .setFooter({ text: 'Information retrieved from XIVAPI and FFXIV Collect.' })
+      .setFooter({
+        text: 'Information retrieved from XIVAPI and FFXIV Collect.',
+      })
 
     if (spell.notes !== undefined) {
       embed.addFields({ name: 'Notes', value: spell.notes })
@@ -74,9 +92,11 @@ export const spell: Command = {
     await interaction.reply({ embeds: [embed] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] => {
-    const choices = strago.data.spellData.map(s => s.name)
-    const filtered = choices.filter(c => c.toLowerCase().includes(prefix.toLowerCase()))
+    const choices = strago.data.spellData.map((s) => s.name)
+    const filtered = choices.filter((c) =>
+      c.toLowerCase().includes(prefix.toLowerCase()),
+    )
     return filtered
   },
-  guildCommand: false
+  guildCommand: false,
 }

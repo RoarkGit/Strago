@@ -1,9 +1,13 @@
-import type { Strago } from '../interfaces/Strago'
-
-import { type CommandInteraction, type GuildMemberRoleManager, SlashCommandBuilder, type TextChannel } from 'discord.js'
+import {
+  type CommandInteraction,
+  type GuildMemberRoleManager,
+  SlashCommandBuilder,
+  type TextChannel,
+} from 'discord.js'
 
 import * as achievementData from '../data/achievementData.json'
 import type { Command } from '../interfaces/Command'
+import type { Strago } from '../interfaces/Strago'
 import * as xivlib from '../modules/xivlib'
 
 /**
@@ -16,8 +20,13 @@ import * as xivlib from '../modules/xivlib'
 export const grant: Command = {
   data: new SlashCommandBuilder()
     .setName('grant')
-    .setDescription('Grant achievement-based roles for which you are eligible.'),
-  run: async (interaction: CommandInteraction, strago: Strago): Promise<void> => {
+    .setDescription(
+      'Grant achievement-based roles for which you are eligible.',
+    ),
+  run: async (
+    interaction: CommandInteraction,
+    strago: Strago,
+  ): Promise<void> => {
     try {
       if (interaction.guild === null) return
 
@@ -26,27 +35,42 @@ export const grant: Command = {
 
       // Check if user recently ran command.
       if (strago.grantSpamSet.has(member.id)) {
-        await interaction.reply({ content: 'You\'re doing that too quickly, wait at least ten minutes and try again.', ephemeral: true })
+        await interaction.reply({
+          content:
+            "You're doing that too quickly, wait at least ten minutes and try again.",
+          ephemeral: true,
+        })
         return
       } else {
         strago.grantSpamSet.add(member.id)
       }
 
-      await interaction.reply({ content: 'Checking registration...', ephemeral: true })
+      await interaction.reply({
+        content: 'Checking registration...',
+        ephemeral: true,
+      })
       const characters = strago.db.collection('characters')
       const character = await characters.findOne({
-        discordId: interaction.user.id
+        discordId: interaction.user.id,
       })
 
       if (character === null) {
-        await interaction.editReply({ content: 'Unable to find registered character. Try running `/register`.' })
+        await interaction.editReply({
+          content:
+            'Unable to find registered character. Try running `/register`.',
+        })
         return
       }
 
-      const achievementsPublic = await xivlib.getAchievementsPublic(character.characterId as string)
+      const achievementsPublic = await xivlib.getAchievementsPublic(
+        character.characterId as string,
+      )
 
       if (!achievementsPublic) {
-        await interaction.editReply({ content: 'I could not view your achievements, please make sure they are public and try again.' })
+        await interaction.editReply({
+          content:
+            'I could not view your achievements, please make sure they are public and try again.',
+        })
         return
       }
 
@@ -63,11 +87,13 @@ export const grant: Command = {
 
       const granted = new Set<string>()
       const characterAchievements = await xivlib.getAchievementsComplete(
-        character.characterId, Object.keys(achievementData.achievementIds))
+        character.characterId,
+        Object.keys(achievementData.achievementIds),
+      )
       const memberRoles: GuildMemberRoleManager = member.roles
 
       for (const role of achievementData.roles) {
-        const discordRole = guild.roles.cache.find(r => r.name === role.name)
+        const discordRole = guild.roles.cache.find((r) => r.name === role.name)
         if (discordRole === undefined) {
           strago.logger.error(`Undefined role: ${role.name}`)
           continue
@@ -75,16 +101,21 @@ export const grant: Command = {
 
         // Check for blocking roles first.
         const blockers: string[] = []
-        const hasRole = memberRoles.cache.some(r => r.name === role.name)
+        const hasRole = memberRoles.cache.some((r) => r.name === role.name)
 
         role.blockedBy.forEach((blocker) => {
-          if (granted.has(blocker) || memberRoles.cache.some(r => r.name === blocker)) {
+          if (
+            granted.has(blocker) ||
+            memberRoles.cache.some((r) => r.name === blocker)
+          ) {
             blockers.push(blocker)
           }
         })
 
         if (blockers.length > 0) {
-          await updateState(`${role.name}: You already have ${blockers.join(', ')}`)
+          await updateState(
+            `${role.name}: You already have ${blockers.join(', ')}`,
+          )
           if (hasRole) await memberRoles.remove(discordRole)
           continue
         }
@@ -95,16 +126,26 @@ export const grant: Command = {
         const missing: string[] = []
         role.required.forEach((achievement) => {
           if (!characterAchievements.has(achievement)) {
-            missing.push(achievementData.achievementIds[achievement as keyof typeof achievementData.achievementIds])
+            missing.push(
+              achievementData.achievementIds[
+                achievement as keyof typeof achievementData.achievementIds
+              ],
+            )
           }
         })
 
         if (missing.length > 3) {
-          await updateState(`Skipping ${role.name} since you are missing many achievements!`)
+          await updateState(
+            `Skipping ${role.name} since you are missing many achievements!`,
+          )
           if (hasRole) await memberRoles.remove(discordRole)
           continue
         } else if (missing.length > 0) {
-          await updateState(`Skipping ${role.name} since you are missing: ${missing.join(', ')}`)
+          await updateState(
+            `Skipping ${role.name} since you are missing: ${missing.join(
+              ', ',
+            )}`,
+          )
           if (hasRole) await memberRoles.remove(discordRole)
           continue
         }
@@ -121,16 +162,22 @@ export const grant: Command = {
 
         // Special case for Blue Legend
         if (role.name === 'Blue Legend') {
-          const channel = guild.channels.cache.find(c => c.name === 'general') as TextChannel
+          const channel = guild.channels.cache.find(
+            (c) => c.name === 'general',
+          ) as TextChannel
           const role: string = discordRole.toString()
-          await channel.send(`<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`)
+          await channel.send(
+            `<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`,
+          )
         }
       }
     } catch (error) {
       strago.logger.error('Failed to grant roles', error)
-      await interaction.editReply('I encountered an error trying to retrieve your achievements.\n' +
-                                        'Please try again and if the issue persists contact Liam Galt.')
+      await interaction.editReply(
+        'I encountered an error trying to retrieve your achievements.\n' +
+          'Please try again and if the issue persists contact Liam Galt.',
+      )
     }
   },
-  guildCommand: true
+  guildCommand: true,
 }

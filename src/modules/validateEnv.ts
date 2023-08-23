@@ -5,7 +5,9 @@ import type { Strago } from '../interfaces/Strago'
  * @param strago Strago client instance
  * @returns Whether or not the environment variables were valid.
  */
-export const validateEnv = (strago: Strago): { valid: boolean, message: string } => {
+export const validateEnv = (
+  strago: Strago,
+): { valid: boolean; message: string } => {
   try {
     if (process.env.BOT_TOKEN === undefined) {
       return { valid: false, message: 'Missing bot token.' }
@@ -36,7 +38,10 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
     }
 
     strago.config = {
-      shortcutTypes: process.env.SHORTCUT_TYPES === undefined ? [] : process.env.SHORTCUT_TYPES.split(','),
+      shortcutTypes:
+        process.env.SHORTCUT_TYPES === undefined
+          ? []
+          : process.env.SHORTCUT_TYPES.split(','),
       databaseUri: process.env.DATABASE_URI,
       env: process.env.NODE_ENV,
       id: process.env.CLIENT_ID,
@@ -44,13 +49,19 @@ export const validateEnv = (strago: Strago): { valid: boolean, message: string }
       homeGuildId: process.env.HOME_GUILD_ID,
       modChannelId: process.env.MOD_CHANNEL_ID,
       weeklyTargetChannelId: process.env.WEEKLY_TARGET_CHANNEL_ID,
-      pruneChannels: process.env.PRUNE_CHANNELS === undefined ? [] : process.env.PRUNE_CHANNELS.split(','),
-      token: process.env.BOT_TOKEN
+      pruneChannels:
+        process.env.PRUNE_CHANNELS === undefined
+          ? []
+          : process.env.PRUNE_CHANNELS.split(','),
+      token: process.env.BOT_TOKEN,
     }
 
     return { valid: true, message: 'Environment validated.' }
   } catch (error) {
     console.error(error)
-    return { valid: false, message: 'Uncaught error when validating environment.' }
+    return {
+      valid: false,
+      message: 'Uncaught error when validating environment.',
+    }
   }
 }

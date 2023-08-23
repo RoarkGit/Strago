@@ -1,16 +1,17 @@
 /**
  * Library for retrieving assorted information about FFXIV characters.
  */
-
-import axios from 'axios'
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import crypto from 'crypto'
 import path from 'path'
+
 import { PromisePool } from '@supercharge/promise-pool'
 import * as nodestone from '@xivapi/nodestone'
+import axios from 'axios'
 
 const parsers = {
   character: new nodestone.Character(),
-  characterSearch: new nodestone.CharacterSearch()
+  characterSearch: new nodestone.CharacterSearch(),
 }
 
 const ACHIEVEMENT_COMPLETE = 'entry__achievement__view--complete'
@@ -22,7 +23,10 @@ const LODESTONE_URL = 'https://na.finalfantasyxiv.com/lodestone/character/'
  * @param server The character's server
  * @returns SHA-1(character+server)
  */
-export const generateChallenge = (character: string, server: string): string => {
+export const generateChallenge = (
+  character: string,
+  server: string,
+): string => {
   const charString = (character + server).toLowerCase()
   const hash = crypto.createHash('sha1')
   hash.update(charString)
@@ -35,8 +39,13 @@ export const generateChallenge = (character: string, server: string): string => 
  * @param server The character's server
  * @returns The character's Lodestone ID if it exists, '-1' otherwise.
  */
-export const getCharacterId = async (character: string, server: string): Promise<string> => {
-  const res = await parsers.characterSearch.parse({ query: { name: character, server } } as any) as any
+export const getCharacterId = async (
+  character: string,
+  server: string,
+): Promise<string> => {
+  const res = (await parsers.characterSearch.parse({
+    query: { name: character, server },
+  } as any)) as any
   if (res.NoResultsFound !== undefined) return '-1'
   for (const char of res.List) {
     if (char.Name === character) return char.ID.toString()
@@ -49,8 +58,12 @@ export const getCharacterId = async (character: string, server: string): Promise
  * @param characterId The character's Lodestone ID
  * @returns The character's name and server if they exist, '-1' otherwise.
  */
-export const getCharacterInfo = async (characterId: string): Promise<[string, string]> => {
-  const res = await parsers.character.parse({ params: { characterId } } as any) as any
+export const getCharacterInfo = async (
+  characterId: string,
+): Promise<[string, string]> => {
+  const res = (await parsers.character.parse({
+    params: { characterId },
+  } as any)) as any
   if (res === undefined) return ['-1', '-1']
   return [res.Name, res.World]
 }
@@ -61,10 +74,12 @@ export const getCharacterInfo = async (characterId: string): Promise<[string, st
  * @param achievementIds List of achievements to check
  * @returns A Set representing the completed achievements from achievementIds.
  */
-export const getAchievementsComplete = async (characterId: string, achievementIds: string[]): Promise<Set<string>> => {
+export const getAchievementsComplete = async (
+  characterId: string,
+  achievementIds: string[],
+): Promise<Set<string>> => {
   const achievementSet = new Set<string>()
-  await PromisePool
-    .for(achievementIds)
+  await PromisePool.for(achievementIds)
     .withConcurrency(5)
     .handleError(async (error) => {
       throw error // Throw any errors, we only want to execute on full achievement sets.
@@ -72,7 +87,7 @@ export const getAchievementsComplete = async (characterId: string, achievementId
     .process(async (achievementId) => {
       if (await getAchievementComplete(characterId, achievementId)) {
         achievementSet.add(achievementId)
-      };
+      }
     })
   return achievementSet
 }
@@ -83,11 +98,15 @@ export const getAchievementsComplete = async (characterId: string, achievementId
  * @param achievementId The achievement's ID
  * @returns Whether or not the character has completed the achievement.
  */
-export const getAchievementComplete = async (characterId: string, achievementId: string): Promise<boolean> => {
+export const getAchievementComplete = async (
+  characterId: string,
+  achievementId: string,
+): Promise<boolean> => {
   const url = getUrl([characterId, 'achievement', 'detail', achievementId])
-  return await axios.get(url)
-    .then(response => response.data.includes(ACHIEVEMENT_COMPLETE))
-    .catch(_ => false)
+  return await axios
+    .get(url)
+    .then((response) => response.data.includes(ACHIEVEMENT_COMPLETE))
+    .catch(() => false)
 }
 
 /**
@@ -95,11 +114,14 @@ export const getAchievementComplete = async (characterId: string, achievementId:
  * @param characterId The character's ID
  * @returns Whether or not the character's achievements are public.
  */
-export const getAchievementsPublic = async (characterId: string): Promise<boolean> => {
+export const getAchievementsPublic = async (
+  characterId: string,
+): Promise<boolean> => {
   const url = getUrl([characterId, 'achievement'])
-  return await axios.get(url)
+  return await axios
+    .get(url)
     .then(() => true)
-    .catch(error => {
+    .catch((error) => {
       // Private achievement pages return a 403, so we should only print other errors that occur.
       if (error.response.status !== 403) {
         console.error(error)
@@ -113,8 +135,12 @@ export const getAchievementsPublic = async (characterId: string): Promise<boolea
  * @param characterId The character's ID
  * @returns Whether or not the character challenge was successfully verified.
  */
-export const verifyCharacter = async (characterId: string): Promise<boolean> => {
-  const res: any = await parsers.character.parse({ params: { characterId } } as any)
+export const verifyCharacter = async (
+  characterId: string,
+): Promise<boolean> => {
+  const res: any = await parsers.character.parse({
+    params: { characterId },
+  } as any)
   const character = res.Name
   const server = res.World
   const challenge = generateChallenge(character, server)

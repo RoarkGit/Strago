@@ -1,6 +1,6 @@
-import type { Strago } from '../interfaces/Strago'
-
 import { MongoClient } from 'mongodb'
+
+import type { Strago } from '../interfaces/Strago'
 
 /**
  * Attempts to connect to the bot's database.
