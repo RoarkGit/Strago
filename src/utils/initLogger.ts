@@ -1,4 +1,4 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { createLogger, format, transports } from 'winston'
 import type TransportStream from 'winston-transport'

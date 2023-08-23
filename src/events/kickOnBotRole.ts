@@ -1,6 +1,6 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
-import { type GuildMember } from 'discord.js'
+import type { GuildMember } from 'discord.js'
 
 /**
  * Handles slash command interaction.

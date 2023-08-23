@@ -1,8 +1,8 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ComponentType, type MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 
 /**
  * Removes a specified role from all users in the server.

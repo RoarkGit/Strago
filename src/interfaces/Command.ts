@@ -1,6 +1,6 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
-import { type AutocompleteInteraction, type CommandInteraction, type SlashCommandBuilder, type SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
+import type { AutocompleteInteraction, CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
 
 /**
  * Represents an abstract Slash command.

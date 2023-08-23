@@ -1,4 +1,4 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 /**
  * Reads and validate .env file for required values and correctness.

@@ -1,12 +1,12 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { Collection } from 'discord.js'
 import { readdir } from 'fs/promises'
 import { join } from 'path'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 import { ShortcutCommand } from '../interfaces/ShortcutCommand'
-import { type Shortcuts } from '../commands/shortcuts'
+import type { Shortcuts } from '../commands/shortcuts'
 
 /**
  * Attempts to load all Commands stored in the commands folder.

@@ -1,4 +1,4 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { checkLFGSpam } from './checkLFGSpam'
 import { interactionCreate } from './interactionCreate'

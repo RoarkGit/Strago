@@ -1,6 +1,6 @@
 import { type CommandInteraction, SlashCommandBuilder } from 'discord.js'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
 
 /**

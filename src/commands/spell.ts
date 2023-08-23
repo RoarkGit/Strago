@@ -1,7 +1,7 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 import { type CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 
 // eslint-disable-next-line
 const XIVAPI = require('@xivapi/js')

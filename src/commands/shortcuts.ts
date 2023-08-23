@@ -1,8 +1,8 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { type AutocompleteInteraction, type CommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandSubcommandGroupBuilder, type SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 
 /**
  * Meta-command for managing shortcut commands.

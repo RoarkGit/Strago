@@ -1,11 +1,11 @@
-import { type Strago } from './interfaces/Strago'
+import type { Strago } from './interfaces/Strago'
 
 import { Client, Collection, GatewayIntentBits } from 'discord.js'
 import { join } from 'path'
 
 import { handleEvents } from './events/handleEvents'
 import { connectDatabase } from './utils/connectDatabase'
-import { type Spell } from './interfaces/Spell'
+import type { Spell } from './interfaces/Spell'
 import { validateEnv } from './modules/validateEnv'
 import { loadCommands } from './utils/loadCommands'
 import { loadSpells } from './utils/loadSpells'

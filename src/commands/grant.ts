@@ -1,9 +1,9 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { type CommandInteraction, type GuildMemberRoleManager, SlashCommandBuilder, type TextChannel } from 'discord.js'
 
 import * as achievementData from '../data/achievementData.json'
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
 /**

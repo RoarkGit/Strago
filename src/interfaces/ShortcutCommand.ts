@@ -1,7 +1,7 @@
-import { type Strago } from './Strago'
+import type { Strago } from './Strago'
 
 import { type CommandInteraction, SlashCommandBuilder, SlashCommandStringOption, type SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
-import { type Command } from './Command'
+import type { Command } from './Command'
 
 /**
  * Command for use with shortcuts command, instantiated by 'type.'

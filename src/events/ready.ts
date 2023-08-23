@@ -1,10 +1,10 @@
 import { CronJob } from 'cron'
 
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { channelPrune } from '../modules/channelPrune'
 import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
-import { type TextChannel } from 'discord.js'
+import type { TextChannel } from 'discord.js'
 
 /**
  * Prints message when bot is connected and ready.

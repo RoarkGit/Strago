@@ -1,8 +1,8 @@
-import { type Strago } from '../interfaces/Strago'
+import type { Strago } from '../interfaces/Strago'
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ComponentType, type MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js'
 
-import { type Command } from '../interfaces/Command'
+import type { Command } from '../interfaces/Command'
 import * as xivlib from '../modules/xivlib'
 
 const SERVER_NAMES = [
