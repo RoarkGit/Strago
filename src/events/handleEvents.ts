@@ -1,6 +1,7 @@
 import { checkLFGSpam } from './checkLFGSpam'
 import { interactionCreate } from './interactionCreate'
 import { kickOnBotRole } from './kickOnBotRole'
+import { logDeletedMessage } from './logDeletedMessage'
 import { publishAnnouncement } from './publishAnnouncement'
 import { ready } from './ready'
 import type { Strago } from '../interfaces/Strago'
@@ -21,6 +22,10 @@ export const handleEvents = (strago: Strago): void => {
   strago.on('messageCreate', async (message) => {
     await checkLFGSpam(message, strago)
     await publishAnnouncement(message, strago)
+  })
+
+  strago.on('messageDelete', async (message) => {
+    await logDeletedMessage(message, strago)
   })
 
   strago.on('guildMemberUpdate', async (_, member) => {

@@ -23,9 +23,7 @@ void (async () => {
       GatewayIntentBits.GuildMembers |
       GatewayIntentBits.GuildMessages |
       GatewayIntentBits.MessageContent,
-    partials: [
-      Partials.GuildMember
-    ],
+    partials: [Partials.GuildMember, Partials.Message],
   }) as Strago
 
   // Validate and load environment variables.

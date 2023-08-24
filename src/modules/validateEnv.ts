@@ -21,6 +21,14 @@ export const validateEnv = (
       return { valid: false, message: 'Missing test guild ID.' }
     }
 
+    if (process.env.DELETED_MESSAGES_CHANNEL_ID === undefined) {
+      return { valid: false, message: 'Missing deleted messages channel ID.' }
+    }
+
+    if (process.env.MOD_CATEGORY_ID === undefined) {
+      return { valid: false, message: 'Missing moderator category ID.' }
+    }
+
     if (process.env.MOD_CHANNEL_ID === undefined) {
       return { valid: false, message: 'Missing moderator channel ID.' }
     }
@@ -47,6 +55,8 @@ export const validateEnv = (
       id: process.env.CLIENT_ID,
       loggerUri: process.env.LOKI_URI,
       homeGuildId: process.env.HOME_GUILD_ID,
+      deletedMessagesChannelId: process.env.DELETED_MESSAGES_CHANNEL_ID,
+      modCategoryId: process.env.MOD_CATEGORY_ID,
       modChannelId: process.env.MOD_CHANNEL_ID,
       weeklyTargetChannelId: process.env.WEEKLY_TARGET_CHANNEL_ID,
       pruneChannels:
