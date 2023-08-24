@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { Client, Collection, GatewayIntentBits } from 'discord.js'
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js'
 
 import { handleEvents } from './events/handleEvents'
 import type { Spell } from './interfaces/Spell'
@@ -23,6 +23,9 @@ void (async () => {
       GatewayIntentBits.GuildMembers |
       GatewayIntentBits.GuildMessages |
       GatewayIntentBits.MessageContent,
+    partials: [
+      Partials.GuildMember
+    ],
   }) as Strago
 
   // Validate and load environment variables.

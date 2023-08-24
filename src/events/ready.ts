@@ -1,5 +1,5 @@
 import { CronJob } from 'cron'
-import type { TextChannel } from 'discord.js'
+import { type TextChannel } from 'discord.js'
 
 import type { Strago } from '../interfaces/Strago'
 import { channelPrune } from '../modules/channelPrune'
@@ -12,7 +12,6 @@ import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
 export const ready = async (strago: Strago): Promise<void> => {
   strago.logger.info('Discord ready!')
   const guildList = strago.guilds.cache
-  await Promise.all(guildList.map(async (g) => await g.members.fetch()))
   const guildNames = guildList.map((g) => ({
     guildName: g.name,
     guildId: g.id,
