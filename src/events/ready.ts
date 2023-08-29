@@ -68,10 +68,19 @@ export const ready = async (strago: Strago): Promise<void> => {
   const weeklyTargetsCron = new CronJob({
     cronTime: '0 0 8 * * 2',
     onTick: () => {
-      const embed = generateWeeklyTargetsEmbed(0)
       const channel = strago.channels.cache.get(
         strago.config.weeklyTargetChannelId,
       ) as TextChannel
+      // Delete old messages
+      channel.messages.fetch().then((messages) =>
+        messages.forEach((m) => {
+          if (!m.pinned) {
+            m.delete().catch((err) => strago.logger.error(err))
+          }
+        }),
+      )
+      // Send new weekly message
+      const embed = generateWeeklyTargetsEmbed(0)
       channel.send({ embeds: [embed] }).catch((err) => strago.logger.error(err))
     },
     timeZone: 'Etc/UTC',
