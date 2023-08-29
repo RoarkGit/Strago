@@ -81,7 +81,10 @@ export const ready = async (strago: Strago): Promise<void> => {
       )
       // Send new weekly message
       const embed = generateWeeklyTargetsEmbed(0)
-      channel.send({ embeds: [embed] }).catch((err) => strago.logger.error(err))
+      channel
+        .send({ embeds: [embed] })
+        .then((m) => m.crosspost())
+        .catch((err) => strago.logger.error(err))
     },
     timeZone: 'Etc/UTC',
   })
