@@ -45,7 +45,7 @@ export const ready = async (strago: Strago): Promise<void> => {
     g.channels.cache.forEach((c) => {
       if (
         !c.isTextBased() ||
-        c.parentId === '1144343998186672208' ||
+        c.parentId === strago.config.modCategoryId ||
         g.members.me === null ||
         !c
           .permissionsFor(g.members.me)
