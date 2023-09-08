@@ -1,5 +1,5 @@
 import {
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   type GuildMemberRoleManager,
   SlashCommandBuilder,
   type TextChannel,
@@ -24,7 +24,7 @@ export const grant: Command = {
       'Grant achievement-based roles for which you are eligible.',
     ),
   run: async (
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
     try {

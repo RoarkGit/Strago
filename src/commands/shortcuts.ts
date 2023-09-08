@@ -1,6 +1,6 @@
 import {
   type AutocompleteInteraction,
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandSubcommandGroupBuilder,
@@ -28,15 +28,10 @@ export class Shortcuts implements Command {
   }
 
   public async run(
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> {
-    if (
-      !interaction.isChatInputCommand() ||
-      interaction.guild === null ||
-      interaction.channel === null
-    )
-      return
+    if (interaction.guild === null || interaction.channel === null) return
     try {
       await interaction.deferReply()
       const command = interaction.options.getSubcommand()

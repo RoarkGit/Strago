@@ -1,5 +1,5 @@
 import {
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   EmbedBuilder,
   SlashCommandBuilder,
 } from 'discord.js'
@@ -34,11 +34,9 @@ export const spell: Command = {
         .setAutocomplete(true),
     ),
   run: async (
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
-    if (!interaction.isChatInputCommand()) return
-
     const name = interaction.options.getString('name', true).toLowerCase()
 
     const spell = strago.data.spellData.get(name)

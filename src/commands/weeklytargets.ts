@@ -1,4 +1,7 @@
-import { type CommandInteraction, SlashCommandBuilder } from 'discord.js'
+import {
+  type ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from 'discord.js'
 
 import type { Command } from '../interfaces/Command'
 import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
@@ -19,9 +22,7 @@ export const weeklytargets: Command = {
           'Optional: Number of weeks ahead to look; use negative numbers to look back.',
         ),
     ),
-  run: async (interaction: CommandInteraction): Promise<void> => {
-    if (!interaction.isChatInputCommand()) return
-
+  run: async (interaction: ChatInputCommandInteraction): Promise<void> => {
     const weeks = interaction.options.getNumber('weeks') ?? 0
     const embed = generateWeeklyTargetsEmbed(weeks)
     await interaction.reply({ embeds: [embed] })

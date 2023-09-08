@@ -2,7 +2,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   ComponentType,
   type MessageActionRowComponentBuilder,
   SlashCommandBuilder,
@@ -136,14 +136,10 @@ export const register: Command = {
         ),
     ),
   run: async (
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
     try {
-      // This line is needed to access interaction options.
-      if (!interaction.isChatInputCommand() || interaction.channel === null)
-        return
-
       await interaction.reply({
         content: 'Searching for character...',
         ephemeral: true,

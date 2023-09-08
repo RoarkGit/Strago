@@ -2,7 +2,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   ComponentType,
   type MessageActionRowComponentBuilder,
   PermissionFlagsBits,
@@ -29,10 +29,10 @@ export const recreaterole: Command = {
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
   run: async (
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
-    if (!interaction.isChatInputCommand() || interaction.guild === null) return
+    if (interaction.guild === null) return
 
     // Fetch members so responses will be correct.
     const guild = interaction.guild

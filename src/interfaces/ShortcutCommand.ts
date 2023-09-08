@@ -1,5 +1,5 @@
 import {
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   SlashCommandBuilder,
   SlashCommandStringOption,
   type SlashCommandSubcommandsOnlyBuilder,
@@ -34,10 +34,10 @@ export class ShortcutCommand implements Command {
   }
 
   public async run(
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> {
-    if (!interaction.isChatInputCommand() || interaction.guild === null) return
+    if (interaction.guild === null) return
 
     const collection = strago.db.collection(this.type)
     const doc = await collection.findOne({

@@ -2,7 +2,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  type CommandInteraction,
+  type ChatInputCommandInteraction,
   ComponentType,
   type MessageActionRowComponentBuilder,
   PermissionFlagsBits,
@@ -27,10 +27,10 @@ export const bulkban: Command = {
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
   run: async (
-    interaction: CommandInteraction,
+    interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
-    if (!interaction.isChatInputCommand() || interaction.guild === null) return
+    if (interaction.guild === null) return
 
     const members = await interaction.guild.members.fetch()
     const prefix = interaction.options.getString('prefix', true)
