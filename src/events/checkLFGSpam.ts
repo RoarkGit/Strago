@@ -1,5 +1,6 @@
 import { ChannelType, type Message, type TextChannel } from 'discord.js'
 
+import User from '../interfaces/models/User'
 import type { Strago } from '../interfaces/Strago'
 
 const timeoutDuration = 60 * 60 * 1000
@@ -24,24 +25,22 @@ export const checkLFGSpam = async (
   // Check if roles were actually mentioned.
   if (message.mentions.roles.size > 0) {
     if (strago.lfgSpamSet.has(member.id)) {
-      const users = strago.db.collection('users')
-      const user = await users.findOne({
-        discordId: member.id,
-      })
-      if (user === null) {
-        await users.insertOne({ discordId: member.id, numTimeouts: 1 })
-      } else {
-        await users.updateOne(
-          { discordId: member.id },
-          { $inc: { numTimeouts: 1 } },
-        )
-        const numTimeouts = (user.numTimeouts as number) + 1
-        await (
-          strago.channels.cache.get(strago.config.modChannelId) as TextChannel
-        ).send(
-          `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
-        )
-      }
+      const user = await User.findOneAndUpdate(
+        { discordId: member.id },
+        { $setOnInsert: { discordId: member.id } },
+        { new: true, setDefaultsOnInsert: true, upsert: true },
+      )
+      await user.updateOne(
+        { discordId: member.id },
+        { $inc: { numTimeouts: 1 } },
+      )
+      await user.save()
+      const numTimeouts = (user.numTimeouts as number) + 1
+      await (
+        strago.channels.cache.get(strago.config.modChannelId) as TextChannel
+      ).send(
+        `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
+      )
       await message.reply(
         `${member.toString()}: pinging roles in multiple LFG channels spams people who might be in those channels. You have been timed out for one hour.\n` +
           '_Posting_ in multiple channels is fine as long as you do _not_ ping in multiple channels.',

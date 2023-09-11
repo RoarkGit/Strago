@@ -6,8 +6,10 @@ import {
   SlashCommandSubcommandGroupBuilder,
   type SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
+import type { Document } from 'mongoose'
 
 import type { Command } from '../interfaces/Command'
+import Shortcut, { IShortcut } from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
 
 /**
@@ -47,15 +49,20 @@ export class Shortcuts implements Command {
           content,
           files,
         }
-        await strago.db
-          .collection(type)
-          .findOneAndReplace({ title }, document, { upsert: true })
+        const shortcut = (await Shortcut(type).findOneAndReplace(
+          { title },
+          document,
+          {
+            upsert: true,
+          },
+        )) as Document<IShortcut>
+        await shortcut.save()
         strago.shortcutTitles.get(type)?.add(title)
         await interaction.editReply({
           content: `New ${type} ${title} successfully saved!`,
         })
       } else if (command === 'delete') {
-        const result = await strago.db.collection(type).deleteOne({ title })
+        const result = await Shortcut(type).deleteOne({ title })
         if (result.deletedCount === 1) {
           await interaction.editReply({
             content: `${type} ${title} successfully deleted!`,

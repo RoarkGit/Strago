@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { connect } from 'mongoose'
 
 import type { Strago } from '../interfaces/Strago'
 
@@ -9,9 +9,7 @@ import type { Strago } from '../interfaces/Strago'
  */
 export const connectDatabase = async (strago: Strago): Promise<boolean> => {
   try {
-    const client = new MongoClient(strago.config.databaseUri)
-    strago.db = client.db(strago.config.env)
-
+    await connect(strago.config.databaseUri)
     return true
   } catch (error) {
     strago.logger.error('Failed to connect to database:', error)

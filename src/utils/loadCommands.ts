@@ -5,6 +5,7 @@ import { Collection } from 'discord.js'
 
 import type { Shortcuts } from '../commands/shortcuts'
 import type { Command } from '../interfaces/Command'
+import Shortcut from '../interfaces/models/Shortcut'
 import { ShortcutCommand } from '../interfaces/ShortcutCommand'
 import type { Strago } from '../interfaces/Strago'
 
@@ -39,11 +40,8 @@ export const loadCommands = async (
     for (const t of strago.config.shortcutTypes) {
       const command = new ShortcutCommand(t)
       commands.set(t, command)
-      const titles = await strago.db
-        .collection(t)
-        .find()
-        .map((d) => d.title)
-        .toArray()
+      const shortcuts = await Shortcut(t).find()
+      const titles = shortcuts.map((d) => d.title)
       strago.shortcutTitles.set(t, new Set<string>(titles))
     }
 

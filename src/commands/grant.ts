@@ -7,6 +7,7 @@ import {
 
 import * as achievementData from '../data/achievementData.json'
 import type { Command } from '../interfaces/Command'
+import Character from '../interfaces/models/Character'
 import type { Strago } from '../interfaces/Strago'
 import * as xivlib from '../modules/xivlib'
 
@@ -49,8 +50,7 @@ export const grant: Command = {
         content: 'Checking registration...',
         ephemeral: true,
       })
-      const characters = strago.db.collection('characters')
-      const character = await characters.findOne({
+      const character = await Character.findOne({
         discordId: interaction.user.id,
       })
 

@@ -6,6 +6,7 @@ import {
 } from 'discord.js'
 
 import type { Command } from './Command'
+import Shortcut from './models/Shortcut'
 import type { Strago } from './Strago'
 
 /**
@@ -33,14 +34,10 @@ export class ShortcutCommand implements Command {
     this.type = type
   }
 
-  public async run(
-    interaction: ChatInputCommandInteraction,
-    strago: Strago,
-  ): Promise<void> {
+  public async run(interaction: ChatInputCommandInteraction): Promise<void> {
     if (interaction.guild === null) return
 
-    const collection = strago.db.collection(this.type)
-    const doc = await collection.findOne({
+    const doc = await Shortcut(this.type).findOne({
       title: interaction.options.getString('title', true),
     })
     if (doc === null) {
