@@ -49,14 +49,9 @@ export class Shortcuts implements Command {
           content,
           files,
         }
-        const shortcut = (await Shortcut(type).findOneAndReplace(
-          { title },
-          document,
-          {
-            upsert: true,
-          },
-        )) as Document<IShortcut>
-        await shortcut.save()
+        await Shortcut(type).findOneAndReplace({ title }, document, {
+          upsert: true,
+        })
         strago.shortcutTitles.get(type)?.add(title)
         await interaction.editReply({
           content: `New ${type} ${title} successfully saved!`,
