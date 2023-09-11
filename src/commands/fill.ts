@@ -207,14 +207,17 @@ async function find(
 
   let selectedRoles: string[] = []
   let selectedContent: { id: string; label: string }
+  let timeout = true
 
   collector.on('collect', async (i) => {
     if (i.customId === 'cancel') {
+      timeout = false
       await i.editReply({
         content: 'Canceled fill request.',
         components: [],
       })
     } else if (i.customId === 'submit') {
+      timeout = false
       if (selectedRoles.length === 0 || selectedContent === undefined) {
         await i.reply({
           content:
@@ -222,72 +225,91 @@ async function find(
           ephemeral: true,
         })
       } else {
-        const fills = await Fill.find({
-          [selectedContent.id]: true,
-          enabled: true,
-          $or: selectedRoles.map((r) => ({ [r]: true })),
-        })
-        if (fills.length === 0) {
-          await i.update({
-            content:
-              'There are currently no fills available for that role/content.',
-            components: [],
-          })
-        } else {
-          await i.update({
-            content: `Submitted fill request to ${fills.length} potential fill${
-              fills.length > 1 ? 's' : ''
-            }. If they're interested, they will reach out to you.`,
-            components: [],
-          })
-          const fillChannel = strago.channels.cache.get(
-            strago.config.fillChannelId,
+        const fillChannel = strago.channels.cache.get(
+          strago.config.fillChannelId,
+        )
+
+        const lfgChannel = interaction.channel
+
+        if (!fillChannel?.isTextBased()) return
+
+        const embed = new EmbedBuilder()
+          .setTitle('New Fill Request')
+          .setDescription(`${interaction.user} has created a new fill request.`)
+          .addFields(
+            {
+              name: 'Roles',
+              value: `${selectedRoles
+                .map((r) => idLabels.get(r) as string)
+                .join(', ')}`,
+              inline: true,
+            },
+            {
+              name: 'Content',
+              value: `${selectedContent.label}`,
+              inline: true,
+            },
           )
-
-          if (!fillChannel?.isTextBased()) return
-
-          const embed = new EmbedBuilder()
-            .setTitle('New Fill Request')
-            .setDescription(
-              `${interaction.user} has created a new fill request.`,
-            )
-            .addFields(
-              {
-                name: 'Roles',
-                value: `${selectedRoles
-                  .map((r) => idLabels.get(r) as string)
-                  .join(', ')}`,
-                inline: true,
-              },
-              {
-                name: 'Content',
-                value: `${selectedContent.label}`,
-                inline: true,
-              },
-            )
-          // Try to find the last message sent in channel.
-          if (
-            interaction.channel !== null &&
-            !interaction.channel.isDMBased() &&
-            interaction.channel.name.endsWith('lfg')
-          ) {
-            const message = (
-              await interaction.channel.messages.fetch({
-                around: interaction.id,
-              })
-            ).find((m) => m.author === interaction.user)
-            console.log(message)
-            if (message !== undefined) {
-              embed.addFields({
-                name: `Last Message: ${message.url}`,
-                value: `${message.content}`,
-              })
-            }
+        // Try to find the last message sent in channel.
+        if (
+          lfgChannel !== null &&
+          !lfgChannel.isDMBased() &&
+          lfgChannel.name.endsWith('lfg') &&
+          !lfgChannel.isThread()
+        ) {
+          const message = (
+            await lfgChannel.messages.fetch({
+              around: interaction.id,
+            })
+          ).find((m) => m.author === interaction.user)
+          if (message === undefined) {
+            await i.update({
+              content:
+                "I couldn't find a recent LFG message from you in this channel, so no request was made.",
+              components: [],
+            })
+            return
           }
-          await fillChannel.send({
-            content: `${fills.map((f) => `<@${f.get('discordId')}>`).join('')}`,
-            embeds: [embed],
+          embed.addFields({
+            name: `Last Message: ${message.url}`,
+            value: `${message.content}`,
           })
+
+          const fills = await Fill.find({
+            [selectedContent.id]: true,
+            enabled: true,
+            $or: selectedRoles.map((r) => ({ [r]: true })),
+          })
+          if (fills.length === 0) {
+            await i.update({
+              content:
+                'There are currently no fills available for that role/content.',
+              components: [],
+            })
+          } else {
+            const users = await Promise.all(
+              fills.map(
+                async (f) =>
+                  await interaction.guild?.members.fetch(f.get('discordId')),
+              ),
+            )
+            const validFills = users.filter(
+              (u) =>
+                u !== undefined && lfgChannel.members.get(u.id) !== undefined,
+            )
+            await fillChannel.send({
+              content: `${validFills.map((m) => `${m}`).join('')}`,
+              embeds: [embed],
+            })
+            await i.update({
+              content: `Submitted fill request to ${
+                validFills.length
+              } potential fill${
+                validFills.length > 1 ? 's' : ''
+              }. If they're interested, they will reach out to you.`,
+              components: [],
+            })
+          }
         }
       }
     } else if (i.componentType === ComponentType.StringSelect) {
@@ -305,10 +327,12 @@ async function find(
   })
 
   collector.on('end', async () => {
-    await response.edit({
-      content: 'Request timed out without being submitted.',
-      components: [],
-    })
+    if (timeout) {
+      await response.edit({
+        content: 'Request timed out without being submitted.',
+        components: [],
+      })
+    }
   })
 }
 
