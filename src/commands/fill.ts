@@ -353,7 +353,6 @@ export const fill: Command = {
   data: new SlashCommandBuilder()
     .setName('fill')
     .setDescription('Enable/disable fill notifications.')
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addSubcommand((subcommand) =>
       subcommand.setName('on').setDescription('Turns fill notifications on.'),
     )
