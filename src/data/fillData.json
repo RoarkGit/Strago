@@ -1,0 +1,57 @@
+{
+  "content": {
+    "extremeData": {
+      "arrExtremes": {
+        "label": "ARR Extremes",
+        "requiresRole": "Mightier than the Realm",
+        "emoji": "trial"
+      },
+      "hwExtremes": {
+        "label": "HW Extremes",
+        "requiresRole": "Mightier than the Heavens",
+        "emoji": "trial"
+      },
+      "sbExtremes": {
+        "label": "SB Extremes",
+        "requiresRole": "Mightier than the Storm",
+        "emoji": "trial"
+      },
+      "shbExtremes": {
+        "label": "ShB Extremes",
+        "requiresRole": "Mightier than the Shadow",
+        "emoji": "trial"
+      }
+    },
+    "raidData": {
+      "morbolRaids": {
+        "label": "Morbol Raids",
+        "requiresRole": "Morbol Owner",
+        "emoji": "morbol"
+      },
+      "omegaRaids": {
+        "label": "Omega Raids",
+        "requiresRole": "The Azure and Omega",
+        "emoji": "azureAndOmega"
+      },
+      "edenRaids": {
+        "label": "Eden Raids",
+        "requiresRole": "Forbidden Blue",
+        "emoji": "forbiddenBlue"
+      }
+    }
+  },
+  "roles": {
+    "tankRole": {
+      "label": "Tank",
+      "emoji": "blu_tank"
+    },
+    "healerRole": {
+      "label": "Healer",
+      "emoji": "blu_healer"
+    },
+    "dpsRole": {
+      "label": "DPS",
+      "emoji": "blu_dps"
+    }
+  }
+}

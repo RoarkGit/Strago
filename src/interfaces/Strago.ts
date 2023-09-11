@@ -23,6 +23,7 @@ export interface Strago extends Client {
     homeGuildId: string
     loggerUri: string | undefined
     deletedMessagesChannelId: string
+    fillChannelId: string
     modCategoryId: string
     modChannelId: string
     weeklyTargetChannelId: string
