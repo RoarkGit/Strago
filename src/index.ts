@@ -71,6 +71,7 @@ void (async () => {
   }
 
   // Instantiate values.
+  strago.fillSpamSet = new TimeoutSet(10 * 60)
   strago.lfgSpamSet = new TimeoutSet(5 * 60)
   strago.grantSpamSet = new TimeoutSet(10 * 60)
 

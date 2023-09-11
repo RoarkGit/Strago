@@ -312,6 +312,7 @@ async function find(
               }. If they're interested, they will reach out to you.`,
               components: [],
             })
+            strago.fillSpamSet.add(interaction.user.id)
           }
         }
       }
@@ -377,7 +378,18 @@ export const fill: Command = {
     const command = interaction.options.getSubcommand()
 
     if (command === 'find') {
-      await find(interaction, strago)
+      // Check if user recently ran command.
+      if (strago.fillSpamSet.has(interaction.user.id)) {
+        await interaction.reply({
+          content:
+            "You're doing that too quickly, wait at least ten minutes and try again.",
+          ephemeral: true,
+        })
+        return
+      } else {
+        strago.fillSpamSet.add(interaction.user.id)
+        await find(interaction, strago)
+      }
     } else {
       // Check if user has any of the required roles.
       const memberRoles = new Set(

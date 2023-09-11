@@ -34,6 +34,7 @@ export interface Strago extends Client {
     spellData: Collection<string, Spell>
   }
   shortcutTitles: Collection<string, Set<string>>
+  fillSpamSet: TimeoutSet
   grantSpamSet: TimeoutSet
   lfgSpamSet: TimeoutSet
   logger: Logger
