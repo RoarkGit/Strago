@@ -12,7 +12,7 @@ const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
  */
 export const generateWeeklyTargetsEmbed = (weeks: number): EmbedBuilder => {
   const numWeeks =
-    Math.round((Date.now().valueOf() - ROTATION_START.valueOf()) / MS_IN_WEEK) +
+    Math.floor((Date.now().valueOf() - ROTATION_START.valueOf()) / MS_IN_WEEK) +
     weeks
   const carnivaleTargets = Object.values(weeklyTargets.carnivale).map(
     (t) => t[numWeeks % t.length],
