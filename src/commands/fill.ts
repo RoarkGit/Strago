@@ -212,7 +212,7 @@ async function find(
   collector.on('collect', async (i) => {
     if (i.customId === 'cancel') {
       timeout = false
-      await i.editReply({
+      await i.update({
         content: 'Canceled fill request.',
         components: [],
       })
