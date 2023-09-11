@@ -127,7 +127,7 @@ async function roles(
   collector.on('collect', async (i: ButtonInteraction) => {
     if (i.customId === 'save') {
       await i.update({
-        content: 'Updated your fill configuration!',
+        content: 'Updated your fill configuration.',
         components: [],
       })
       await fill.save()
@@ -145,10 +145,9 @@ async function roles(
   collector.on('end', async (_, reason) => {
     if (reason === 'time') {
       await response.edit({
-        content: 'Interaction timed out, updated your fill configuration!',
+        content: 'Interaction timed out, fill configuration was not saved.',
         components: [],
       })
-      await fill.save()
     }
   })
 }
@@ -244,7 +243,7 @@ async function find(
           if (message === undefined) {
             await i.update({
               content:
-                "I couldn't find a recent LFG message from you in this channel, so no request was made.",
+                "I couldn't find a recent message from you in this channel, so no request was made.",
               components: [],
             })
             return
@@ -374,12 +373,36 @@ export const fill: Command = {
     interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
-    if (interaction.guild === null) return
+    if (interaction.guild === null || interaction.member === null) return
     const command = interaction.options.getSubcommand()
 
     if (command === 'find') {
       await find(interaction, strago)
     } else {
+      // Check if user has any of the required roles.
+      const memberRoles = new Set(
+        (interaction.member.roles as GuildMemberRoleManager).cache.map(
+          (r) => r.name,
+        ),
+      )
+      if (!memberRoles.has('Blue Legend')) {
+        const requiredRoles = Object.values(fillData.content)
+          .reduce(
+            (accumulator, d) =>
+              accumulator.concat(Object.values(d).map((v) => v.requiresRole)),
+            [] as string[],
+          )
+          .filter((r) => memberRoles.has(r))
+        if (requiredRoles.length === 0) {
+          await interaction.reply({
+            content:
+              'You do not have any of the roles that allow you to register as a fill.',
+            ephemeral: true,
+          })
+          return
+        }
+      }
+
       // Get user's fill data or create default.
       const fill: Document<IFill> = await Fill.findOneAndUpdate(
         { discordId: interaction.user.id },
