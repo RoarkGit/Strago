@@ -58,6 +58,7 @@ function createOption(
   return option
 }
 
+// Handle role configuration command
 async function roles(
   interaction: ChatInputCommandInteraction,
   fill: Document<IFill>,
@@ -117,6 +118,8 @@ async function roles(
     components: rows,
     ephemeral: true,
   })
+
+  // Handle button presses.
   const collector = response.createMessageComponentCollector({
     componentType: ComponentType.Button,
     time: 60000,
@@ -128,6 +131,7 @@ async function roles(
         components: [],
       })
       await fill.save()
+      collector.stop()
     } else {
       const set = !fill.get(i.customId)
       fill.set(i.customId, set)
@@ -138,12 +142,14 @@ async function roles(
     }
   })
 
-  collector.on('end', async () => {
-    await response.edit({
-      content: 'Interaction timed out, updated your fill configuration!',
-      components: [],
-    })
-    await fill.save()
+  collector.on('end', async (_, reason) => {
+    if (reason === 'time') {
+      await response.edit({
+        content: 'Interaction timed out, updated your fill configuration!',
+        components: [],
+      })
+      await fill.save()
+    }
   })
 }
 
@@ -207,17 +213,15 @@ async function find(
 
   let selectedRoles: string[] = []
   let selectedContent: { id: string; label: string }
-  let timeout = true
 
   collector.on('collect', async (i) => {
     if (i.customId === 'cancel') {
-      timeout = false
       await i.update({
         content: 'Canceled fill request.',
         components: [],
       })
+      collector.stop()
     } else if (i.customId === 'submit') {
-      timeout = false
       if (selectedRoles.length === 0 || selectedContent === undefined) {
         await i.reply({
           content:
@@ -225,36 +229,11 @@ async function find(
           ephemeral: true,
         })
       } else {
-        const fillChannel = strago.channels.cache.get(
-          strago.config.fillChannelId,
-        )
-
         const lfgChannel = interaction.channel
-
-        if (!fillChannel?.isTextBased()) return
-
-        const embed = new EmbedBuilder()
-          .setTitle('New Fill Request')
-          .setDescription(`${interaction.user} has created a new fill request.`)
-          .addFields(
-            {
-              name: 'Roles',
-              value: `${selectedRoles
-                .map((r) => idLabels.get(r) as string)
-                .join(', ')}`,
-              inline: true,
-            },
-            {
-              name: 'Content',
-              value: `${selectedContent.label}`,
-              inline: true,
-            },
-          )
         // Try to find the last message sent in channel.
         if (
           lfgChannel !== null &&
           !lfgChannel.isDMBased() &&
-          lfgChannel.name.endsWith('lfg') &&
           !lfgChannel.isThread()
         ) {
           const message = (
@@ -270,10 +249,34 @@ async function find(
             })
             return
           }
-          embed.addFields({
-            name: `Last Message: ${message.url}`,
-            value: `${message.content}`,
-          })
+          const fillChannel = strago.channels.cache.get(
+            strago.config.fillChannelId,
+          )
+          if (fillChannel === undefined || !fillChannel.isTextBased()) return
+
+          const embed = new EmbedBuilder()
+            .setTitle('New Fill Request')
+            .setDescription(
+              `${interaction.user} has created a new fill request.`,
+            )
+            .addFields(
+              {
+                name: 'Roles',
+                value: `${selectedRoles
+                  .map((r) => idLabels.get(r) as string)
+                  .join(', ')}`,
+                inline: true,
+              },
+              {
+                name: 'Content',
+                value: `${selectedContent.label}`,
+                inline: true,
+              },
+              {
+                name: `Last Message: ${message.url}`,
+                value: `${message.content}`,
+              },
+            )
 
           const fills = await Fill.find({
             [selectedContent.id]: true,
@@ -293,6 +296,7 @@ async function find(
                   await interaction.guild?.members.fetch(f.get('discordId')),
               ),
             )
+            // Filter users that are not in the given LFG channel.
             const validFills = users.filter(
               (u) =>
                 u !== undefined && lfgChannel.members.get(u.id) !== undefined,
@@ -312,6 +316,7 @@ async function find(
           }
         }
       }
+      collector.stop()
     } else if (i.componentType === ComponentType.StringSelect) {
       // Update selected data.
       await i.deferUpdate()
@@ -326,8 +331,8 @@ async function find(
     }
   })
 
-  collector.on('end', async () => {
-    if (timeout) {
+  collector.on('end', async (_, reason) => {
+    if (reason === 'time') {
       await response.edit({
         content: 'Request timed out without being submitted.',
         components: [],
@@ -371,8 +376,6 @@ export const fill: Command = {
   ): Promise<void> => {
     if (interaction.guild === null) return
     const command = interaction.options.getSubcommand()
-
-    await connect(strago.config.databaseUri)
 
     if (command === 'find') {
       await find(interaction, strago)
