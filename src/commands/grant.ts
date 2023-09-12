@@ -5,7 +5,7 @@ import {
   type TextChannel,
 } from 'discord.js'
 
-import * as achievementData from '../data/achievementData.json'
+import achievementData from '../data/achievementData.json'
 import type { Command } from '../interfaces/Command'
 import Character from '../interfaces/models/Character'
 import type { Strago } from '../interfaces/Strago'

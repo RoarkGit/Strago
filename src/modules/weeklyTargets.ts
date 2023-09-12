@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js'
 
-import * as weeklyTargets from '../data/weeklyTargets.json'
+import weeklyTargets from '../data/weeklyTargets.json'
 
 const MS_IN_WEEK = 1000 * 60 * 60 * 24 * 7
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))

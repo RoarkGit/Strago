@@ -6,10 +6,9 @@ import {
   SlashCommandSubcommandGroupBuilder,
   type SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
-import type { Document } from 'mongoose'
 
 import type { Command } from '../interfaces/Command'
-import Shortcut, { IShortcut } from '../interfaces/models/Shortcut'
+import Shortcut from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
 
 /**
