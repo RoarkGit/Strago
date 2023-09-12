@@ -14,7 +14,7 @@ FROM node:alpine
 WORKDIR /usr
 COPY package.json ./
 RUN npm install --omit=dev
-COPY --from=0 /usr/prod /usr/prod
+COPY --from=0 /usr/dist /usr/dist
 RUN npm install pm2 -g
 
-CMD ["pm2-runtime", "prod", "index.js"]
+CMD ["pm2-runtime", "dist", "index.js"]

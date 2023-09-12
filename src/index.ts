@@ -54,10 +54,7 @@ void (async () => {
 
   // Load commands.
   strago.shortcutTitles = new Collection<string, Set<string>>()
-  const commandsPath =
-    strago.config.env === 'prod'
-      ? join(process.cwd(), 'prod', 'commands')
-      : join(process.cwd(), 'src', 'commands')
+  const commandsPath = join(process.cwd(), 'dist', 'commands')
   if (!(await loadCommands(strago, commandsPath))) {
     strago.logger.error('Failed to load commands.')
     return
