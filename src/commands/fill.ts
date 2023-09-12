@@ -377,6 +377,16 @@ export const fill: Command = {
     const command = interaction.options.getSubcommand()
 
     if (command === 'find') {
+      if (
+        interaction.channel === null ||
+        interaction.channel.isDMBased() ||
+        !interaction.channel.name.endsWith('lfg')
+      ) {
+        await interaction.reply({
+          content: "This command can only be run in 'lfg' channels",
+          ephemeral: true,
+        })
+      }
       // Check if user recently ran command.
       if (strago.fillSpamSet.has(interaction.user.id)) {
         await interaction.reply({
@@ -407,7 +417,7 @@ export const fill: Command = {
         if (requiredRoles.length === 0) {
           await interaction.reply({
             content:
-              'You do not have any of the roles that allow you to register as a fill.',
+              'You do not have any of the roles that allow you to register as a fill. To register as a fill, you need to have at least one of the Mightier than the X or raid achievement roles. Run `/roles` for more info.',
             ephemeral: true,
           })
           return
