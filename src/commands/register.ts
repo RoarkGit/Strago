@@ -7,10 +7,9 @@ import {
   type MessageActionRowComponentBuilder,
   SlashCommandBuilder,
 } from 'discord.js'
-import { Document } from 'mongoose'
 
 import type { Command } from '../interfaces/Command'
-import Character, { ICharacter } from '../interfaces/models/Character'
+import Character from '../interfaces/models/Character'
 import type { Strago } from '../interfaces/Strago'
 import * as xivlib from '../modules/xivlib'
 
@@ -205,12 +204,11 @@ export const register: Command = {
               content: 'You have successfully registered your character!',
               components: [],
             })
-            const char = (await Character.findOneAndReplace(
+            await Character.findOneAndReplace(
               { discordId: i.user.id },
               { discordId: i.user.id, characterId, characterName: character },
               { upsert: true },
-            )) as Document<ICharacter>
-            await char.save()
+            )
           } else {
             if (characterId != null) {
               strago.logger.info(`Registration failed for ${characterId}`)
