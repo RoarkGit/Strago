@@ -5,6 +5,8 @@ import type { Strago } from '../interfaces/Strago'
 interface LogMessage {
   message: string
   command: string
+  subcommandGroup: string | null
+  subcommand: string | null
   options: Record<string, string | number | boolean | undefined>
   user: Record<string, string>
   guild: Record<string, string | null>
@@ -26,18 +28,15 @@ export const interactionCreate = async (
 
     // Log command usage with entered options.
     const user = await strago.users.fetch(interaction.user.id)
-    const commandNames = [
-      interaction.commandName,
-      interaction.options.getSubcommandGroup(false),
-      interaction.options.getSubcommand(false),
-    ]
     const options: Record<string, string | number | boolean | undefined> = {}
     interaction.options.data.forEach((o) => {
       options[o.name] = o.value
     })
     const logMessage: LogMessage = {
       message: 'Processing command',
-      command: commandNames.filter((c) => c !== null).join(':'),
+      command: interaction.commandName,
+      subcommandGroup: interaction.options.getSubcommandGroup(false),
+      subcommand: interaction.options.getSubcommand(false),
       options,
       user: {
         userTag: user.tag,
