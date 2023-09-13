@@ -1,4 +1,9 @@
-import { ChannelType, type Message, type TextChannel } from 'discord.js'
+import {
+  ChannelType,
+  type Message,
+  PermissionFlagsBits,
+  type TextChannel,
+} from 'discord.js'
 
 import User from '../interfaces/models/User'
 import type { Strago } from '../interfaces/Strago'
@@ -21,6 +26,7 @@ export const checkLFGSpam = async (
   )
     return
   const member = message.member
+  if (member.permissions.has(PermissionFlagsBits.ManageMessages)) return
 
   // Check if roles were actually mentioned.
   if (message.mentions.roles.size > 0) {
