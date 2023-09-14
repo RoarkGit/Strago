@@ -1,57 +1,71 @@
 {
   "content": {
+    "normalData": {
+      "spellLearning": {
+        "label": "Spell Learning",
+        "emoji": "📜"
+      },
+      "blueMageLog": {
+        "label": "Blue Mage Log",
+        "emoji": "🎫"
+      },
+      "weeklyTargets": {
+        "label": "Weekly Targets",
+        "emoji": "📘"
+      }
+    },
     "extremeData": {
       "arrExtremes": {
         "label": "ARR Extremes",
         "requiresRole": "Mightier than the Realm",
-        "emoji": "trial"
+        "guildEmoji": "trial"
       },
       "hwExtremes": {
         "label": "HW Extremes",
         "requiresRole": "Mightier than the Heavens",
-        "emoji": "trial"
+        "guildEmoji": "trial"
       },
       "sbExtremes": {
         "label": "SB Extremes",
         "requiresRole": "Mightier than the Storm",
-        "emoji": "trial"
+        "guildEmoji": "trial"
       },
       "shbExtremes": {
         "label": "ShB Extremes",
         "requiresRole": "Mightier than the Shadow",
-        "emoji": "trial"
+        "guildEmoji": "trial"
       }
     },
     "raidData": {
       "morbolRaids": {
         "label": "Morbol Raids",
         "requiresRole": "Morbol Owner",
-        "emoji": "morbol"
+        "guildEmoji": "morbol"
       },
       "omegaRaids": {
         "label": "Omega Raids",
         "requiresRole": "The Azure and Omega",
-        "emoji": "azureAndOmega"
+        "guildEmoji": "azureAndOmega"
       },
       "edenRaids": {
         "label": "Eden Raids",
         "requiresRole": "Forbidden Blue",
-        "emoji": "forbiddenBlue"
+        "guildEmoji": "forbiddenBlue"
       }
     }
   },
   "roles": {
     "tankRole": {
       "label": "Tank",
-      "emoji": "blu_tank"
+      "guildEmoji": "blu_tank"
     },
     "healerRole": {
       "label": "Healer",
-      "emoji": "blu_healer"
+      "guildEmoji": "blu_healer"
     },
     "dpsRole": {
       "label": "DPS",
-      "emoji": "blu_dps"
+      "guildEmoji": "blu_dps"
     }
   }
 }

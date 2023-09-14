@@ -9,13 +9,12 @@ import {
   EmbedBuilder,
   GuildEmoji,
   GuildMemberRoleManager,
-  PermissionFlagsBits,
   Role,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from 'discord.js'
-import { Document, connect } from 'mongoose'
+import { Document } from 'mongoose'
 
 import fillData from '../data/fillData.json'
 import { Command } from '../interfaces/Command'
@@ -27,14 +26,16 @@ const idLabels: Collection<string, string> = new Collection<string, string>()
 // Create base button for use in action rows.
 function createButton(
   id: string,
-  data: { label: string; emoji: string },
+  data: { label: string; emoji?: string; guildEmoji?: string },
   emojis: Collection<string, GuildEmoji>,
   enabled: boolean,
 ): ButtonBuilder {
-  const emoji = emojis.find((e) => e.name === data.emoji)
+  const emoji = emojis.find((e) => e.name === data.guildEmoji)
   const button = new ButtonBuilder().setCustomId(id).setLabel(data.label)
   if (emoji !== undefined) {
     button.setEmoji(emoji.toString())
+  } else if (data.emoji !== undefined) {
+    button.setEmoji(data.emoji)
   }
   // Set style for enabled/disabled.
   button.setStyle(enabled ? ButtonStyle.Success : ButtonStyle.Secondary)
@@ -44,16 +45,18 @@ function createButton(
 // Create option for use in string select menus.
 function createOption(
   id: string,
-  data: { label: string; emoji: string },
+  data: { label: string; emoji?: string; guildEmoji?: string },
   emojis: Collection<string, GuildEmoji>,
 ): StringSelectMenuOptionBuilder {
   idLabels.set(id, data.label)
-  const emoji = emojis.find((e) => e.name === data.emoji)
+  const emoji = emojis.find((e) => e.name === data.guildEmoji)
   const option = new StringSelectMenuOptionBuilder()
     .setLabel(data.label)
     .setValue(id)
   if (emoji !== undefined) {
     option.setEmoji(emoji.toString())
+  } else if (data.emoji !== undefined) {
+    option.setEmoji(data.emoji)
   }
   return option
 }
@@ -84,7 +87,9 @@ async function roles(
           const button = createButton(id, data, emojis, fill.get(id))
           // Disable button if missing eligible role.
           button.setDisabled(
-            !legend && !roles.cache.some((r) => r.name === data.requiresRole),
+            data.requiresRole !== undefined &&
+              !legend &&
+              !roles.cache.some((r) => r.name === data.requiresRole),
           )
           buttons.set(id, button)
           return button
@@ -174,15 +179,17 @@ async function find(
     .setCustomId('content')
     .setPlaceholder('Which content are you running?')
     .addOptions(
-      Object.values(fillData.content).reduce(
-        (accumulator, contentData) =>
-          accumulator.concat(
-            Object.entries(contentData).map(([id, data]) =>
-              createOption(id, data, emojis),
+      Object.values(fillData.content)
+        .reduce(
+          (accumulator, contentData) =>
+            accumulator.concat(
+              Object.entries(contentData).map(([id, data]) =>
+                createOption(id, data, emojis),
+              ),
             ),
-          ),
-        [] as StringSelectMenuOptionBuilder[],
-      ),
+          [] as StringSelectMenuOptionBuilder[],
+        )
+        .reverse(),
     )
   const roleRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
     roleChoices,
@@ -381,8 +388,7 @@ export const fill: Command = {
         interaction.channel === null ||
         interaction.channel.isDMBased() ||
         interaction.channel.parent === null ||
-        // TODO: Make this a variable instead of hardcoded.
-        interaction.channel.parent.id !== '762884611159621673'
+        interaction.channel.parent.id !== strago.config.lfgCategoryId
       ) {
         await interaction.reply({
           content:
@@ -403,30 +409,6 @@ export const fill: Command = {
         await find(interaction, strago)
       }
     } else {
-      // Check if user has any of the required roles.
-      const memberRoles = new Set(
-        (interaction.member.roles as GuildMemberRoleManager).cache.map(
-          (r) => r.name,
-        ),
-      )
-      if (!memberRoles.has('Blue Legend')) {
-        const requiredRoles = Object.values(fillData.content)
-          .reduce(
-            (accumulator, d) =>
-              accumulator.concat(Object.values(d).map((v) => v.requiresRole)),
-            [] as string[],
-          )
-          .filter((r) => memberRoles.has(r))
-        if (requiredRoles.length === 0) {
-          await interaction.reply({
-            content:
-              'You do not have any of the roles that allow you to register as a fill. To register as a fill, you need to have at least one of the Mightier than the X or raid achievement roles. Run `/roles` for more info.',
-            ephemeral: true,
-          })
-          return
-        }
-      }
-
       // Get user's fill data or create default.
       const fill: Document<IFill> = await Fill.findOneAndUpdate(
         { discordId: interaction.user.id },

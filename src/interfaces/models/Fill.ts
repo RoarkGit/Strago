@@ -2,6 +2,9 @@ import { Schema, model } from 'mongoose'
 
 export interface IFill {
   discordId: string
+  spellLearning: boolean
+  blueMageLog: boolean
+  weeklyTargets: boolean
   arrExtremes: boolean
   hwExtremes: boolean
   sbExtremes: boolean
@@ -17,6 +20,9 @@ export interface IFill {
 
 const FillSchema = new Schema<IFill>({
   discordId: { type: String, required: true },
+  spellLearning: { type: Boolean, required: true, default: false },
+  blueMageLog: { type: Boolean, required: true, default: false },
+  weeklyTargets: { type: Boolean, required: true, default: false },
   arrExtremes: { type: Boolean, required: true, default: false },
   hwExtremes: { type: Boolean, required: true, default: false },
   sbExtremes: { type: Boolean, required: true, default: false },

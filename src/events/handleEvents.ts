@@ -28,7 +28,7 @@ export const handleEvents = (strago: Strago): void => {
       message.channel.isTextBased() &&
       !message.channel.isDMBased() &&
       message.channel.id !== strago.config.fillChannelId &&
-      message.channel.parentId === '762884611159621673' &&
+      message.channel.parentId === strago.config.lfgCategoryId &&
       message.mentions.roles.some((r) => r.name.includes('Filler'))
     ) {
       await message.reply({
