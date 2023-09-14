@@ -380,10 +380,13 @@ export const fill: Command = {
       if (
         interaction.channel === null ||
         interaction.channel.isDMBased() ||
-        !interaction.channel.name.endsWith('lfg')
+        interaction.channel.parent === null ||
+        // TODO: Make this a variable instead of hardcoded.
+        interaction.channel.parent.id !== '762884611159621673'
       ) {
         await interaction.reply({
-          content: "This command can only be run in 'lfg' channels",
+          content:
+            "This command can only be run in 'lfg' or 'recruitment' channels",
           ephemeral: true,
         })
       }
