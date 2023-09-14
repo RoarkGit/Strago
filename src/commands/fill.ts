@@ -405,7 +405,6 @@ export const fill: Command = {
         })
         return
       } else {
-        strago.fillSpamSet.add(interaction.user.id)
         await find(interaction, strago)
       }
     } else {
