@@ -22,7 +22,9 @@ export const loadCommands = async (
       string,
       Command
     >()
-    const files = await readdir(commandsPath)
+    const files = (await readdir(commandsPath)).filter(
+      (f) => !f.endsWith('.map'),
+    )
 
     for (const file of files) {
       const name = file.split('.')[0]

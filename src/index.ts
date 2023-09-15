@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join, resolve } from 'path'
 
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js'
 
@@ -54,7 +54,7 @@ void (async () => {
 
   // Load commands.
   strago.shortcutTitles = new Collection<string, Set<string>>()
-  const commandsPath = join(process.cwd(), 'dist', 'commands')
+  const commandsPath = join(resolve(__dirname), 'commands')
   if (!(await loadCommands(strago, commandsPath))) {
     strago.logger.error('Failed to load commands.')
     return
