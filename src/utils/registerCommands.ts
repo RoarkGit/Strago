@@ -25,7 +25,10 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
       | RESTPostAPIChatInputApplicationCommandsJSONBody
     > = []
 
-    strago.commands.forEach((command) => {
+    strago.commands.forEach(async (command) => {
+      if (command.preregister !== undefined) {
+        await command.preregister()
+      }
       const data = command.data.toJSON()
 
       if (command.guildCommand) {

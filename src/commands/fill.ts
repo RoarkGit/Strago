@@ -9,6 +9,7 @@ import {
   EmbedBuilder,
   GuildEmoji,
   GuildMemberRoleManager,
+  Message,
   Role,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
@@ -160,6 +161,7 @@ async function roles(
 async function find(
   interaction: ChatInputCommandInteraction,
   strago: Strago,
+  lfgMessage: Message,
 ): Promise<void> {
   if (interaction.guild === null) return
 
@@ -242,19 +244,6 @@ async function find(
           !lfgChannel.isDMBased() &&
           !lfgChannel.isThread()
         ) {
-          const message = (
-            await lfgChannel.messages.fetch({
-              around: interaction.id,
-            })
-          ).find((m) => m.author === interaction.user)
-          if (message === undefined) {
-            await i.update({
-              content:
-                "I couldn't find a recent message from you in this channel, so no request was made.",
-              components: [],
-            })
-            return
-          }
           const fillChannel = strago.channels.cache.get(
             strago.config.fillChannelId,
           )
@@ -279,8 +268,8 @@ async function find(
                 inline: true,
               },
               {
-                name: `Last Message: ${message.url}`,
-                value: `${message.content}`,
+                name: `Last Message: ${lfgMessage.url}`,
+                value: `${lfgMessage.content}`,
               },
             )
 
@@ -322,8 +311,8 @@ async function find(
             strago.fillSpamSet.add(interaction.user.id)
           }
         }
+        collector.stop()
       }
-      collector.stop()
     } else if (i.componentType === ComponentType.StringSelect) {
       // Update selected data.
       await i.deferUpdate()
@@ -376,6 +365,16 @@ export const fill: Command = {
         .setName('find')
         .setDescription('Find a fill by role/content type.'),
     ),
+  preregister: async (): Promise<void> => {
+    Object.entries(fillData.roles).forEach(([id, role]) => {
+      idLabels.set(id, role.label)
+    })
+    Object.values(fillData.content).forEach((contentData) => {
+      Object.entries(contentData).forEach(([id, data]) => {
+        idLabels.set(id, data.label)
+      })
+    })
+  },
   run: async (
     interaction: ChatInputCommandInteraction,
     strago: Strago,
@@ -395,6 +394,7 @@ export const fill: Command = {
             "This command can only be run in 'lfg' or 'recruitment' channels",
           ephemeral: true,
         })
+        return
       }
       // Check if user recently ran command.
       if (strago.fillSpamSet.has(interaction.user.id)) {
@@ -405,7 +405,20 @@ export const fill: Command = {
         })
         return
       } else {
-        await find(interaction, strago)
+        const lfgMessage = (
+          await interaction.channel.messages.fetch({
+            around: interaction.id,
+          })
+        ).find((m) => m.author === interaction.user)
+        if (lfgMessage === undefined || lfgMessage.content === '') {
+          await interaction.reply({
+            content:
+              "I couldn't find a recent message from you in this channel, please post a message before looking for a fill.",
+            ephemeral: true,
+          })
+          return
+        }
+        await find(interaction, strago, lfgMessage)
       }
     } else {
       // Get user's fill data or create default.

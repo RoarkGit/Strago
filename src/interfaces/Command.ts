@@ -17,6 +17,7 @@ export interface Command {
   data:
     | Omit<SlashCommandBuilder, 'addSubcommandGroup' | 'addSubcommand'>
     | SlashCommandSubcommandsOnlyBuilder
+  preregister?: () => Promise<void>
   /**
    * Command action to run.
    */
