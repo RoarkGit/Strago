@@ -41,7 +41,7 @@ export const checkLFGSpam = async (
         { $inc: { numTimeouts: 1 } },
       )
       await user.save()
-      const numTimeouts = (user.numTimeouts as number) + 1
+      const numTimeouts = user.numTimeouts + 1
       if (numTimeouts > 1) {
         const modChannel = strago.channels.cache.get(
           strago.config.modChannelId,
