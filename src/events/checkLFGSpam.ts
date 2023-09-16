@@ -42,11 +42,14 @@ export const checkLFGSpam = async (
       )
       await user.save()
       const numTimeouts = (user.numTimeouts as number) + 1
-      await (
-        strago.channels.cache.get(strago.config.modChannelId) as TextChannel
-      ).send(
-        `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
-      )
+      if (numTimeouts > 1) {
+        const modChannel = strago.channels.cache.get(
+          strago.config.modChannelId,
+        ) as TextChannel
+        await modChannel.send(
+          `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
+        )
+      }
       await message.reply(
         `${member.toString()}: pinging roles in multiple LFG channels spams people who might be in those channels. You have been timed out for one hour.\n` +
           '_Posting_ in multiple channels is fine as long as you do _not_ ping in multiple channels.',
