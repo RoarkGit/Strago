@@ -167,7 +167,7 @@ export const grant: Command = {
           ) as TextChannel
           const role: string = discordRole.toString()
           await channel.send(
-            `<:academyCool:926176707302535188> ${member.toString()} has ascended to the status of ${role}! <:academyCool:926176707302535188>`,
+            `<:academyLegend:1153342742055886999> ${member.toString()} has ascended to the status of ${role}! <:academyLegend:1153342742055886999>`,
           )
         }
       }
