@@ -278,28 +278,28 @@ async function find(
             enabled: true,
             $or: selectedRoles.map((r) => ({ [r]: true })),
           })
-          if (fills.length === 0) {
+          const users = await Promise.all(
+            fills.map(
+              async (f) =>
+                await interaction.guild?.members.fetch(f.get('discordId')),
+            ),
+          )
+          // Filter users that are not in the given LFG channel.
+          const validFills = users.filter(
+            (u) =>
+              u !== undefined && lfgChannel.members.get(u.id) !== undefined,
+          )
+          await fillChannel.send({
+            content: `${validFills.map((m) => `${m}`).join('')}`,
+            embeds: [embed],
+          })
+          if (validFills.length === 0) {
             await i.update({
               content:
-                'There are currently no fills available for that role/content.',
+                'There are currently no active fillers available for that role/content, but I submitted a fill request in case someone sees it, anyway.',
               components: [],
             })
           } else {
-            const users = await Promise.all(
-              fills.map(
-                async (f) =>
-                  await interaction.guild?.members.fetch(f.get('discordId')),
-              ),
-            )
-            // Filter users that are not in the given LFG channel.
-            const validFills = users.filter(
-              (u) =>
-                u !== undefined && lfgChannel.members.get(u.id) !== undefined,
-            )
-            await fillChannel.send({
-              content: `${validFills.map((m) => `${m}`).join('')}`,
-              embeds: [embed],
-            })
             await i.update({
               content: `Submitted fill request to ${
                 validFills.length
@@ -308,8 +308,8 @@ async function find(
               }. If they're interested, they will reach out to you.`,
               components: [],
             })
-            strago.fillSpamSet.add(interaction.user.id)
           }
+          strago.fillSpamSet.add(interaction.user.id)
         }
         collector.stop()
       }
