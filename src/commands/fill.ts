@@ -285,10 +285,27 @@ async function find(
             ),
           )
           // Filter users that are not in the given LFG channel.
-          const validFills = users.filter(
-            (u) =>
-              u !== undefined && lfgChannel.members.get(u.id) !== undefined,
-          )
+          const validFills = users.filter((u) => {
+            if (u === undefined || lfgChannel.members.get(u.id) === undefined)
+              return false
+            // Special case needed for Liam in all channels.
+            // Might add specific channel registration for filling in the future if needed.
+            const liamId = '103297791110959104'
+            const naChannels = [
+              'aether-lfg',
+              'crystal-lfg',
+              'dynamis-lfg',
+              'primal-lfg',
+              'na-static-recruitment',
+            ]
+            if (u.id === liamId) {
+              if (!naChannels.includes(lfgChannel.name)) {
+                return false
+              }
+            }
+            return true
+          })
+
           await fillChannel.send({
             content: `${validFills.map((m) => `${m}`).join('')}`,
             embeds: [embed],
