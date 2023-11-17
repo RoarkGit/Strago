@@ -34,7 +34,7 @@ function createButton(
   const emoji = emojis.find((e) => e.name === data.guildEmoji)
   const button = new ButtonBuilder().setCustomId(id).setLabel(data.label)
   if (emoji !== undefined) {
-    button.setEmoji(emoji.toString())
+    button.setEmoji(emoji.identifier)
   } else if (data.emoji !== undefined) {
     button.setEmoji(data.emoji)
   }
@@ -55,7 +55,7 @@ function createOption(
     .setLabel(data.label)
     .setValue(id)
   if (emoji !== undefined) {
-    option.setEmoji(emoji.toString())
+    option.setEmoji(emoji.identifier)
   } else if (data.emoji !== undefined) {
     option.setEmoji(data.emoji)
   }
