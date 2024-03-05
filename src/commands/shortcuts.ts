@@ -41,8 +41,16 @@ export class Shortcuts implements Command {
       if (command === 'set') {
         const messageId = interaction.options.getString('message_id', true)
         const message = await interaction.channel.messages.fetch(messageId)
+        console.log(message)
         const content = message.content
-        const files = message.attachments.map((a) => a.url)
+        const files = await Promise.all(
+          message.attachments.map(async (a) => {
+            const response = await fetch(a.url)
+            const blob = await response.blob()
+            const arrayBuffer = await blob.arrayBuffer()
+            return Buffer.from(arrayBuffer).toString('base64')
+          }),
+        )
         const document = {
           title,
           content,

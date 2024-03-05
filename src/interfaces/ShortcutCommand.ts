@@ -1,4 +1,5 @@
 import {
+  AttachmentBuilder,
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
   SlashCommandStringOption,
@@ -47,11 +48,14 @@ export class ShortcutCommand implements Command {
       })
     } else {
       await interaction.deferReply()
-      const response = {
-        ...(doc.content !== undefined && { content: doc.content }),
-        files: doc.files,
-      }
-      await interaction.editReply(response)
+      const attachments = doc.files.map((f) => {
+        return new AttachmentBuilder(Buffer.from(f, 'base64'), {
+          name: 'test.mp4',
+        })
+      })
+      await interaction.editReply({
+        files: attachments,
+      })
     }
   }
 
