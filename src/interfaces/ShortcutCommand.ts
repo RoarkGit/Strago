@@ -48,14 +48,15 @@ export class ShortcutCommand implements Command {
       })
     } else {
       await interaction.deferReply()
-      const attachments = doc.files.map((f) => {
-        return new AttachmentBuilder(Buffer.from(f, 'base64'), {
-          name: 'test.mp4',
-        })
-      })
-      await interaction.editReply({
-        files: attachments,
-      })
+      const response = {
+        ...(doc.content !== undefined && { content: doc.content }),
+        files: doc.files.map((f) => {
+          return new AttachmentBuilder(Buffer.from(f.data, 'base64'), {
+            name: f.filename,
+          })
+        }),
+      }
+      await interaction.editReply(response)
     }
   }
 

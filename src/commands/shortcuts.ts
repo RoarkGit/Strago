@@ -47,7 +47,10 @@ export class Shortcuts implements Command {
             const response = await fetch(a.url)
             const blob = await response.blob()
             const arrayBuffer = await blob.arrayBuffer()
-            return Buffer.from(arrayBuffer).toString('base64')
+            return {
+              filename: a.name,
+              data: Buffer.from(arrayBuffer).toString('base64'),
+            }
           }),
         )
         const document = {
