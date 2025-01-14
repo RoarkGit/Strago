@@ -42,7 +42,7 @@ export const logDeletedMessage = async (
       embed.setFooter({ text: `Message ID: ${message.id}` })
     }
     strago.channels.fetch(strago.config.deletedMessagesChannelId).then((ch) => {
-      if (ch === null || !ch.isTextBased()) return
+      if (ch === null || !ch.isSendable()) return
       ch.send({ embeds: [embed] }).catch((err) => strago.logger.error(err))
       if (attachments.size > 0) {
         ch.send({

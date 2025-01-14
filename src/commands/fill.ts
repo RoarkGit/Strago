@@ -247,7 +247,7 @@ async function find(
           const fillChannel = strago.channels.cache.get(
             strago.config.fillChannelId,
           )
-          if (fillChannel === undefined || !fillChannel.isTextBased()) return
+          if (fillChannel === undefined || !fillChannel.isSendable()) return
 
           const embed = new EmbedBuilder()
             .setTitle('New Fill Request')

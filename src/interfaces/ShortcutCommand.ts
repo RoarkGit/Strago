@@ -2,6 +2,7 @@ import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
   SlashCommandStringOption,
   type SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
@@ -19,6 +20,7 @@ export class ShortcutCommand implements Command {
   titleOption: SlashCommandStringOption
   data:
     | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
+    | SlashCommandOptionsOnlyBuilder
     | SlashCommandSubcommandsOnlyBuilder
 
   constructor(type: string) {
