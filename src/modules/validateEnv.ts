@@ -21,28 +21,12 @@ export const validateEnv = (
       return { valid: false, message: 'Missing test guild ID.' }
     }
 
-    if (process.env.DELETED_MESSAGES_CHANNEL_ID === undefined) {
-      return { valid: false, message: 'Missing deleted messages channel ID.' }
-    }
-
-    if (process.env.FILL_CHANNEL_ID === undefined) {
-      return { valid: false, message: 'Missing fill channel ID.' }
-    }
-
-    if (process.env.LFG_CATEGORY_ID === undefined) {
-      return { valid: false, message: 'Missing fill LFG category ID.' }
-    }
-
     if (process.env.MOD_CATEGORY_ID === undefined) {
       return { valid: false, message: 'Missing moderator category ID.' }
     }
 
     if (process.env.MOD_CHANNEL_ID === undefined) {
       return { valid: false, message: 'Missing moderator channel ID.' }
-    }
-
-    if (process.env.WEEKLY_TARGET_CHANNEL_ID === undefined) {
-      return { valid: false, message: 'Missing weekly target channel ID.' }
     }
 
     if (process.env.DATABASE_URI === undefined) {
@@ -62,6 +46,7 @@ export const validateEnv = (
       env: process.env.NODE_ENV,
       id: process.env.CLIENT_ID,
       loggerUri: process.env.LOKI_URI,
+      honeypotChannelId: process.env.HONEYPOT_CHANNEL_ID,
       homeGuildId: process.env.HOME_GUILD_ID,
       deletedMessagesChannelId: process.env.DELETED_MESSAGES_CHANNEL_ID,
       fillChannelId: process.env.FILL_CHANNEL_ID,

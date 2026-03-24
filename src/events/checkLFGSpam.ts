@@ -22,7 +22,8 @@ export const checkLFGSpam = async (
   if (
     message.channel.type !== ChannelType.GuildText ||
     message.member === null ||
-    !message.channel.name.endsWith('lfg')
+    !message.channel.name.endsWith('lfg') ||
+    strago.config.lfgCategoryId === undefined
   )
     return
   const member = message.member

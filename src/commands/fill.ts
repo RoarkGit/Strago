@@ -163,7 +163,7 @@ async function find(
   strago: Strago,
   lfgMessage: Message,
 ): Promise<void> {
-  if (interaction.guild === null) return
+  if (interaction.guild === null || strago.config.fillChannelId) return
 
   const emojis = interaction.guild.emojis.cache
 
@@ -245,7 +245,7 @@ async function find(
           !lfgChannel.isThread()
         ) {
           const fillChannel = strago.channels.cache.get(
-            strago.config.fillChannelId,
+            strago.config.fillChannelId as string,
           )
           if (fillChannel === undefined || !fillChannel.isSendable()) return
 

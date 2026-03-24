@@ -46,13 +46,15 @@ Configuration is stored in `.env`. Eventually this will be more convenient to us
 
 The following values are required:
 
-|Value           |Description|
-|----------------|----------------------------------------------------------|
-|`BOT_TOKEN`     |Discord bot API token.                                    |
-|`CLIENT_ID`     |The bot application ID.                                   |
-|`NODE_ENV`      |The environment in which the bot is running (e.g. `prod`).|
-|`HOME_GUILD_ID` |The ID of the home guild in which the bot is running.     |
-|`PRUNE_CHANNELS`|Comma-separated list of channel IDs to prune.             |
+|Value            |Description|
+|-----------------|----------------------------------------------------------|
+|`BOT_TOKEN`      |Discord bot API token.                                    |
+|`CLIENT_ID`      |The bot application ID.                                   |
+|`NODE_ENV`       |The environment in which the bot is running (e.g. `prod`).|
+|`HOME_GUILD_ID`  |The ID of the home guild in which the bot is running.     |
+|`MOD_CATEGORY_ID`|The ID of the moderator channel category.                 |
+|`MOD_CHANNEL_ID` |The ID of the moderator channel.                          |
+|`DATABASE_URI`   |URI of MongoDB instance where data is stored.             |
 
 ### Data
 Any data, static or otherwise, exists inside `./data`.

@@ -64,29 +64,32 @@ export const ready = async (strago: Strago): Promise<void> => {
     timeZone: 'Etc/UTC',
   })
   channelPruneCron.start()
-  // Start weekly targets cron.
-  const weeklyTargetsCron = new CronJob({
-    cronTime: '0 0 8 * * 2',
-    onTick: () => {
-      const channel = strago.channels.cache.get(
-        strago.config.weeklyTargetChannelId,
-      ) as TextChannel
-      // Delete old messages
-      channel.messages.fetch().then((messages) =>
-        messages.forEach((m) => {
-          if (!m.pinned) {
-            m.delete().catch((err) => strago.logger.error(err))
-          }
-        }),
-      )
-      // Send new weekly message
-      const embed = generateWeeklyTargetsEmbed(0)
-      channel
-        .send({ embeds: [embed] })
-        .then((m) => m.crosspost())
-        .catch((err) => strago.logger.error(err))
-    },
-    timeZone: 'Etc/UTC',
-  })
-  weeklyTargetsCron.start()
+
+  if (strago.config.weeklyTargetChannelId !== undefined) {
+    // Start weekly targets cron.
+    const weeklyTargetsCron = new CronJob({
+      cronTime: '0 0 8 * * 2',
+      onTick: () => {
+        const channel = strago.channels.cache.get(
+          strago.config.weeklyTargetChannelId as string,
+        ) as TextChannel
+        // Delete old messages
+        channel.messages.fetch().then((messages) =>
+          messages.forEach((m) => {
+            if (!m.pinned) {
+              m.delete().catch((err) => strago.logger.error(err))
+            }
+          }),
+        )
+        // Send new weekly message
+        const embed = generateWeeklyTargetsEmbed(0)
+        channel
+          .send({ embeds: [embed] })
+          .then((m) => m.crosspost())
+          .catch((err) => strago.logger.error(err))
+      },
+      timeZone: 'Etc/UTC',
+    })
+    weeklyTargetsCron.start()
+  }
 }

@@ -20,13 +20,14 @@ export interface Strago extends Client {
     env: string
     id: string
     homeGuildId: string
-    lfgCategoryId: string
+    honeypotChannelId: string | undefined
+    lfgCategoryId: string | undefined
     loggerUri: string | undefined
-    deletedMessagesChannelId: string
-    fillChannelId: string
+    deletedMessagesChannelId: string | undefined
+    fillChannelId: string | undefined
     modCategoryId: string
     modChannelId: string
-    weeklyTargetChannelId: string
+    weeklyTargetChannelId: string | undefined
     pruneChannels: string[]
     token: string
   }

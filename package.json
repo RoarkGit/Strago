@@ -15,9 +15,8 @@
   "dependencies": {
     "@discordjs/rest": "^2.0.0",
     "@supercharge/promise-pool": "^3.0.0",
-    "@xivapi/js": "^0.4.2",
-    "@xivapi/nodestone": "^0.2.5",
-    "axios": "^1.4.0",
+    "@xivapi/js": "^1.0.3",
+    "@xivapi/nodestone": "^0.2.7",
     "copyfiles": "^2.4.1",
     "cron": "^2.4.1",
     "discord.js": "^14.12.1",
@@ -39,6 +38,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.2",
+    "prettier-eslint": "^16.1.2",
     "rimraf": "^5.0.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
