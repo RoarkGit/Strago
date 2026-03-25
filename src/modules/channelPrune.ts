@@ -9,7 +9,6 @@ export const channelPrune = async (strago: Strago): Promise<void> => {
   // Only prune from home guild.
   const guild = strago.guilds.cache.get(strago.config.homeGuildId)
   if (guild === undefined) return
-  strago.logger.info('Beginning channel prune.')
   const now = Date.now()
   const twoWeeksMs = 1000 * 60 * 60 * 24 * 14
   const toDelete: Message[] = []
@@ -28,5 +27,6 @@ export const channelPrune = async (strago: Strago): Promise<void> => {
   // Prune messages older than two weeks.
   toDelete.sort((message) => message.createdTimestamp)
   await Promise.all(toDelete.map(async (message) => await message.delete()))
-  strago.logger.info(`Pruned ${toDelete.length} messages.`)
+  if (toDelete.length > 0)
+    strago.logger.info(`Pruned ${toDelete.length} messages.`)
 }
