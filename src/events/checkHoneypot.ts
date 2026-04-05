@@ -29,7 +29,7 @@ export const checkHoneypot = async (
   })
   await message.guild.members.unban(member)
   await message.channel.send(
-    `${MORBLA} Caught ${member.user.username} sticking their hand in the honeypot! ${MORBLA}`,
+    `${MORBLA} Caught ${member.user} (${member.user.username}) sticking their hand in the honeypot! ${MORBLA}`,
   )
   strago.logger.info(
     `Kicked ${member.user.username} for sending message to honeypot channel.`,
