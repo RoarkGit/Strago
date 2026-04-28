@@ -25,7 +25,7 @@ export class Shortcuts implements Command {
     this.data = new SlashCommandBuilder()
       .setName('shortcuts')
       .setDescription('Various commands for managing shortcuts.')
-      .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+      .setDefaultMemberPermissions(PermissionFlagsBits.PinMessages)
   }
 
   public async run(
