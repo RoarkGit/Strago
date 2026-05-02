@@ -8,7 +8,7 @@ import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 
 // eslint-disable-next-line
-const XIVAPI = require('@xivapi/js')
+import xivapi from '@xivapi/js'
 
 const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -17,6 +17,12 @@ const ASPECT_COLORS: Record<string, number> = {
   Lightning: 0xffaaff,
   Ice: 0xffffff,
   Earth: 0xffffaa,
+}
+
+type SpellInfo = {
+  Cast100ms: number
+  Recast100ms: number
+  PrimaryCostValue: number
 }
 
 /**
@@ -49,8 +55,10 @@ export const spell: Command = {
     }
 
     // Retrieve spell info.
-    const xivapi = new XIVAPI()
-    const spellInfo = await xivapi.data.get('action', spell.apiId)
+    const xiv = new xivapi({})
+    const sheets = await xiv.data.sheets()
+    const spellRow = await sheets.get('Action', spell.apiId)
+    const spellInfo = spellRow.fields as SpellInfo
 
     let cast = (Number(spellInfo.Cast100ms) / 10).toFixed(2)
     if (cast === '0.00') {
