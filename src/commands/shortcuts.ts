@@ -11,24 +11,14 @@ import type { Command } from '../interfaces/Command'
 import Shortcut from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
 
-/**
- * Meta-command for managing shortcut commands.
- */
-export class Shortcuts implements Command {
-  data:
-    | SlashCommandSubcommandsOnlyBuilder
-    | Omit<SlashCommandBuilder, 'addSubcommandGroup' | 'addSubcommand'>
-  guildCommand: boolean
+export const shortcuts: Command = {
+  guildCommand: true,
+  data: new SlashCommandBuilder()
+    .setName('shortcuts')
+    .setDescription('Various commands for managing shortcuts.')
+    .setDefaultMemberPermissions(PermissionFlagsBits.PinMessages),
 
-  constructor() {
-    this.guildCommand = true
-    this.data = new SlashCommandBuilder()
-      .setName('shortcuts')
-      .setDescription('Various commands for managing shortcuts.')
-      .setDefaultMemberPermissions(PermissionFlagsBits.PinMessages)
-  }
-
-  public async run(
+  async run(
     interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> {
@@ -38,10 +28,10 @@ export class Shortcuts implements Command {
       const command = interaction.options.getSubcommand()
       const type = interaction.options.getSubcommandGroup(true)
       const title = interaction.options.getString('title', true)
+
       if (command === 'set') {
         const messageId = interaction.options.getString('message_id', true)
         const message = await interaction.channel.messages.fetch(messageId)
-        const content = message.content
         const files = await Promise.all(
           message.attachments.map(async (a) => {
             const response = await fetch(a.url)
@@ -53,14 +43,11 @@ export class Shortcuts implements Command {
             }
           }),
         )
-        const document = {
-          title,
-          content,
-          files,
-        }
-        await Shortcut(type).findOneAndReplace({ title }, document, {
-          upsert: true,
-        })
+        await Shortcut(type).findOneAndReplace(
+          { title },
+          { title, content: message.content, files },
+          { upsert: true },
+        )
         strago.shortcutTitles.get(type)?.add(title)
         await interaction.editReply({
           content: `New ${type} ${title} successfully saved!`,
@@ -68,10 +55,10 @@ export class Shortcuts implements Command {
       } else if (command === 'delete') {
         const result = await Shortcut(type).deleteOne({ title })
         if (result.deletedCount === 1) {
+          strago.shortcutTitles.get(type)?.delete(title)
           await interaction.editReply({
             content: `${type} ${title} successfully deleted!`,
           })
-          strago.shortcutTitles.get(type)?.delete(title)
         } else {
           await interaction.editReply({
             content: "I couldn't find a shortcut with that title.",
@@ -88,15 +75,28 @@ export class Shortcuts implements Command {
         content: 'Something went wrong while processing your request.',
       })
     }
-  }
+  },
 
-  /**
-   * Generates subcommands for each 'type' of shortcut.
-   */
-  public generateSubcommands(strago: Strago): void {
-    const data = this.data as SlashCommandBuilder
-    for (const t of strago.config.shortcutTypes) {
-      const subcommandGroup = new SlashCommandSubcommandGroupBuilder()
+  autocomplete(
+    strago: Strago,
+    prefix: string,
+    interaction: AutocompleteInteraction,
+  ): string[] {
+    const type = interaction.options.getSubcommandGroup(true)
+    const choices = strago.shortcutTitles.get(type)
+    if (choices === undefined) return []
+    return Array.from(choices)
+      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase()))
+      .sort()
+  },
+}
+
+export const generateSubcommands = (strago: Strago): void => {
+  const data = shortcuts.data as SlashCommandBuilder &
+    SlashCommandSubcommandsOnlyBuilder
+  for (const t of strago.config.shortcutTypes) {
+    data.addSubcommandGroup(
+      new SlashCommandSubcommandGroupBuilder()
         .setName(t)
         .setDescription(`Add, update, or delete ${t} shortcuts.`)
         .addSubcommand((subcommand) =>
@@ -130,24 +130,7 @@ export class Shortcuts implements Command {
                 .setRequired(true)
                 .setAutocomplete(true),
             ),
-        )
-      data.addSubcommandGroup(subcommandGroup)
-    }
-  }
-
-  public autocomplete(
-    strago: Strago,
-    prefix: string,
-    interaction: AutocompleteInteraction,
-  ): string[] {
-    const type = interaction.options.getSubcommandGroup(true)
-    const choices = strago.shortcutTitles.get(type)
-    if (choices === undefined) return []
-    const filtered = Array.from(choices)
-      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase()))
-      .sort()
-    return filtered
+        ),
+    )
   }
 }
-
-export const shortcuts = new Shortcuts()

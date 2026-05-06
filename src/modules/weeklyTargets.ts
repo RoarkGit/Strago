@@ -1,8 +1,7 @@
 import { EmbedBuilder } from 'discord.js'
 
+import { ONE_WEEK_MS } from '../constants/time'
 import weeklyTargets from '../data/weeklyTargets.json'
-
-const MS_IN_WEEK = 1000 * 60 * 60 * 24 * 7
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
 
 /**
@@ -12,8 +11,9 @@ const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
  */
 export const generateWeeklyTargetsEmbed = (weeks: number): EmbedBuilder => {
   const numWeeks =
-    Math.floor((Date.now().valueOf() - ROTATION_START.valueOf()) / MS_IN_WEEK) +
-    weeks
+    Math.floor(
+      (Date.now().valueOf() - ROTATION_START.valueOf()) / ONE_WEEK_MS,
+    ) + weeks
   const carnivaleTargets = Object.values(weeklyTargets.carnivale).map(
     (t) => t[numWeeks % t.length],
   )

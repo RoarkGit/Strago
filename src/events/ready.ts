@@ -5,11 +5,16 @@ import {
   type TextChannel,
 } from 'discord.js'
 
+import { ONE_WEEK_MS } from '../constants/time'
 import type { Strago } from '../interfaces/Strago'
 import { channelPrune } from '../modules/channelPrune'
 import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
 
-const fetchMessages = async (channel: GuildTextBasedChannel, cutoff: Date) => {
+// Populates Discord.js message cache so logDeletedMessage can log message content on delete.
+const cacheRecentMessages = async (
+  channel: GuildTextBasedChannel,
+  cutoff: Date,
+) => {
   let messages = await channel.messages.fetch({ limit: 100 })
   let lastMessage = messages.last()
   while (
@@ -25,10 +30,6 @@ const fetchMessages = async (channel: GuildTextBasedChannel, cutoff: Date) => {
   }
 }
 
-/**
- * Prints message when bot is connected and ready.
- * @param strago Strago client instance
- */
 export const ready = async (strago: Strago): Promise<void> => {
   strago.logger.info('Discord ready!')
   const guildList = strago.guilds.cache
@@ -40,7 +41,7 @@ export const ready = async (strago: Strago): Promise<void> => {
     message: `Connected to ${guildList.size} servers.`,
     guilds: guildNames,
   })
-  const lastWeekDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+  const lastWeekDate = new Date(Date.now() - ONE_WEEK_MS)
   guildList.forEach((g) => {
     g.channels.cache.forEach((c) => {
       if (
@@ -52,10 +53,13 @@ export const ready = async (strago: Strago): Promise<void> => {
           .has(PermissionsBitField.Flags.ViewChannel)
       )
         return
-      fetchMessages(c, lastWeekDate).catch((err) => strago.logger.error(err))
+      cacheRecentMessages(c, lastWeekDate).catch((err) =>
+        strago.logger.error(err),
+      )
     })
   })
-  // Start channel prune cron.
+
+  // Every 10 minutes: prune inactive fill channels.
   const channelPruneCron = new CronJob({
     cronTime: '0 */10 * * * *',
     onTick: () => {
@@ -66,14 +70,13 @@ export const ready = async (strago: Strago): Promise<void> => {
   channelPruneCron.start()
 
   if (strago.config.weeklyTargetChannelId !== undefined) {
-    // Start weekly targets cron.
+    // Every Tuesday at 8:00 UTC: post fresh weekly targets.
     const weeklyTargetsCron = new CronJob({
       cronTime: '0 0 8 * * 2',
       onTick: () => {
         const channel = strago.channels.cache.get(
           strago.config.weeklyTargetChannelId as string,
         ) as TextChannel
-        // Delete old messages
         channel.messages.fetch().then((messages) =>
           messages.forEach((m) => {
             if (!m.pinned) {
@@ -81,7 +84,6 @@ export const ready = async (strago: Strago): Promise<void> => {
             }
           }),
         )
-        // Send new weekly message
         const embed = generateWeeklyTargetsEmbed(0)
         channel
           .send({ embeds: [embed] })

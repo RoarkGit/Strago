@@ -25,18 +25,17 @@ export const registerCommands = async (strago: Strago): Promise<boolean> => {
       | RESTPostAPIChatInputApplicationCommandsJSONBody
     > = []
 
-    strago.commands.forEach(async (command) => {
+    for (const command of strago.commands.values()) {
       if (command.preregister !== undefined) {
         await command.preregister()
       }
       const data = command.data.toJSON()
-
       if (command.guildCommand) {
         guildCommandData.push(data)
       } else {
         globalCommandData.push(data)
       }
-    })
+    }
 
     strago.logger.info('Registering global commands.')
     await rest.put(Routes.applicationCommands(strago.config.id), {

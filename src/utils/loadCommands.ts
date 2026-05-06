@@ -3,16 +3,12 @@ import { join } from 'path'
 
 import { Collection } from 'discord.js'
 
-import type { Shortcuts } from '../commands/shortcuts'
+import { generateSubcommands } from '../commands/shortcuts'
 import type { Command } from '../interfaces/Command'
 import Shortcut from '../interfaces/models/Shortcut'
-import { ShortcutCommand } from '../interfaces/ShortcutCommand'
+import { createShortcutCommand } from '../interfaces/ShortcutCommand'
 import type { Strago } from '../interfaces/Strago'
 
-/**
- * Attempts to load all Commands stored in the commands folder.
- * @returns Boolean indicating success.
- */
 export const loadCommands = async (
   strago: Strago,
   commandsPath: string,
@@ -32,19 +28,16 @@ export const loadCommands = async (
       commands.set(name, module[name])
     }
 
-    // Set up shortcut subcommands.
-    const shortcutsCommand = commands.get('shortcuts') as Shortcuts
-    if (shortcutsCommand !== undefined) {
-      shortcutsCommand.generateSubcommands(strago)
+    // Build subcommands for the shortcuts management command.
+    if (commands.has('shortcuts')) {
+      generateSubcommands(strago)
     }
 
-    // Initialize shortcuts.
+    // Register a command and load titles for each shortcut type.
     for (const t of strago.config.shortcutTypes) {
-      const command = new ShortcutCommand(t)
-      commands.set(t, command)
-      const shortcuts = await Shortcut(t).find()
-      const titles = shortcuts.map((d) => d.title)
-      strago.shortcutTitles.set(t, new Set<string>(titles))
+      commands.set(t, createShortcutCommand(t))
+      const docs = await Shortcut(t).find()
+      strago.shortcutTitles.set(t, new Set<string>(docs.map((d) => d.title)))
     }
 
     strago.commands = commands

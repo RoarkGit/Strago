@@ -2,6 +2,11 @@ import { join, resolve } from 'path'
 
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js'
 
+import {
+  FILL_SPAM_TIMEOUT_S,
+  GRANT_SPAM_TIMEOUT_S,
+  LFG_SPAM_TIMEOUT_S,
+} from './constants/time'
 import { handleEvents } from './events/handleEvents'
 import type { Spell } from './interfaces/Spell'
 import type { Strago } from './interfaces/Strago'
@@ -68,9 +73,9 @@ void (async () => {
   }
 
   // Instantiate values.
-  strago.fillSpamSet = new TimeoutSet(10 * 60)
-  strago.lfgSpamSet = new TimeoutSet(5 * 60)
-  strago.grantSpamSet = new TimeoutSet(10 * 60)
+  strago.fillSpamSet = new TimeoutSet(FILL_SPAM_TIMEOUT_S)
+  strago.lfgSpamSet = new TimeoutSet(LFG_SPAM_TIMEOUT_S)
+  strago.grantSpamSet = new TimeoutSet(GRANT_SPAM_TIMEOUT_S)
 
   // Load event handlers.
   handleEvents(strago)

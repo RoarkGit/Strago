@@ -5,19 +5,49 @@ import {
   type TextChannel,
 } from 'discord.js'
 
+import { ACADEMY_LEGEND_EMOJI, BLUE_LEGEND_ROLE } from '../constants/bot'
 import achievementData from '../data/achievementData.json'
 import type { Command } from '../interfaces/Command'
 import Character from '../interfaces/models/Character'
 import type { Strago } from '../interfaces/Strago'
 import * as xivlib from '../modules/xivlib'
 
-/**
- * Runs the grant workflow:
- *   1. Checks for registration
- *   2. Checks that achievements are visible
- *   3. Checks achievement completion for achievements stored in achievementData.
- *   4. Grants/revokes achievements according to completion and role blockers.
- */
+type RoleData = (typeof achievementData.roles)[number]
+
+type EligibilityResult =
+  | { status: 'blocked'; blockers: string[] }
+  | { status: 'missing'; missing: string[]; tooMany: boolean }
+  | { status: 'already_has' }
+  | { status: 'eligible' }
+
+const checkEligibility = (
+  role: RoleData,
+  memberRoles: GuildMemberRoleManager,
+  characterAchievements: Set<string>,
+  granted: Set<string>,
+): EligibilityResult => {
+  const blockers = role.blockedBy.filter(
+    (b) => granted.has(b) || memberRoles.cache.some((r) => r.name === b),
+  )
+  if (blockers.length > 0) return { status: 'blocked', blockers }
+
+  const missing = role.required
+    .filter((a) => !characterAchievements.has(a))
+    .map(
+      (a) =>
+        achievementData.achievementIds[
+          a as keyof typeof achievementData.achievementIds
+        ],
+    )
+  if (missing.length > 0)
+    return { status: 'missing', missing, tooMany: missing.length > 3 }
+
+  if (memberRoles.cache.some((r) => r.name === role.name))
+    return { status: 'already_has' }
+
+  return { status: 'eligible' }
+}
+
 export const grant: Command = {
   data: new SlashCommandBuilder()
     .setName('grant')
@@ -34,7 +64,6 @@ export const grant: Command = {
       const guild = interaction.guild
       const member = await guild.members.fetch(interaction.user.id)
 
-      // Check if user recently ran command.
       if (strago.grantSpamSet.has(member.id)) {
         await interaction.reply({
           content:
@@ -42,9 +71,8 @@ export const grant: Command = {
           ephemeral: true,
         })
         return
-      } else {
-        strago.grantSpamSet.add(member.id)
       }
+      strago.grantSpamSet.add(member.id)
 
       await interaction.reply({
         content: 'Checking registration...',
@@ -65,7 +93,6 @@ export const grant: Command = {
       const achievementsPublic = await xivlib.getAchievementsPublic(
         character.characterId as string,
       )
-
       if (!achievementsPublic) {
         await interaction.editReply({
           content:
@@ -75,22 +102,22 @@ export const grant: Command = {
       }
 
       const lines: string[] = []
-
       const updateState = async (line: string): Promise<void> => {
         strago.logger.info(line)
         lines.push(line)
         await interaction.editReply({ content: lines.join('\n') })
       }
 
-      const characterName: string = character.characterName
-      await updateState(`Beginning achievement scan for ${characterName}...`)
+      await updateState(
+        `Beginning achievement scan for ${character.characterName as string}...`,
+      )
 
       const granted = new Set<string>()
       const characterAchievements = await xivlib.getAchievementsComplete(
         character.characterId,
         Object.keys(achievementData.achievementIds),
       )
-      const memberRoles: GuildMemberRoleManager = member.roles
+      const memberRoles = member.roles as GuildMemberRoleManager
 
       for (const role of achievementData.roles) {
         const discordRole = guild.roles.cache.find((r) => r.name === role.name)
@@ -99,22 +126,17 @@ export const grant: Command = {
           continue
         }
 
-        // Check for blocking roles first.
-        const blockers: string[] = []
+        const eligibility = checkEligibility(
+          role,
+          memberRoles,
+          characterAchievements,
+          granted,
+        )
         const hasRole = memberRoles.cache.some((r) => r.name === role.name)
 
-        role.blockedBy.forEach((blocker) => {
-          if (
-            granted.has(blocker) ||
-            memberRoles.cache.some((r) => r.name === blocker)
-          ) {
-            blockers.push(blocker)
-          }
-        })
-
-        if (blockers.length > 0) {
+        if (eligibility.status === 'blocked') {
           await updateState(
-            `${role.name}: You already have ${blockers.join(', ')}`,
+            `${role.name}: You already have ${eligibility.blockers.join(', ')}`,
           )
           if (hasRole) await memberRoles.remove(discordRole)
           continue
@@ -122,36 +144,16 @@ export const grant: Command = {
 
         await updateState(`Checking eligibility for ${role.name}`)
 
-        // Check for completed achievements.
-        const missing: string[] = []
-        role.required.forEach((achievement) => {
-          if (!characterAchievements.has(achievement)) {
-            missing.push(
-              achievementData.achievementIds[
-                achievement as keyof typeof achievementData.achievementIds
-              ],
-            )
-          }
-        })
-
-        if (missing.length > 3) {
-          await updateState(
-            `Skipping ${role.name} since you are missing many achievements!`,
-          )
-          if (hasRole) await memberRoles.remove(discordRole)
-          continue
-        } else if (missing.length > 0) {
-          await updateState(
-            `Skipping ${role.name} since you are missing: ${missing.join(
-              ', ',
-            )}`,
-          )
+        if (eligibility.status === 'missing') {
+          const msg = eligibility.tooMany
+            ? `Skipping ${role.name} since you are missing many achievements!`
+            : `Skipping ${role.name} since you are missing: ${eligibility.missing.join(', ')}`
+          await updateState(msg)
           if (hasRole) await memberRoles.remove(discordRole)
           continue
         }
 
-        // Check if role already exists.
-        if (hasRole) {
+        if (eligibility.status === 'already_has') {
           await updateState(`${role.name}: You already have it!`)
           continue
         }
@@ -160,14 +162,12 @@ export const grant: Command = {
         await memberRoles.add(discordRole)
         granted.add(role.name)
 
-        // Special case for Blue Legend
-        if (role.name === 'Blue Legend') {
+        if (role.name === BLUE_LEGEND_ROLE) {
           const channel = guild.channels.cache.find(
             (c) => c.name === 'general',
           ) as TextChannel
-          const role: string = discordRole.toString()
           await channel.send(
-            `<:academyLegend:1153342742055886999> ${member.toString()} has ascended to the status of ${role}! <:academyLegend:1153342742055886999>`,
+            `${ACADEMY_LEGEND_EMOJI} ${member.toString()} has ascended to the status of ${discordRole}! ${ACADEMY_LEGEND_EMOJI}`,
           )
         }
       }

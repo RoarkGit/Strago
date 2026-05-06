@@ -1,16 +1,13 @@
 import { ChannelType, type Message } from 'discord.js'
 
+import { TWO_WEEKS_MS } from '../constants/time'
 import type { Strago } from '../interfaces/Strago'
 
-/**
- * Prunes messages more than two weeks old from specified channels.
- */
 export const channelPrune = async (strago: Strago): Promise<void> => {
   // Only prune from home guild.
   const guild = strago.guilds.cache.get(strago.config.homeGuildId)
   if (guild === undefined) return
   const now = Date.now()
-  const twoWeeksMs = 1000 * 60 * 60 * 24 * 14
   const toDelete: Message[] = []
   // Iterate over channels, find all unpinned messages older than two weeks.
   for (const channelId of strago.config.pruneChannels) {
@@ -18,7 +15,7 @@ export const channelPrune = async (strago: Strago): Promise<void> => {
       if (channel === null || channel.type !== ChannelType.GuildText) return
       const messages = await channel.messages.fetch()
       for (const message of messages.values()) {
-        if (!message.pinned && now - message.createdTimestamp > twoWeeksMs) {
+        if (!message.pinned && now - message.createdTimestamp > TWO_WEEKS_MS) {
           toDelete.push(message)
         }
       }

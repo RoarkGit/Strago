@@ -5,10 +5,9 @@ import {
   type TextChannel,
 } from 'discord.js'
 
+import { ONE_HOUR_MS } from '../constants/time'
 import User from '../interfaces/models/User'
 import type { Strago } from '../interfaces/Strago'
-
-const timeoutDuration = 60 * 60 * 1000
 
 /**
  * Times out users who ping roles in multiple LFG channels in quick succession.
@@ -56,7 +55,7 @@ export const checkLFGSpam = async (
           '_Posting_ in multiple channels is fine as long as you do _not_ ping in multiple channels.',
       )
       await message.delete()
-      await member.timeout(timeoutDuration, 'Spamming LFG channels with pings.')
+      await member.timeout(ONE_HOUR_MS, 'Spamming LFG channels with pings.')
       if (member.nickname !== null) {
         strago.logger.info(`Timed out ${member.toString()} for spamming LFG.`)
       }

@@ -3,12 +3,13 @@ import {
   EmbedBuilder,
   SlashCommandBuilder,
 } from 'discord.js'
+// eslint-disable-next-line
+import xivapi from '@xivapi/js'
 
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 
-// eslint-disable-next-line
-import xivapi from '@xivapi/js'
+const xiv = new xivapi({})
 
 const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -25,9 +26,6 @@ type SpellInfo = {
   PrimaryCostValue: number
 }
 
-/**
- * Retrieves information about a given spell.
- */
 export const spell: Command = {
   data: new SlashCommandBuilder()
     .setName('spell')
@@ -54,16 +52,12 @@ export const spell: Command = {
       return
     }
 
-    // Retrieve spell info.
-    const xiv = new xivapi({})
     const sheets = await xiv.data.sheets()
     const spellRow = await sheets.get('Action', spell.apiId)
     const spellInfo = spellRow.fields as SpellInfo
 
     let cast = (Number(spellInfo.Cast100ms) / 10).toFixed(2)
-    if (cast === '0.00') {
-      cast = 'Instant'
-    }
+    if (cast === '0.00') cast = 'Instant'
     const recast = (Number(spellInfo.Recast100ms) / 10).toFixed(2)
     const mpCost = (Number(spellInfo.PrimaryCostValue) * 100).toString()
     const range = spell.range !== undefined ? `${spell.range}y` : '-'
@@ -97,12 +91,9 @@ export const spell: Command = {
 
     await interaction.reply({ embeds: [embed] })
   },
-  autocomplete: (strago: Strago, prefix: string): string[] => {
-    const choices = strago.data.spellData.map((s) => s.name)
-    const filtered = choices.filter((c) =>
-      c.toLowerCase().includes(prefix.toLowerCase()),
-    )
-    return filtered
-  },
+  autocomplete: (strago: Strago, prefix: string): string[] =>
+    strago.data.spellData
+      .map((s) => s.name)
+      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase())),
   guildCommand: false,
 }
