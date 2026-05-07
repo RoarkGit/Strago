@@ -6,10 +6,21 @@ import {
   SlashCommandSubcommandGroupBuilder,
   type SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
+import type { ObjectId } from 'mongodb'
 
 import type { Command } from '../interfaces/Command'
 import Shortcut from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
+import { gridfs } from '../utils/connectDatabase'
+
+async function uploadToGridFS(filename: string, buffer: Buffer): Promise<ObjectId> {
+  return new Promise((resolve, reject) => {
+    const stream = gridfs.openUploadStream(filename)
+    stream.end(buffer)
+    stream.on('finish', () => resolve(stream.id as ObjectId))
+    stream.on('error', reject)
+  })
+}
 
 export const shortcuts: Command = {
   guildCommand: true,
@@ -35,26 +46,28 @@ export const shortcuts: Command = {
         const files = await Promise.all(
           message.attachments.map(async (a) => {
             const response = await fetch(a.url)
-            const blob = await response.blob()
-            const arrayBuffer = await blob.arrayBuffer()
-            return {
-              filename: a.name,
-              data: Buffer.from(arrayBuffer).toString('base64'),
-            }
+            const buffer = Buffer.from(await response.arrayBuffer())
+            const fileId = await uploadToGridFS(a.name, buffer)
+            return { filename: a.name, fileId }
           }),
         )
+        const existing = await Shortcut(type).findOne({ title })
         await Shortcut(type).findOneAndReplace(
           { title },
           { title, content: message.content, files },
           { upsert: true },
         )
+        if (existing !== null) {
+          await Promise.all(existing.files.map((f) => gridfs.delete(f.fileId)))
+        }
         strago.shortcutTitles.get(type)?.add(title)
         await interaction.editReply({
           content: `New ${type} ${title} successfully saved!`,
         })
       } else if (command === 'delete') {
-        const result = await Shortcut(type).deleteOne({ title })
-        if (result.deletedCount === 1) {
+        const existing = await Shortcut(type).findOneAndDelete({ title }, null)
+        if (existing !== null) {
+          await Promise.all(existing.files.map((f) => gridfs.delete(f.fileId)))
           strago.shortcutTitles.get(type)?.delete(title)
           await interaction.editReply({
             content: `${type} ${title} successfully deleted!`,

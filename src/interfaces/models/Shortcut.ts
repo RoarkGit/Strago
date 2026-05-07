@@ -1,14 +1,14 @@
-import { Model, Schema, model } from 'mongoose'
+import { Model, Schema, Types, model } from 'mongoose'
 
 export interface IShortcut {
   title: string
   content: string
-  files: { filename: string; data: string }[]
+  files: { filename: string; fileId: Types.ObjectId }[]
 }
 
 const FileSchema = new Schema({
   filename: { type: String, required: true },
-  data: { type: String, required: true },
+  fileId: { type: Schema.Types.ObjectId, required: true },
 })
 
 const ShortcutSchema = new Schema<IShortcut>({

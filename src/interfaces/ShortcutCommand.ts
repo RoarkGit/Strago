@@ -3,10 +3,22 @@ import {
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
 } from 'discord.js'
+import type { ObjectId } from 'mongodb'
 
 import type { Command } from './Command'
 import Shortcut from './models/Shortcut'
 import type { Strago } from './Strago'
+import { gridfs } from '../utils/connectDatabase'
+
+async function downloadFromGridFS(fileId: ObjectId): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = []
+    const stream = gridfs.openDownloadStream(fileId)
+    stream.on('data', (chunk: Buffer) => chunks.push(chunk))
+    stream.on('end', () => resolve(Buffer.concat(chunks)))
+    stream.on('error', reject)
+  })
+}
 
 export const createShortcutCommand = (type: string): Command => ({
   guildCommand: true,
@@ -34,13 +46,11 @@ export const createShortcutCommand = (type: string): Command => ({
       })
     } else {
       await interaction.deferReply()
+      const buffers = await Promise.all(doc.files.map((f) => downloadFromGridFS(f.fileId)))
       await interaction.editReply({
         ...(doc.content !== undefined && { content: doc.content }),
-        files: doc.files.map(
-          (f) =>
-            new AttachmentBuilder(Buffer.from(f.data, 'base64'), {
-              name: f.filename,
-            }),
+        files: buffers.map(
+          (buf, i) => new AttachmentBuilder(buf, { name: doc.files[i].filename }),
         ),
       })
     }
