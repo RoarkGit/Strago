@@ -13,7 +13,10 @@ import Shortcut from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
 import { gridfs } from '../utils/connectDatabase'
 
-async function uploadToGridFS(filename: string, buffer: Buffer): Promise<ObjectId> {
+async function uploadToGridFS(
+  filename: string,
+  buffer: Buffer,
+): Promise<ObjectId> {
   return new Promise((resolve, reject) => {
     const stream = gridfs.openUploadStream(filename)
     stream.end(buffer)

@@ -46,11 +46,14 @@ export const createShortcutCommand = (type: string): Command => ({
       })
     } else {
       await interaction.deferReply()
-      const buffers = await Promise.all(doc.files.map((f) => downloadFromGridFS(f.fileId)))
+      const buffers = await Promise.all(
+        doc.files.map((f) => downloadFromGridFS(f.fileId)),
+      )
       await interaction.editReply({
         ...(doc.content !== undefined && { content: doc.content }),
         files: buffers.map(
-          (buf, i) => new AttachmentBuilder(buf, { name: doc.files[i].filename }),
+          (buf, i) =>
+            new AttachmentBuilder(buf, { name: doc.files[i].filename }),
         ),
       })
     }
