@@ -15,12 +15,12 @@
   "dependencies": {
     "@discordjs/rest": "^2.0.0",
     "@supercharge/promise-pool": "^3.0.0",
-    "@xivapi/js": "^1.0.3",
     "@xivapi/nodestone": "0.2.7",
     "copyfiles": "^2.4.1",
     "cron": "^2.4.1",
     "discord.js": "^14.12.1",
     "dotenv": "^16.3.1",
+    "js-yaml": "^4.1.1",
     "mongoose": "^7.6.9",
     "ts-node": "^10.9.1",
     "winston": "^3.10.0",
@@ -28,6 +28,7 @@
     "winston-transport": "^4.5.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.4.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",

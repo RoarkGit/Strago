@@ -1,15 +1,16 @@
+import { join } from 'path'
+
 import {
+  AttachmentBuilder,
   type ChatInputCommandInteraction,
   EmbedBuilder,
   SlashCommandBuilder,
 } from 'discord.js'
-// eslint-disable-next-line
-import xivapi from '@xivapi/js'
 
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 
-const xiv = new xivapi({})
+const IMAGES_PATH = join(__dirname, '../../src/data/Blue-Mage-Data/images')
 
 const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -20,10 +21,11 @@ const ASPECT_COLORS: Record<string, number> = {
   Earth: 0xffffaa,
 }
 
-type SpellInfo = {
-  Cast100ms: number
-  Recast100ms: number
-  PrimaryCostValue: number
+function cleanField(text: string): string {
+  return text
+    .replace(/\{\{< \w+ "(.*?)" >\}\}/g, '$1')
+    .replace(/\n{2,}/g, '\n')
+    .trim()
 }
 
 export const spell: Command = {
@@ -52,44 +54,47 @@ export const spell: Command = {
       return
     }
 
-    const sheets = await xiv.data.sheets()
-    const spellRow = await sheets.get('Action', spell.apiId)
-    const spellInfo = spellRow.fields as SpellInfo
+    const cast = spell.cast === 0 ? 'Instant' : `${spell.cast.toFixed(2)}s`
+    const recast = `${spell.recast.toFixed(2)}s`
+    const mp = spell.mp != null && spell.mp > 0 ? spell.mp.toString() : '0'
+    const range = spell.range != null ? `${spell.range}y` : '-'
+    const radius = spell.radius != null ? `${spell.radius}y` : '-'
+    const rank = '★'.repeat(spell.rank)
 
-    let cast = (Number(spellInfo.Cast100ms) / 10).toFixed(2)
-    if (cast === '0.00') cast = 'Instant'
-    const recast = (Number(spellInfo.Recast100ms) / 10).toFixed(2)
-    const mpCost = (Number(spellInfo.PrimaryCostValue) * 100).toString()
-    const range = spell.range !== undefined ? `${spell.range}y` : '-'
-    const radius = spell.radius !== undefined ? `${spell.radius}y` : '-'
+    const attachment = new AttachmentBuilder(
+      join(IMAGES_PATH, `${spell.id}.png`),
+      { name: `${spell.id}.png` },
+    )
 
     const embed = new EmbedBuilder()
-      .setTitle(`${spell.number}: ${spell.name} ${spell.rank}`)
-      .setColor(ASPECT_COLORS[spell.aspect] ?? 0xaaaaaa)
+      .setTitle(`${spell.number}: ${spell.name} ${rank}`)
+      .setColor(ASPECT_COLORS[spell.spellAspect] ?? 0xaaaaaa)
       .addFields(
         { name: 'Cast', value: cast, inline: true },
         { name: 'Recast', value: recast, inline: true },
         { name: 'Range', value: range, inline: true },
-        { name: 'MP Cost', value: mpCost, inline: true },
+        { name: 'MP Cost', value: mp, inline: true },
         {
           name: 'Spell Info',
-          value: `${spell.type} / ${spell.aspect}`,
+          value: `${spell.spellType} / ${spell.spellAspect}`,
           inline: true,
         },
         { name: 'Radius', value: radius, inline: true },
-        { name: 'Description', value: spell.description },
-        { name: 'Location', value: spell.location },
+        { name: 'Description', value: cleanField(spell.description) },
+        { name: 'Location', value: cleanField(spell.location) },
       )
-      .setThumbnail(spell.icon)
-      .setFooter({
-        text: 'Information retrieved from XIVAPI and FFXIV Collect.',
-      })
+      .setThumbnail(`attachment://${spell.id}.png`)
 
-    if (spell.notes !== undefined) {
-      embed.addFields({ name: 'Notes', value: spell.notes })
+    if (spell.notes != null) {
+      embed.addFields({ name: 'Notes', value: cleanField(spell.notes) })
     }
 
-    await interaction.reply({ embeds: [embed] })
+    embed.addFields({
+      name: '​',
+      value: 'Information sourced from [Blue Academy](https://github.com/RoarkGit/Blue-Mage-Data)',
+    })
+
+    await interaction.reply({ embeds: [embed], files: [attachment] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
     strago.data.spellData

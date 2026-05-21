@@ -52,7 +52,7 @@ void (async () => {
     spellData: new Collection<string, Spell>(),
   }
 
-  if (!(await loadSpells(strago))) {
+  if (!loadSpells(strago)) {
     strago.logger.error('Failed to load spells.')
     return
   }

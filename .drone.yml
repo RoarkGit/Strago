@@ -3,7 +3,16 @@ kind: pipeline
 type: docker
 name: default
 
+clone:
+  depth: 0
+
 steps:
+- name: update-submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+
+
 - name: build-branch
   image: plugins/docker
   settings:
