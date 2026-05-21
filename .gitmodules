@@ -1,0 +1,3 @@
+[submodule "src/data/Blue-Mage-Data"]
+	path = src/data/Blue-Mage-Data
+	url = https://github.com/RoarkGit/Blue-Mage-Data
