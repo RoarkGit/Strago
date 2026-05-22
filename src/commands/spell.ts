@@ -1,5 +1,3 @@
-import { join } from 'path'
-
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
@@ -9,8 +7,7 @@ import {
 
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
-
-const IMAGES_PATH = join(__dirname, '../../src/data/Blue-Mage-Data/images')
+import { PATHS } from '../utils/paths'
 
 const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -62,7 +59,7 @@ export const spell: Command = {
     const rank = '★'.repeat(spell.rank)
 
     const attachment = new AttachmentBuilder(
-      join(IMAGES_PATH, `${spell.id}.png`),
+      `${PATHS.spellImages()}/${spell.id}.png`,
       { name: `${spell.id}.png` },
     )
 
@@ -91,7 +88,8 @@ export const spell: Command = {
 
     embed.addFields({
       name: '​',
-      value: 'Information sourced from [Blue Academy](https://github.com/RoarkGit/Blue-Mage-Data)',
+      value:
+        'Information sourced from [Blue Academy](https://github.com/RoarkGit/Blue-Mage-Data)',
     })
 
     await interaction.reply({ embeds: [embed], files: [attachment] })

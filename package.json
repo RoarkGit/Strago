@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf ./dist",
+    "lint": "eslint src",
     "start:dev": "tsc-watch -p ./tsconfig.dev.json --onSuccess \"node --enable-source-maps -r dotenv/config ./dist/index.js dotenv_config_path=.env.dev\"",
     "start:prod": "npm run clean && tsc-watch --onSuccess \"node -r dotenv/config ./dist/index.js dotenv_config_path=.env.prod\""
   },
