@@ -8,7 +8,9 @@ export let gridfs: GridFSBucket
 export const connectDatabase = async (strago: Strago): Promise<boolean> => {
   try {
     await connect(strago.config.databaseUri)
-    gridfs = new GridFSBucket(connection.db)
+    const db = connection.db
+    if (!db) throw new Error('Database connection failed')
+    gridfs = new GridFSBucket(db)
     return true
   } catch (error) {
     strago.logger.error('Failed to connect to database:', error)

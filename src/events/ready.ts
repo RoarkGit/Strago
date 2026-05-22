@@ -60,7 +60,7 @@ export const ready = async (strago: Strago): Promise<void> => {
   })
 
   // Every 10 minutes: prune inactive fill channels.
-  const channelPruneCron = new CronJob({
+  const channelPruneCron = CronJob.from({
     cronTime: '0 */10 * * * *',
     onTick: () => {
       channelPrune(strago).catch((err) => strago.logger.error(err))
@@ -71,7 +71,7 @@ export const ready = async (strago: Strago): Promise<void> => {
 
   if (strago.config.weeklyTargetChannelId !== undefined) {
     // Every Tuesday at 8:00 UTC: post fresh weekly targets.
-    const weeklyTargetsCron = new CronJob({
+    const weeklyTargetsCron = CronJob.from({
       cronTime: '0 0 8 * * 2',
       onTick: () => {
         const channel = strago.channels.cache.get(
