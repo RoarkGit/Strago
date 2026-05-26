@@ -1,15 +1,14 @@
 import { EmbedBuilder } from 'discord.js'
 
 import { ONE_WEEK_MS } from '../constants/time'
-import weeklyTargets from '../data/weeklyTargets.json'
+import type { WeeklyTargets } from '../interfaces/WeeklyTargets'
+
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
 
-/**
- * Generates an embed containing weekly targets to be used in messages.
- * @param weeks number of weeks away from current week to search
- * @returns a message embed containing the weekly targets info
- */
-export const generateWeeklyTargetsEmbed = (weeks: number): EmbedBuilder => {
+export const generateWeeklyTargetsEmbed = (
+  weeklyTargets: WeeklyTargets,
+  weeks: number,
+): EmbedBuilder => {
   const numWeeks =
     Math.floor(
       (Date.now().valueOf() - ROTATION_START.valueOf()) / ONE_WEEK_MS,

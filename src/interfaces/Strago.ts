@@ -4,6 +4,7 @@ import type { Logger } from 'winston'
 import type { Command } from './Command'
 import type { Spell } from './Spell'
 import type { TimeoutSet } from './TimeoutSet'
+import type { WeeklyTargets } from './WeeklyTargets'
 
 /**
  * Implementation of Discord client.
@@ -34,6 +35,7 @@ export interface Strago extends Client {
   // Static data.
   data: {
     spellData: Collection<string, Spell>
+    weeklyTargets: WeeklyTargets
   }
   shortcutTitles: Collection<string, Set<string>>
   fillSpamSet: TimeoutSet

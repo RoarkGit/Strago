@@ -4,11 +4,9 @@ import {
 } from 'discord.js'
 
 import type { Command } from '../interfaces/Command'
+import type { Strago } from '../interfaces/Strago'
 import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
 
-/**
- * Returns weekly targets.
- */
 export const weeklytargets: Command = {
   data: new SlashCommandBuilder()
     .setName('weeklytargets')
@@ -22,9 +20,12 @@ export const weeklytargets: Command = {
           'Optional: Number of weeks ahead to look; use negative numbers to look back.',
         ),
     ),
-  run: async (interaction: ChatInputCommandInteraction): Promise<void> => {
+  run: async (
+    interaction: ChatInputCommandInteraction,
+    strago: Strago,
+  ): Promise<void> => {
     const weeks = interaction.options.getNumber('weeks') ?? 0
-    const embed = generateWeeklyTargetsEmbed(weeks)
+    const embed = generateWeeklyTargetsEmbed(strago.data.weeklyTargets, weeks)
     await interaction.reply({ embeds: [embed] })
   },
   guildCommand: false,

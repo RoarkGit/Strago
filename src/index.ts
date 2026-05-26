@@ -16,6 +16,7 @@ import { connectDatabase } from './utils/connectDatabase'
 import { initLogger } from './utils/initLogger'
 import { loadCommands } from './utils/loadCommands'
 import { loadSpells } from './utils/loadSpells'
+import { loadWeeklyTargets } from './utils/loadWeeklyTargets'
 import { registerCommands } from './utils/registerCommands'
 
 /**
@@ -50,10 +51,16 @@ void (async () => {
   // Load static data.
   strago.data = {
     spellData: new Collection<string, Spell>(),
+    weeklyTargets: { carnivale: {}, duties: {}, primes: {} },
   }
 
   if (!loadSpells(strago)) {
     strago.logger.error('Failed to load spells.')
+    return
+  }
+
+  if (!loadWeeklyTargets(strago)) {
+    strago.logger.error('Failed to load weekly targets.')
     return
   }
 
