@@ -1,0 +1,63 @@
+name: Notify Discord
+
+on:
+  push:
+    branches: [main]
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore:')"
+    steps:
+      - name: Send push notification
+        if: github.event_name == 'push'
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          MSG: ${{ github.event.head_commit.message }}
+          URL: ${{ github.event.head_commit.url }}
+          AUTHOR: ${{ github.event.head_commit.author.name }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          jq -n \
+            --arg title "$REPO" \
+            --arg desc "\`$MSG\`\n$AUTHOR pushed to \`$BRANCH\`" \
+            --arg url "$URL" \
+            '{"embeds":[{"title":$title,"description":$desc,"url":$url,"color":5793266}]}' \
+          | curl -X POST "$WEBHOOK" -H "Content-Type: application/json" -d @-
+
+      - name: Send issue notification
+        if: github.event_name == 'issues'
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          TITLE: ${{ github.event.issue.title }}
+          URL: ${{ github.event.issue.html_url }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+        run: |
+          jq -n \
+            --arg title "Issue opened: $TITLE" \
+            --arg desc "$AUTHOR opened an issue in $REPO" \
+            --arg url "$URL" \
+            '{"embeds":[{"title":$title,"description":$desc,"url":$url,"color":15548997}]}' \
+          | curl -X POST "$WEBHOOK" -H "Content-Type: application/json" -d @-
+
+      - name: Send PR notification
+        if: github.event_name == 'pull_request'
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          TITLE: ${{ github.event.pull_request.title }}
+          URL: ${{ github.event.pull_request.html_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          jq -n \
+            --arg title "PR opened: $TITLE" \
+            --arg desc "$AUTHOR opened a pull request in $REPO" \
+            --arg url "$URL" \
+            '{"embeds":[{"title":$title,"description":$desc,"url":$url,"color":5763719}]}' \
+          | curl -X POST "$WEBHOOK" -H "Content-Type: application/json" -d @-
