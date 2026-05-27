@@ -20,7 +20,7 @@ WORKDIR /usr
 COPY package.json ./
 RUN npm install --omit=dev
 COPY --from=0 /usr/dist /usr/dist
-COPY --from=0 /usr/data ./data
+COPY --from=0 /usr/src/data ./data
 RUN npm install pm2 -g
 
 CMD ["pm2-runtime", "dist", "index.js"]
