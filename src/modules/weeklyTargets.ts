@@ -1,9 +1,14 @@
 import { EmbedBuilder } from 'discord.js'
 
 import { ONE_WEEK_MS } from '../constants/time'
-import type { WeeklyTargets } from '../interfaces/WeeklyTargets'
+import type { CarnivaleTarget, WeeklyTargets } from '../interfaces/WeeklyTargets'
 
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
+
+function formatCarnivale(target: CarnivaleTarget): string {
+  if (!target.bonuses?.length) return target.name
+  return `${target.name}\n${target.bonuses.map((b) => `- ${b}`).join('\n')}`
+}
 
 export const generateWeeklyTargetsEmbed = (
   weeklyTargets: WeeklyTargets,
@@ -37,7 +42,7 @@ export const generateWeeklyTargetsEmbed = (
     .addFields(
       {
         name: '__Masked Carnivale Targets__',
-        value: `:third_place: ${carnivaleTargets[0]}\n:second_place: ${carnivaleTargets[1]}\n:first_place: ${carnivaleTargets[2]}`,
+        value: `:third_place: ${formatCarnivale(carnivaleTargets[0])}\n:second_place: ${formatCarnivale(carnivaleTargets[1])}\n:first_place: ${formatCarnivale(carnivaleTargets[2])}`,
         inline: false,
       },
       { name: '__Blue Mage Log Targets__', value: duties, inline: false },
