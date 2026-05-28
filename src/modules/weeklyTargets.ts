@@ -7,7 +7,7 @@ const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
 
 function formatCarnivale(target: CarnivaleTarget): string {
   if (!target.bonuses?.length) return target.name
-  return `${target.name}\n${target.bonuses.map((b) => `- ${b}`).join('\n')}`
+  return `${target.name} (${target.bonuses.join(', ')})`
 }
 
 export const generateWeeklyTargetsEmbed = (
