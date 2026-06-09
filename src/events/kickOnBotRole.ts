@@ -1,5 +1,6 @@
 import type { GuildMember } from 'discord.js'
 
+import Stats from '../interfaces/models/Stats'
 import type { Strago } from '../interfaces/Strago'
 
 /**
@@ -13,6 +14,11 @@ export const kickOnBotRole = async (
 ): Promise<void> => {
   if (member.roles.cache.some((r) => r.name === 'Bot Trap')) {
     await member.kick('User clicked on bot trap role.')
+    await Stats.findOneAndUpdate(
+      {},
+      { $inc: { botTrapRoleKills: 1 } },
+      { upsert: true, setDefaultsOnInsert: true },
+    )
     strago.logger.info(
       `Kicked ${member.user.username} for clicking on bot trap role.`,
     )

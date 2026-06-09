@@ -1,5 +1,6 @@
 import { type Message } from 'discord.js'
 
+import Stats from '../interfaces/models/Stats'
 import type { Strago } from '../interfaces/Strago'
 
 const MORBLA = '<:morbla:1066449552581865482>'
@@ -28,8 +29,13 @@ export const checkHoneypot = async (
     reason: 'User sent message to honeypot channel.',
   })
   await message.guild.members.unban(member)
+  const stats = await Stats.findOneAndUpdate(
+    {},
+    { $inc: { honeypotKills: 1 } },
+    { new: true, upsert: true, setDefaultsOnInsert: true },
+  )
   await message.channel.send(
-    `${MORBLA} Caught ${member.displayName} (${member.user.username} <${member.user.id}>) sticking their hand in the honeypot! ${MORBLA}`,
+    `${MORBLA} Caught ${member.displayName} (${member.user.username} <${member.user.id}>) sticking their hand in the honeypot! Total honeypot kills: ${stats.honeypotKills} ${MORBLA}`,
   )
   strago.logger.info(
     `Kicked ${member.user.username} for sending message to honeypot channel.`,
