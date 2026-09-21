@@ -25,16 +25,27 @@ const ASPECT_COLORS: Record<string, number> = {
  * and `yellow` and `orange` name a status. Discord has no colored text outside code
  * blocks, so all three become bold, which matches both the emphasis the game itself
  * uses and how /beast renders its tooltips.
+ *
+ * `spell` is different: it carries a spell id, which the site resolves to that
+ * spell's name when it builds the tooltip link, so resolve it the same way here.
  */
-function cleanField(text: string): string {
+function cleanField(text: string, strago: Strago): string {
   return text
-    .replace(/\{\{<\s*\w+\s+"?(.*?)"?\s*>\}\}/g, (_, inner: string) => {
-      const trimmed = inner.trim()
-      if (trimmed === '') return ''
-      // Labels keep their trailing space inside the shortcode, and Discord will not
-      // render bold with a space against the delimiter, so it moves outside.
-      return `**${trimmed}**${inner.endsWith(' ') ? ' ' : ''}`
-    })
+    .replace(
+      /\{\{<\s*(\w+)\s+"?(.*?)"?\s*>\}\}/g,
+      (_, kind: string, inner: string) => {
+        const trimmed = inner.trim()
+        if (trimmed === '') return ''
+        const label =
+          kind === 'spell'
+            ? (strago.data.spellData.find((s) => s.id === trimmed)?.name ??
+              trimmed)
+            : trimmed
+        // Labels keep their trailing space inside the shortcode, and Discord will
+        // not render bold with a space against the delimiter, so it moves outside.
+        return `**${label}**${inner.endsWith(' ') ? ' ' : ''}`
+      },
+    )
     .replace(/\n{2,}/g, '\n')
     .trim()
 }
@@ -93,13 +104,13 @@ export const spell: Command = {
           inline: true,
         },
         { name: 'Radius', value: radius, inline: true },
-        { name: 'Description', value: cleanField(spell.description) },
-        { name: 'Location', value: cleanField(spell.location) },
+        { name: 'Description', value: cleanField(spell.description, strago) },
+        { name: 'Location', value: cleanField(spell.location, strago) },
       )
       .setThumbnail(`attachment://${spell.id}.png`)
 
     if (spell.notes != null) {
-      embed.addFields({ name: 'Notes', value: cleanField(spell.notes) })
+      embed.addFields({ name: 'Notes', value: cleanField(spell.notes, strago) })
     }
 
     embed.addFields({
