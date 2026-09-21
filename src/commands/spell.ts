@@ -1,13 +1,8 @@
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
-  ContainerBuilder,
-  MessageFlags,
-  SectionBuilder,
-  SeparatorBuilder,
+  EmbedBuilder,
   SlashCommandBuilder,
-  TextDisplayBuilder,
-  ThumbnailBuilder,
 } from 'discord.js'
 
 import type { Command } from '../interfaces/Command'
@@ -28,8 +23,8 @@ const ASPECT_COLORS: Record<string, number> = {
  *
  * spell.yaml marks up its tooltips for Blue Academy, where `green` labels an effect,
  * and `yellow` and `orange` name a status. Discord has no colored text outside code
- * blocks, which would stop custom emoji rendering, so all three become bold. That
- * matches both the emphasis the game itself uses and how /beast renders its tooltips.
+ * blocks, so all three become bold, which matches both the emphasis the game itself
+ * uses and how /beast renders its tooltips.
  */
 function cleanField(text: string): string {
   return text
@@ -82,64 +77,38 @@ export const spell: Command = {
       { name: `${spell.id}.png` },
     )
 
-    // Components V2 rather than an embed, so the spell's name and the headings below
-    // it render as real markdown headings rather than fixed-size embed field names.
-    const container = new ContainerBuilder()
-      .setAccentColor(ASPECT_COLORS[spell.spellAspect] ?? 0xaaaaaa)
-      .addSectionComponents(
-        new SectionBuilder()
-          .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              [
-                `## ${spell.number}: ${spell.name} ${rank}`,
-                `**Type** ${spell.spellType} / ${spell.spellAspect}`,
-                `**Cast** ${cast} · **Recast** ${recast} · **MP** ${mp}`,
-                `**Range** ${range} · **Radius** ${radius}`,
-              ].join('\n'),
-            ),
-          )
-          .setThumbnailAccessory(
-            new ThumbnailBuilder()
-              .setURL(`attachment://${spell.id}.png`)
-              .setDescription(`${spell.name} icon`),
-          ),
+    // An embed rather than Components V2: inline fields are the only thing Discord
+    // offers that lays the stat block out in rows and columns.
+    const embed = new EmbedBuilder()
+      .setTitle(`${spell.number}: ${spell.name} ${rank}`)
+      .setColor(ASPECT_COLORS[spell.spellAspect] ?? 0xaaaaaa)
+      .addFields(
+        { name: 'Cast', value: cast, inline: true },
+        { name: 'Recast', value: recast, inline: true },
+        { name: 'Range', value: range, inline: true },
+        { name: 'MP Cost', value: mp, inline: true },
+        {
+          name: 'Spell Info',
+          value: `${spell.spellType} / ${spell.spellAspect}`,
+          inline: true,
+        },
+        { name: 'Radius', value: radius, inline: true },
+        { name: 'Description', value: cleanField(spell.description) },
+        { name: 'Location', value: cleanField(spell.location) },
       )
-      .addSeparatorComponents(new SeparatorBuilder())
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `### Description\n${cleanField(spell.description)}`,
-        ),
-      )
-      .addSeparatorComponents(new SeparatorBuilder())
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `### Location\n${cleanField(spell.location)}`,
-        ),
-      )
+      .setThumbnail(`attachment://${spell.id}.png`)
 
     if (spell.notes != null) {
-      container
-        .addSeparatorComponents(new SeparatorBuilder())
-        .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            `### Notes\n${cleanField(spell.notes)}`,
-          ),
-        )
+      embed.addFields({ name: 'Notes', value: cleanField(spell.notes) })
     }
 
-    container
-      .addSeparatorComponents(new SeparatorBuilder())
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          '-# Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
-        ),
-      )
-
-    await interaction.reply({
-      components: [container],
-      files: [attachment],
-      flags: MessageFlags.IsComponentsV2,
+    embed.addFields({
+      name: '​',
+      value:
+        'Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
     })
+
+    await interaction.reply({ embeds: [embed], files: [attachment] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
     strago.data.spellData
