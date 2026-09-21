@@ -46,6 +46,22 @@ function cleanField(text: string): string {
 }
 
 /**
+ * Renders a beast's satiety and its five stat ratings from the Crucible of the
+ * Unbroken.
+ */
+function statsText(beast: Beast): string {
+  const stats = [
+    `**STR** ${beast.stats.strength}`,
+    `**INT** ${beast.stats.intelligence}`,
+    `**P.RES** ${beast.stats.physicalResistance}`,
+    `**M.RES** ${beast.stats.magicalResistance}`,
+    `**CON** ${beast.stats.constitution}`,
+  ].join(' · ')
+
+  return [stats, `**Satiety** ${beast.satiety}`].join('\n')
+}
+
+/**
  * Renders one of a beast's actions: a heading carrying the game's own icon, the
  * action's name and its element, then its range and radius, then the full tooltip.
  */
@@ -114,6 +130,8 @@ export const beast: Command = {
                 `## ${beast.number}: ${beast.name}`,
                 `**Classification** ${beast.classification}`,
                 `**Auto-attack** ${elementEmoji(strago, beast.autoAttack.element)}${beast.autoAttack.element} · ${beast.autoAttack.range}y`,
+                `**Habitat** ${cleanField(beast.habitat)}`,
+                statsText(beast),
               ].join('\n'),
             ),
           )
@@ -124,6 +142,8 @@ export const beast: Command = {
           ),
       )
       .addSeparatorComponents(new SeparatorBuilder())
+
+    container
       .addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
           actionText(

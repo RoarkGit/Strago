@@ -22,6 +22,7 @@ export interface Beast {
   classification: string
   satiety: number
   habitat: string
+  lore: string
   autoAttack: {
     element: string
     range: number

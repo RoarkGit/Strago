@@ -18,6 +18,7 @@ export interface Spell {
   face?: boolean
   location: string
   description: string
+  lore: string
   target: string[]
   status?: string[]
   notes?: string
