@@ -2,7 +2,7 @@ name: Update Limited-Job-Data submodule
 
 on:
   repository_dispatch:
-    types: [limited-job-data-updated, blue-mage-data-updated]
+    types: [limited-job-data-updated]
 
 concurrency:
   group: update-submodule
