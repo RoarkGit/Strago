@@ -27,4 +27,20 @@ jobs:
           git add src/data/limited-job-data
           git diff --staged --quiet && echo "No changes" && exit 0
           git commit -m "chore: update Limited-Job-Data submodule"
-          git push
+
+          # A second dispatch, or a manual push, can land on main between our checkout
+          # and this push. Retry against the new tip rather than failing outright: if
+          # origin already has the same submodule commit, our own commit becomes empty
+          # under rebase and is dropped, so the retry's push is a no-op success.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt), rebasing onto origin/main and retrying..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((attempt * 3))
+          done
+
+          echo "::error::Failed to push after 5 attempts"
+          exit 1
