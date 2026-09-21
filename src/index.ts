@@ -8,13 +8,16 @@ import {
   LFG_SPAM_TIMEOUT_S,
 } from './constants/time'
 import { handleEvents } from './events/handleEvents'
+import type { Beast } from './interfaces/Beast'
 import type { Spell } from './interfaces/Spell'
 import type { Strago } from './interfaces/Strago'
 import { TimeoutSet } from './interfaces/TimeoutSet'
 import { validateEnv } from './modules/validateEnv'
 import { connectDatabase } from './utils/connectDatabase'
 import { initLogger } from './utils/initLogger'
+import { loadBeasts } from './utils/loadBeasts'
 import { loadCommands } from './utils/loadCommands'
+import { loadEmoji } from './utils/loadEmoji'
 import { loadSpells } from './utils/loadSpells'
 import { loadWeeklyTargets } from './utils/loadWeeklyTargets'
 import { registerCommands } from './utils/registerCommands'
@@ -50,6 +53,8 @@ void (async () => {
 
   // Load static data.
   strago.data = {
+    beastData: new Collection<string, Beast>(),
+    emoji: new Collection<string, string>(),
     spellData: new Collection<string, Spell>(),
     weeklyTargets: { carnivale: {}, duties: {}, primes: {} },
   }
@@ -58,6 +63,13 @@ void (async () => {
     strago.logger.error('Failed to load spells.')
     return
   }
+
+  if (!loadBeasts(strago)) {
+    strago.logger.error('Failed to load beasts.')
+    return
+  }
+
+  await loadEmoji(strago)
 
   if (!loadWeeklyTargets(strago)) {
     strago.logger.error('Failed to load weekly targets.')

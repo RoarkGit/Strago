@@ -1,4 +1,4 @@
-// Liam's Discord user ID — exempt from single-datacenter fill restrictions.
+// Liam's Discord user ID: exempt from single-datacenter fill restrictions.
 export const LIAM_ID = '103297791110959104'
 
 export const NA_LFG_CHANNELS = [

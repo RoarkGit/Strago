@@ -1,6 +1,7 @@
 import type { Client, Collection } from 'discord.js'
 import type { Logger } from 'winston'
 
+import type { Beast } from './Beast'
 import type { Command } from './Command'
 import type { Spell } from './Spell'
 import type { TimeoutSet } from './TimeoutSet'
@@ -34,6 +35,8 @@ export interface Strago extends Client {
   }
   // Static data.
   data: {
+    beastData: Collection<string, Beast>
+    emoji: Collection<string, string>
     spellData: Collection<string, Spell>
     weeklyTargets: WeeklyTargets
   }

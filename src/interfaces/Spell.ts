@@ -1,5 +1,5 @@
 /**
- * Represents a Blue Mage spell, sourced from the Blue-Mage-Data submodule.
+ * Represents a Blue Mage spell, sourced from the Limited-Job-Data submodule.
  */
 export interface Spell {
   id: string

@@ -1,7 +1,10 @@
 import { EmbedBuilder } from 'discord.js'
 
 import { ONE_WEEK_MS } from '../constants/time'
-import type { CarnivaleTarget, WeeklyTargets } from '../interfaces/WeeklyTargets'
+import type {
+  CarnivaleTarget,
+  WeeklyTargets,
+} from '../interfaces/WeeklyTargets'
 
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
 

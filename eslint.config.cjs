@@ -44,6 +44,12 @@ module.exports = [
           },
         },
       ],
+      // Command.run always receives strago, so commands that do not need it mark the
+      // parameter with a leading underscore rather than dropping it.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       'prettier/prettier': [
         'error',
         {

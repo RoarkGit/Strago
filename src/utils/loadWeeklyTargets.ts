@@ -2,9 +2,9 @@ import { readFileSync } from 'fs'
 
 import { load } from 'js-yaml'
 
-import type { WeeklyTargets } from '../interfaces/WeeklyTargets'
-import type { Strago } from '../interfaces/Strago'
 import { PATHS } from './paths'
+import type { Strago } from '../interfaces/Strago'
+import type { WeeklyTargets } from '../interfaces/WeeklyTargets'
 
 export const loadWeeklyTargets = (strago: Strago): boolean => {
   try {

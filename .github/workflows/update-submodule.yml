@@ -1,8 +1,8 @@
-name: Update Blue-Mage-Data submodule
+name: Update Limited-Job-Data submodule
 
 on:
   repository_dispatch:
-    types: [blue-mage-data-updated]
+    types: [limited-job-data-updated, blue-mage-data-updated]
 
 concurrency:
   group: update-submodule
@@ -18,13 +18,13 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Update submodule
-        run: git submodule update --remote src/data/blue-mage-data
+        run: git submodule update --remote src/data/limited-job-data
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/data/blue-mage-data
+          git add src/data/limited-job-data
           git diff --staged --quiet && echo "No changes" && exit 0
-          git commit -m "chore: update Blue-Mage-Data submodule"
+          git commit -m "chore: update Limited-Job-Data submodule"
           git push

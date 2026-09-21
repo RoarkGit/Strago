@@ -8,7 +8,7 @@ import type { Spell } from '../interfaces/Spell'
 import type { Strago } from '../interfaces/Strago'
 
 /**
- * Loads all spells from the Blue-Mage-Data submodule.
+ * Loads all spells from the Limited-Job-Data submodule.
  * @returns Boolean indicating success.
  */
 export const loadSpells = (strago: Strago): boolean => {

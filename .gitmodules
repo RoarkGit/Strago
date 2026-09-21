@@ -1,3 +1,3 @@
-[submodule "data/blue-mage-data"]
-	path = src/data/blue-mage-data
-	url = https://github.com/RoarkGit/Blue-Mage-Data
+[submodule "data/limited-job-data"]
+	path = src/data/limited-job-data
+	url = https://github.com/RoarkGit/Limited-Job-Data
