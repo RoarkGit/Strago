@@ -13,5 +13,7 @@ export const PATHS = {
   spellImages: () => join(getDataDir(), 'spell/images'),
   beastData: () => join(getDataDir(), 'beast/beast.yaml'),
   beastImages: () => join(getDataDir(), 'beast/images'),
+  itemData: () => join(getDataDir(), 'beast/items.yaml'),
+  itemImages: () => join(getDataDir(), 'beast/item-images'),
   weeklyTargets: () => join(getDataDir(), 'weeklyTargets.yaml'),
 }

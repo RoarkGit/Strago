@@ -9,6 +9,7 @@ import {
 } from './constants/time'
 import { handleEvents } from './events/handleEvents'
 import type { Beast } from './interfaces/Beast'
+import type { Item } from './interfaces/Item'
 import type { Spell } from './interfaces/Spell'
 import type { Strago } from './interfaces/Strago'
 import { TimeoutSet } from './interfaces/TimeoutSet'
@@ -18,6 +19,7 @@ import { initLogger } from './utils/initLogger'
 import { loadBeasts } from './utils/loadBeasts'
 import { loadCommands } from './utils/loadCommands'
 import { loadEmoji } from './utils/loadEmoji'
+import { loadItems } from './utils/loadItems'
 import { loadSpells } from './utils/loadSpells'
 import { loadWeeklyTargets } from './utils/loadWeeklyTargets'
 import { registerCommands } from './utils/registerCommands'
@@ -54,6 +56,7 @@ void (async () => {
   // Load static data.
   strago.data = {
     beastData: new Collection<string, Beast>(),
+    itemData: new Collection<string, Item>(),
     emoji: new Collection<string, string>(),
     spellData: new Collection<string, Spell>(),
     weeklyTargets: { carnivale: {}, duties: {}, primes: {} },
@@ -66,6 +69,11 @@ void (async () => {
 
   if (!loadBeasts(strago)) {
     strago.logger.error('Failed to load beasts.')
+    return
+  }
+
+  if (!loadItems(strago)) {
+    strago.logger.error('Failed to load items.')
     return
   }
 

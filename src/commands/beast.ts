@@ -47,18 +47,30 @@ function cleanField(text: string): string {
 
 /**
  * Renders a beast's satiety and its five stat ratings from the Crucible of the
- * Unbroken.
+ * Unbroken, at the given rank (1-25). The rank is only called out in the text when
+ * it is not 25, the default and the max, to keep the common case unchanged.
  */
-function statsText(beast: Beast): string {
+function statsText(beast: Beast, rank: number): string {
+  const [
+    strength,
+    intelligence,
+    physicalResistance,
+    magicalResistance,
+    constitution,
+  ] = beast.growth[rank - 1]
+
   const stats = [
-    `**STR** ${beast.stats.strength}`,
-    `**INT** ${beast.stats.intelligence}`,
-    `**P.RES** ${beast.stats.physicalResistance}`,
-    `**M.RES** ${beast.stats.magicalResistance}`,
-    `**CON** ${beast.stats.constitution}`,
+    `**STR** ${strength}`,
+    `**INT** ${intelligence}`,
+    `**P.RES** ${physicalResistance}`,
+    `**M.RES** ${magicalResistance}`,
+    `**CON** ${constitution}`,
   ].join(' · ')
 
-  return [stats, `**Satiety** ${beast.satiety}`].join('\n')
+  return [
+    rank === 25 ? stats : `${stats}  *(Rank ${rank})*`,
+    `**Satiety** ${beast.satiety}`,
+  ].join('\n')
 }
 
 /**
@@ -96,12 +108,21 @@ export const beast: Command = {
         .setDescription("The beast's name.")
         .setRequired(true)
         .setAutocomplete(true),
+    )
+    .addIntegerOption((option) =>
+      option
+        .setName('rank')
+        .setDescription("The beast's rank (1-25). Defaults to 25, the max.")
+        .setMinValue(1)
+        .setMaxValue(25)
+        .setRequired(false),
     ),
   run: async (
     interaction: ChatInputCommandInteraction,
     strago: Strago,
   ): Promise<void> => {
     const name = interaction.options.getString('name', true).toLowerCase()
+    const rank = interaction.options.getInteger('rank') ?? 25
 
     const beast: Beast | undefined = strago.data.beastData.get(name)
     if (beast == null) {
@@ -131,7 +152,7 @@ export const beast: Command = {
                 `**Classification** ${beast.classification}`,
                 `**Auto-attack** ${elementEmoji(strago, beast.autoAttack.element)}${beast.autoAttack.element} · ${beast.autoAttack.range}y`,
                 `**Habitat** ${cleanField(beast.habitat)}`,
-                statsText(beast),
+                statsText(beast, rank),
               ].join('\n'),
             ),
           )

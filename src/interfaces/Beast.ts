@@ -36,4 +36,10 @@ export interface Beast {
     magicalResistance: number
     constitution: number
   }
+  /**
+   * The same five stats at every rank 1-25, indexed 0-24. Each row is
+   * [strength, intelligence, physicalResistance, magicalResistance, constitution].
+   * growth[24] equals `stats`.
+   */
+  growth: [number, number, number, number, number][]
 }
