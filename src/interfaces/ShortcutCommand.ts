@@ -4,7 +4,7 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
-import type { ObjectId } from 'mongodb'
+import type { mongo } from 'mongoose'
 
 import type { Command } from './Command'
 import Shortcut from './models/Shortcut'
@@ -12,7 +12,7 @@ import type { Strago } from './Strago'
 import { gridfs } from '../utils/connectDatabase'
 import { matchingChoices } from '../utils/text'
 
-async function downloadFromGridFS(fileId: ObjectId): Promise<Buffer> {
+async function downloadFromGridFS(fileId: mongo.ObjectId): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = []
     const stream = gridfs.openDownloadStream(fileId)

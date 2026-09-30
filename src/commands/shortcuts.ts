@@ -6,7 +6,7 @@ import {
   SlashCommandSubcommandGroupBuilder,
   type SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
-import type { ObjectId } from 'mongodb'
+import type { mongo } from 'mongoose'
 
 import type { Command } from '../interfaces/Command'
 import Shortcut from '../interfaces/models/Shortcut'
@@ -17,11 +17,11 @@ import { matchingChoices } from '../utils/text'
 async function uploadToGridFS(
   filename: string,
   buffer: Buffer,
-): Promise<ObjectId> {
+): Promise<mongo.ObjectId> {
   return new Promise((resolve, reject) => {
     const stream = gridfs.openUploadStream(filename)
     stream.end(buffer)
-    stream.on('finish', () => resolve(stream.id as ObjectId))
+    stream.on('finish', () => resolve(stream.id as mongo.ObjectId))
     stream.on('error', reject)
   })
 }
