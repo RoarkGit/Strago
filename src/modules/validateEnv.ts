@@ -58,6 +58,7 @@ export const validateEnv = (
         process.env.PRUNE_CHANNELS === undefined
           ? []
           : process.env.PRUNE_CHANNELS.split(','),
+      spamDetectionChannelId: process.env.SPAM_DETECTION_CHANNEL_ID,
       token: process.env.BOT_TOKEN,
     }
 

@@ -1,3 +1,4 @@
+import { checkChannelSpam } from './checkChannelSpam'
 import { checkHoneypot } from './checkHoneypot'
 import { checkLFGSpam } from './checkLFGSpam'
 import { interactionCreate } from './interactionCreate'
@@ -24,6 +25,7 @@ export const handleEvents = (strago: Strago): void => {
     await checkLFGSpam(message, strago)
     await publishAnnouncement(message, strago)
     await checkHoneypot(message, strago)
+    await checkChannelSpam(message, strago)
   })
 
   strago.on('messageDelete', async (message) => {

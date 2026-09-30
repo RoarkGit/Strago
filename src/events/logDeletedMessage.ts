@@ -14,7 +14,8 @@ export const logDeletedMessage = async (
 ): Promise<void> => {
   if (
     strago.config.deletedMessagesChannelId === undefined ||
-    message.channel.type !== ChannelType.GuildText ||
+    (message.channel.type !== ChannelType.GuildText &&
+      message.channel.type !== ChannelType.GuildVoice) ||
     message.channel.parentId === strago.config.modCategoryId ||
     message.content === null ||
     message.author === null

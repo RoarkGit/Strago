@@ -32,6 +32,7 @@ export interface Strago extends Client {
     modChannelId: string
     weeklyTargetChannelId: string | undefined
     pruneChannels: string[]
+    spamDetectionChannelId: string | undefined
     token: string
   }
   // Static data.

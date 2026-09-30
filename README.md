@@ -26,6 +26,7 @@
 
 ## Moderation features
 - **User pruning**: kicks all users who have not completed verification and joined more than ten minutes ago
+- **Channel spam**: kicks users who post the same message in three or more channels (text or voice) within 20 seconds and deletes their last hour of messages
 
 ## Technical Information
 
@@ -55,6 +56,8 @@ The following values are required:
 |`MOD_CATEGORY_ID`|The ID of the moderator channel category.                 |
 |`MOD_CHANNEL_ID` |The ID of the moderator channel.                          |
 |`DATABASE_URI`   |URI of MongoDB instance where data is stored.             |
+
+Optionally, `SPAM_DETECTION_CHANNEL_ID` sets where channel spam kicks are reported (defaults to `MOD_CHANNEL_ID`).
 
 ### Data
 Any data, static or otherwise, exists inside `./data`.
