@@ -15,18 +15,31 @@
 ## Supported commands
 - `/grant`: run workflow for granting roles based on character achievements
 - `/register [character] [server] [id]`: register a character to a Discord user using character info or ID
-- `/spell [name]`: returns info about a given Blue Mage spell
-- `/[type] [topic]`: returns a shortcut previously saved under the `type` category
+- `/spell [name]` / `/spelllore [name]`: returns info or lore about a given Blue Mage spell
+- `/beast [name] [rank]` / `/beastlore [name]`: returns info (with stats at a given rank) or lore about a given Beastmaster beast
+- `/beastitem [name]`: returns info about a Beastmaster item (Beast Gear, Crucible Item, or Feed)
 - `/weeklytargets [weeks]`: returns weekly target info for current week or the week `weeks` away
+- `/fill on|off|roles|find`: toggles fill notifications, configures fill roles, or requests a fill from an LFG channel
+- `/botkills`: shows how many bots the honeypot and bot trap role have caught
+- `/[type] [title]`: returns a shortcut previously saved under the `type` category
 
 ## Moderator commands
 - `/bulkban [prefix]`: bans all users whose name starts with a given prefix
-- `/recreaterole [id]`: recreates a specified role, effectively removing it from all users
-- `/shortcuts [type] set [topic] [messageId]`: stores the content of a specified message for later retrieval
+- `/purgerole [id]`: removes a specified role from all members
+- `/shortcuts [type] set [title] [message_id]`: stores the content of a specified message for later retrieval
+- `/shortcuts [type] delete [title]`: deletes a stored shortcut
 
 ## Moderation features
-- **User pruning**: kicks all users who have not completed verification and joined more than ten minutes ago
+- **Honeypot**: kicks anyone who posts in the honeypot channel and deletes their last hour of messages
+- **Bot trap role**: kicks anyone who gives themselves the `Bot Trap` role
+- **LFG ping spam**: times out users who ping roles in more than one LFG channel within five minutes
 - **Channel spam**: kicks users who post the same message in three or more channels (text or voice) within 20 seconds and deletes their last hour of messages
+- **Deleted message log**: reposts deleted messages (and their attachments) from text and voice channels to a log channel
+
+## Automated tasks
+- **Announcement crossposting**: publishes every message posted in announcement channels
+- **Weekly targets**: posts the new weekly targets every Tuesday at 8:00 UTC
+- **Channel pruning**: every ten minutes, deletes unpinned messages older than two weeks from the configured prune channels
 
 ## Technical Information
 
@@ -43,7 +56,7 @@ Helper modules, such as `xivlib.js` for scraping Lodestone, are stored in `./mod
 Bot utilities, such as those for loading and registering commands, are stored in `./utils`.
 
 ### Configuration
-Configuration is stored in `.env`. Eventually this will be more convenient to use rather than having to swap around hardcoded strings in the actual code.
+Configuration is stored in `.env.dev` / `.env.prod`.
 
 The following values are required:
 
@@ -57,12 +70,24 @@ The following values are required:
 |`MOD_CHANNEL_ID` |The ID of the moderator channel.                          |
 |`DATABASE_URI`   |URI of MongoDB instance where data is stored.             |
 
-Optionally, `SPAM_DETECTION_CHANNEL_ID` sets where channel spam kicks are reported (defaults to `MOD_CHANNEL_ID`).
+The following values are optional; the related feature is disabled (or falls back as noted) when unset:
+
+|Value                        |Description|
+|-----------------------------|----------------------------------------------------------------|
+|`DELETED_MESSAGES_CHANNEL_ID`|Channel where deleted messages are logged.                      |
+|`FILL_CHANNEL_ID`            |Channel where `/fill find` requests are posted.                 |
+|`HONEYPOT_CHANNEL_ID`        |The honeypot channel.                                           |
+|`LFG_CATEGORY_ID`            |The LFG channel category (used by `/fill find` and spam checks).|
+|`LOKI_URI`                   |Loki endpoint for shipping logs.                                |
+|`PRUNE_CHANNELS`             |Comma-separated channel IDs to prune.                           |
+|`SHORTCUT_TYPES`             |Comma-separated shortcut categories (e.g. `faqs,memes`).        |
+|`SPAM_DETECTION_CHANNEL_ID`  |Where channel spam kicks are reported (defaults to `MOD_CHANNEL_ID`).|
+|`WEEKLY_TARGET_CHANNEL_ID`   |Channel where weekly targets are posted.                        |
 
 ### Data
-Any data, static or otherwise, exists inside `./data`.
+Static data lives in `./src/data`, including the [Limited-Job-Data](https://github.com/RoarkGit/Limited-Job-Data) submodule for spells, beasts, items, and weekly targets.
 
-The bot expects a MongoDB instance running at `DATABASE_URI` specified in. There should be two databases: `prod` and `dev`. Currently there is just a single collection in each `characters` which stores `discordId`, `characterId` (from Lodestone), and `characterName`.
+The bot expects a MongoDB instance running at `DATABASE_URI`, with collections for registered characters (`characters`), fill preferences (`fills`), LFG timeout counts (`users`), bot trap kill counts (`stats`), and one collection per shortcut type (files are stored in GridFS).
 
 ## Contributing
 I'm happy to help any folks out who want to contribute here (even with minimal experience). Just ping me in Discord first so I have some idea of what to expect and we can figure out where to go from there.
