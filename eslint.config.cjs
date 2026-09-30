@@ -50,13 +50,8 @@ module.exports = [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
-      'prettier/prettier': [
-        'error',
-        {
-          semi: false,
-          singleQuote: true,
-        },
-      ],
+      // Formatting options live in .prettierrc.json so editors and the prettier CLI match.
+      'prettier/prettier': 'error',
       'sort-imports': [
         'error',
         {
