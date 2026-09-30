@@ -13,5 +13,5 @@ export const publishAnnouncement = async (
     .then(() =>
       strago.logger.info(`Crossposted message from channel: ${channelName}`),
     )
-    .catch(strago.logger.error)
+    .catch((err) => strago.logger.error(err))
 }

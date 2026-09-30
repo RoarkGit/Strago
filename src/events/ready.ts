@@ -1,9 +1,5 @@
 import { CronJob } from 'cron'
-import {
-  GuildTextBasedChannel,
-  PermissionsBitField,
-  type TextChannel,
-} from 'discord.js'
+import { GuildTextBasedChannel, PermissionsBitField } from 'discord.js'
 
 import { ONE_WEEK_MS } from '../constants/time'
 import type { Strago } from '../interfaces/Strago'
@@ -28,6 +24,29 @@ const cacheRecentMessages = async (
     })
     lastMessage = messages.last()
   }
+}
+
+// Posts the new weekly targets, then clears out older unpinned posts.
+// Sending first means a failed send leaves last week's targets up rather than an empty channel,
+// and the cleanup can't race the send and delete the new post.
+// Crossposting is handled by publishAnnouncement when the message is created.
+const postWeeklyTargets = async (strago: Strago): Promise<void> => {
+  const channel = await strago.channels.fetch(
+    strago.config.weeklyTargetChannelId as string,
+  )
+  if (channel === null || !channel.isTextBased() || channel.isDMBased()) {
+    throw new Error('Weekly targets channel is missing or not a text channel.')
+  }
+  const embed = generateWeeklyTargetsEmbed(strago.data.weeklyTargets, 0)
+  const posted = await channel.send({ embeds: [embed] })
+  strago.logger.info('Posted weekly targets.')
+
+  const messages = await channel.messages.fetch()
+  await Promise.all(
+    messages
+      .filter((m) => !m.pinned && m.id !== posted.id)
+      .map((m) => m.delete().catch((err) => strago.logger.error(err))),
+  )
 }
 
 export const ready = async (strago: Strago): Promise<void> => {
@@ -76,21 +95,7 @@ export const ready = async (strago: Strago): Promise<void> => {
     const weeklyTargetsCron = new CronJob(
       '0 0 8 * * 2',
       () => {
-        const channel = strago.channels.cache.get(
-          strago.config.weeklyTargetChannelId as string,
-        ) as TextChannel
-        channel.messages.fetch().then((messages) =>
-          messages.forEach((m) => {
-            if (!m.pinned) {
-              m.delete().catch((err) => strago.logger.error(err))
-            }
-          }),
-        )
-        const embed = generateWeeklyTargetsEmbed(strago.data.weeklyTargets, 0)
-        channel
-          .send({ embeds: [embed] })
-          .then((m) => m.crosspost())
-          .catch((err) => strago.logger.error(err))
+        postWeeklyTargets(strago).catch((err) => strago.logger.error(err))
       },
       null,
       false,

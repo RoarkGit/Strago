@@ -1,6 +1,5 @@
 import {
   type ChatInputCommandInteraction,
-  Role,
   SlashCommandBuilder,
 } from 'discord.js'
 import { type Document } from 'mongoose'
@@ -91,8 +90,12 @@ export const fill: Command = {
       const member = await interaction.guild.members.fetch(interaction.user.id)
       const fillRole = interaction.guild.roles.cache.find(
         (r) => r.name === 'Fill',
-      ) as Role
-      member.roles.add(fillRole)
+      )
+      if (fillRole === undefined) {
+        strago.logger.error('Undefined role: Fill')
+        return
+      }
+      await member.roles.add(fillRole)
     } else if (command === 'off') {
       fill.set('enabled', false)
       await fill.save()
@@ -103,8 +106,12 @@ export const fill: Command = {
       const member = await interaction.guild.members.fetch(interaction.user.id)
       const fillRole = interaction.guild.roles.cache.find(
         (r) => r.name === 'Fill',
-      ) as Role
-      member.roles.remove(fillRole)
+      )
+      if (fillRole === undefined) {
+        strago.logger.error('Undefined role: Fill')
+        return
+      }
+      await member.roles.remove(fillRole)
     } else if (command === 'roles') {
       await configureFillRoles(interaction, fill)
     }

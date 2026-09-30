@@ -7,7 +7,6 @@ import path from 'path'
 
 import { PromisePool } from '@supercharge/promise-pool'
 import * as nodestone from '@xivapi/nodestone'
-import axios from 'axios'
 
 const parsers = {
   character: new nodestone.Character(),
@@ -103,10 +102,13 @@ export const getAchievementComplete = async (
   achievementId: string,
 ): Promise<boolean> => {
   const url = getUrl([characterId, 'achievement', 'detail', achievementId])
-  return await axios
-    .get(url)
-    .then((response) => response.data.includes(ACHIEVEMENT_COMPLETE))
-    .catch(() => false)
+  try {
+    const response = await fetch(url)
+    if (!response.ok) return false
+    return (await response.text()).includes(ACHIEVEMENT_COMPLETE)
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -118,16 +120,17 @@ export const getAchievementsPublic = async (
   characterId: string,
 ): Promise<boolean> => {
   const url = getUrl([characterId, 'achievement'])
-  return await axios
-    .get(url)
-    .then(() => true)
-    .catch((error) => {
-      // Private achievement pages return a 403, so we should only print other errors that occur.
-      if (error.response.status !== 403) {
-        console.error(error)
-      }
-      return false
-    })
+  try {
+    const response = await fetch(url)
+    // Private achievement pages return a 403, so we should only print other errors that occur.
+    if (!response.ok && response.status !== 403) {
+      console.error(`${response.status} ${response.statusText} for ${url}`)
+    }
+    return response.ok
+  } catch (error) {
+    console.error(error)
+    return false
+  }
 }
 
 /**

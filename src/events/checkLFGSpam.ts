@@ -33,15 +33,10 @@ export const checkLFGSpam = async (
     if (strago.lfgSpamSet.has(member.id)) {
       const user = await User.findOneAndUpdate(
         { discordId: member.id },
-        { $setOnInsert: { discordId: member.id } },
+        { $inc: { numTimeouts: 1 } },
         { new: true, setDefaultsOnInsert: true, upsert: true },
       )
-      await user.updateOne(
-        { discordId: member.id },
-        { $inc: { numTimeouts: 1 } },
-      )
-      await user.save()
-      const numTimeouts = user.numTimeouts + 1
+      const numTimeouts = user.numTimeouts
       if (numTimeouts > 1) {
         const modChannel = strago.channels.cache.get(
           strago.config.modChannelId,

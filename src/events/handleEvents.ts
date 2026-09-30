@@ -13,29 +13,35 @@ import type { Strago } from '../interfaces/Strago'
  * @param strago Strago client instance
  */
 export const handleEvents = (strago: Strago): void => {
+  // Logs a handler's error instead of letting it reject, so one failing handler doesn't skip the rest.
+  const safely = (handler: Promise<void>): Promise<void> =>
+    handler.catch((err) => {
+      strago.logger.error(err)
+    })
+
   strago.on('clientReady', async () => {
-    await ready(strago)
+    await safely(ready(strago))
   })
 
   strago.on('interactionCreate', async (interaction) => {
-    await interactionCreate(interaction, strago)
+    await safely(interactionCreate(interaction, strago))
   })
 
   strago.on('messageCreate', async (message) => {
-    await checkLFGSpam(message, strago)
-    await publishAnnouncement(message, strago)
-    await checkHoneypot(message, strago)
-    await checkChannelSpam(message, strago)
+    await safely(checkLFGSpam(message, strago))
+    await safely(publishAnnouncement(message, strago))
+    await safely(checkHoneypot(message, strago))
+    await safely(checkChannelSpam(message, strago))
   })
 
   strago.on('messageDelete', async (message) => {
     if (strago.config.deletedMessagesChannelId) {
-      await logDeletedMessage(message, strago)
+      await safely(logDeletedMessage(message, strago))
     }
   })
 
   strago.on('guildMemberUpdate', async (_, member) => {
-    await kickOnBotRole(member, strago)
+    await safely(kickOnBotRole(member, strago))
   })
 
   process.on('uncaughtException', (error) => {
