@@ -36,34 +36,35 @@ export const generateChallenge = (
  * Retrieves a given character's Lodestone ID.
  * @param character The character's name
  * @param server The character's server
- * @returns The character's Lodestone ID if it exists, '-1' otherwise.
+ * @returns The character's Lodestone ID if it exists, null otherwise.
  */
 export const getCharacterId = async (
   character: string,
   server: string,
-): Promise<string> => {
+): Promise<string | null> => {
   const res = (await parsers.characterSearch.parse({
     query: { name: character, server },
   } as any)) as any
-  if (res.NoResultsFound !== undefined) return '-1'
+  if (res.NoResultsFound !== undefined) return null
   for (const char of res.List) {
     if (char.Name === character) return char.ID.toString()
   }
-  return '-1'
+  return null
 }
 
 /**
  * Retrieves a given character's name and server by ID.
  * @param characterId The character's Lodestone ID
- * @returns The character's name and server if they exist, '-1' otherwise.
+ * @returns The character's name and server if they exist, null otherwise.
  */
 export const getCharacterInfo = async (
   characterId: string,
-): Promise<[string, string]> => {
-  const res = (await parsers.character.parse({
-    params: { characterId },
-  } as any)) as any
-  if (res === undefined) return ['-1', '-1']
+): Promise<[string, string] | null> => {
+  // Lodestone returns a 404 for unknown IDs, which the parser throws.
+  const res = (await parsers.character
+    .parse({ params: { characterId } } as any)
+    .catch(() => undefined)) as any
+  if (res === undefined) return null
   return [res.Name, res.World]
 }
 

@@ -1,6 +1,7 @@
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
 import type { ObjectId } from 'mongodb'
@@ -9,6 +10,7 @@ import type { Command } from './Command'
 import Shortcut from './models/Shortcut'
 import type { Strago } from './Strago'
 import { gridfs } from '../utils/connectDatabase'
+import { matchingChoices } from '../utils/text'
 
 async function downloadFromGridFS(fileId: ObjectId): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -42,7 +44,7 @@ export const createShortcutCommand = (type: string): Command => ({
     if (doc === null) {
       await interaction.reply({
         content: 'I was unable to locate that.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
     } else {
       await interaction.deferReply()
@@ -62,8 +64,6 @@ export const createShortcutCommand = (type: string): Command => ({
   autocomplete(strago: Strago, prefix: string): string[] {
     const choices = strago.shortcutTitles.get(type)
     if (choices === undefined) return []
-    return Array.from(choices)
-      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase()))
-      .sort()
+    return matchingChoices(choices, prefix)
   },
 })

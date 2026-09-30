@@ -8,10 +8,12 @@ import {
   EmbedBuilder,
   type GuildEmoji,
   type Message,
+  MessageFlags,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from 'discord.js'
 
+import { fillEmoji } from './fillEmoji'
 import { LIAM_ID, NA_LFG_CHANNELS } from '../constants/bot'
 import fillData from '../data/fillData.json'
 import Fill from '../interfaces/models/Fill'
@@ -34,15 +36,11 @@ function createOption(
   data: { label: string; emoji?: string; guildEmoji?: string },
   emojis: Collection<string, GuildEmoji>,
 ): StringSelectMenuOptionBuilder {
-  const emoji = emojis.find((e) => e.name === data.guildEmoji)
   const option = new StringSelectMenuOptionBuilder()
     .setLabel(data.label)
     .setValue(id)
-  if (emoji !== undefined) {
-    option.setEmoji(emoji.identifier)
-  } else if (data.emoji !== undefined) {
-    option.setEmoji(data.emoji)
-  }
+  const emoji = fillEmoji(data, emojis)
+  if (emoji !== undefined) option.setEmoji(emoji)
   return option
 }
 
@@ -100,7 +98,7 @@ export async function findFill(
   const response = await interaction.reply({
     content: 'Select role and content.',
     components: [roleRow, contentRow, buttonRow],
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   })
 
   const collector = response.createMessageComponentCollector({ time: 60000 })
@@ -120,7 +118,7 @@ export async function findFill(
         await i.reply({
           content:
             "Error: You need to select at least one role and the content for which you're requesting a fill.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         })
         return
       }

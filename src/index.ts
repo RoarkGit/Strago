@@ -16,12 +16,11 @@ import { TimeoutSet } from './interfaces/TimeoutSet'
 import { validateEnv } from './modules/validateEnv'
 import { connectDatabase } from './utils/connectDatabase'
 import { initLogger } from './utils/initLogger'
-import { loadBeasts } from './utils/loadBeasts'
+import { loadByName } from './utils/loadByName'
 import { loadCommands } from './utils/loadCommands'
 import { loadEmoji } from './utils/loadEmoji'
-import { loadItems } from './utils/loadItems'
-import { loadSpells } from './utils/loadSpells'
 import { loadWeeklyTargets } from './utils/loadWeeklyTargets'
+import { PATHS } from './utils/paths'
 import { registerCommands } from './utils/registerCommands'
 
 /**
@@ -54,27 +53,19 @@ void (async () => {
   }
 
   // Load static data.
+  const spellData = loadByName<Spell>(strago, PATHS.spellData())
+  const beastData = loadByName<Beast>(strago, PATHS.beastData())
+  const itemData = loadByName<Item>(strago, PATHS.itemData())
+  if (spellData === null || beastData === null || itemData === null) {
+    strago.logger.error('Failed to load static data.')
+    return
+  }
   strago.data = {
-    beastData: new Collection<string, Beast>(),
-    itemData: new Collection<string, Item>(),
+    beastData,
+    itemData,
     emoji: new Collection<string, string>(),
-    spellData: new Collection<string, Spell>(),
+    spellData,
     weeklyTargets: { carnivale: {}, duties: {}, primes: {} },
-  }
-
-  if (!loadSpells(strago)) {
-    strago.logger.error('Failed to load spells.')
-    return
-  }
-
-  if (!loadBeasts(strago)) {
-    strago.logger.error('Failed to load beasts.')
-    return
-  }
-
-  if (!loadItems(strago)) {
-    strago.logger.error('Failed to load items.')
-    return
   }
 
   await loadEmoji(strago)

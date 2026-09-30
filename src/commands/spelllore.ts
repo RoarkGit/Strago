@@ -2,12 +2,15 @@ import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
 
+import { DATA_SOURCE_CREDIT } from '../constants/bot'
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 import { PATHS } from '../utils/paths'
+import { matchingChoices } from '../utils/text'
 
 export const spelllore: Command = {
   data: new SlashCommandBuilder()
@@ -32,7 +35,7 @@ export const spelllore: Command = {
     if (spell == null) {
       await interaction.reply({
         content: 'I could not locate that spell.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
       return
     }
@@ -49,15 +52,15 @@ export const spelllore: Command = {
       .setThumbnail(`attachment://${spell.id}.png`)
       .addFields({
         name: '​',
-        value:
-          'Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
+        value: DATA_SOURCE_CREDIT,
       })
 
     await interaction.reply({ embeds: [embed], files: [attachment] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
-    strago.data.spellData
-      .map((s) => s.name)
-      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase())),
+    matchingChoices(
+      strago.data.spellData.map((s) => s.name),
+      prefix,
+    ),
   guildCommand: false,
 }

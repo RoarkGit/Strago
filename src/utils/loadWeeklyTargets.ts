@@ -13,7 +13,6 @@ export const loadWeeklyTargets = (strago: Strago): boolean => {
     ) as WeeklyTargets
     return true
   } catch (error) {
-    console.error(error)
     strago.logger.error(error)
     return false
   }

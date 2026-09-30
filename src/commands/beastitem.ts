@@ -10,18 +10,16 @@ import {
   ThumbnailBuilder,
 } from 'discord.js'
 
+import { DATA_SOURCE_CREDIT } from '../constants/bot'
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 import { PATHS } from '../utils/paths'
+import { collapseBlankLines, matchingChoices } from '../utils/text'
 
 const CATEGORY_COLORS: Record<string, number> = {
   'Beast Gear': 0xaaaaff,
   'Crucible Item': 0xaaffaa,
   Feed: 0xffaaaa,
-}
-
-function cleanField(text: string): string {
-  return text.replace(/\n{2,}/g, '\n').trim()
 }
 
 export const beastitem: Command = {
@@ -47,7 +45,7 @@ export const beastitem: Command = {
     if (item == null) {
       await interaction.reply({
         content: 'I could not locate that item.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
       return
     }
@@ -85,13 +83,13 @@ export const beastitem: Command = {
       )
       .addSeparatorComponents(new SeparatorBuilder())
       .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(cleanField(item.description)),
+        new TextDisplayBuilder().setContent(
+          collapseBlankLines(item.description),
+        ),
       )
       .addSeparatorComponents(new SeparatorBuilder())
       .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          '-# Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
-        ),
+        new TextDisplayBuilder().setContent(`-# ${DATA_SOURCE_CREDIT}`),
       )
 
     await interaction.reply({
@@ -101,8 +99,9 @@ export const beastitem: Command = {
     })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
-    strago.data.itemData
-      .map((i) => i.name)
-      .filter((n) => n.toLowerCase().includes(prefix.toLowerCase())),
+    matchingChoices(
+      strago.data.itemData.map((i) => i.name),
+      prefix,
+    ),
   guildCommand: false,
 }

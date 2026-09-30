@@ -5,6 +5,7 @@ import {
   type ChatInputCommandInteraction,
   ComponentType,
   type MessageActionRowComponentBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
 
@@ -143,7 +144,7 @@ export const register: Command = {
     try {
       await interaction.reply({
         content: 'Searching for character...',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
 
       // Either characterId needs to be set, or character and server need to be set. Populate the other variables accordingly.
@@ -155,14 +156,12 @@ export const register: Command = {
         server = titleCase(server)
         characterId = await xivlib.getCharacterId(character, server)
       } else if (characterId !== null) {
-        ;[character, server] = await xivlib.getCharacterInfo(characterId)
+        ;[character, server] = (await xivlib.getCharacterInfo(characterId)) ?? [
+          null,
+          null,
+        ]
       }
-      if (
-        characterId === null ||
-        characterId === '-1' ||
-        character === null ||
-        server === null
-      ) {
+      if (characterId === null || character === null || server === null) {
         await interaction.editReply({
           content: 'I was unable to locate that character.',
         })

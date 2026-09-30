@@ -1,9 +1,4 @@
-import {
-  ChannelType,
-  type Message,
-  PermissionFlagsBits,
-  type TextChannel,
-} from 'discord.js'
+import { ChannelType, type Message, PermissionFlagsBits } from 'discord.js'
 
 import { ONE_HOUR_MS } from '../constants/time'
 import User from '../interfaces/models/User'
@@ -34,16 +29,18 @@ export const checkLFGSpam = async (
       const user = await User.findOneAndUpdate(
         { discordId: member.id },
         { $inc: { numTimeouts: 1 } },
-        { new: true, setDefaultsOnInsert: true, upsert: true },
+        { returnDocument: 'after', setDefaultsOnInsert: true, upsert: true },
       )
       const numTimeouts = user.numTimeouts
       if (numTimeouts > 1) {
-        const modChannel = strago.channels.cache.get(
+        const modChannel = await strago.channels.fetch(
           strago.config.modChannelId,
-        ) as TextChannel
-        await modChannel.send(
-          `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
         )
+        if (modChannel !== null && modChannel.isSendable()) {
+          await modChannel.send(
+            `Timed out ${member.toString()}, they have been timed out ${numTimeouts} times.`,
+          )
+        }
       }
       await message.reply(
         `${member.toString()}: pinging roles in multiple LFG channels spams people who might be in those channels. You have been timed out for one hour.\n` +

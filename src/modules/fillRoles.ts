@@ -8,9 +8,11 @@ import {
   ComponentType,
   type GuildEmoji,
   GuildMemberRoleManager,
+  MessageFlags,
 } from 'discord.js'
 import { type Document } from 'mongoose'
 
+import { fillEmoji } from './fillEmoji'
 import { BLUE_LEGEND_ROLE } from '../constants/bot'
 import fillData from '../data/fillData.json'
 import { type IFill } from '../interfaces/models/Fill'
@@ -21,13 +23,9 @@ function createButton(
   emojis: Collection<string, GuildEmoji>,
   enabled: boolean,
 ): ButtonBuilder {
-  const emoji = emojis.find((e) => e.name === data.guildEmoji)
   const button = new ButtonBuilder().setCustomId(id).setLabel(data.label)
-  if (emoji !== undefined) {
-    button.setEmoji(emoji.identifier)
-  } else if (data.emoji !== undefined) {
-    button.setEmoji(data.emoji)
-  }
+  const emoji = fillEmoji(data, emojis)
+  if (emoji !== undefined) button.setEmoji(emoji)
   button.setStyle(enabled ? ButtonStyle.Success : ButtonStyle.Secondary)
   return button
 }
@@ -82,7 +80,7 @@ export async function configureFillRoles(
     content:
       'Click the buttons for content that you would like to fill for. You _must_ have the achievement-based roles from Strago to click the associated buttons.',
     components: rows,
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   })
 
   const collector = response.createMessageComponentCollector({

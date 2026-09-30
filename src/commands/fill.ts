@@ -1,9 +1,11 @@
 import {
   type ChatInputCommandInteraction,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
 import { type Document } from 'mongoose'
 
+import { FILL_ROLE, RATE_LIMITED_MESSAGE } from '../constants/bot'
 import { type Command } from '../interfaces/Command'
 import Fill, { type IFill } from '../interfaces/models/Fill'
 import { type Strago } from '../interfaces/Strago'
@@ -47,15 +49,14 @@ export const fill: Command = {
         await interaction.reply({
           content:
             "This command can only be run in 'lfg' or 'recruitment' channels",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         })
         return
       }
       if (strago.fillSpamSet.has(interaction.user.id)) {
         await interaction.reply({
-          content:
-            "You're doing that too quickly, wait at least ten minutes and try again.",
-          ephemeral: true,
+          content: RATE_LIMITED_MESSAGE,
+          flags: MessageFlags.Ephemeral,
         })
         return
       }
@@ -66,7 +67,7 @@ export const fill: Command = {
         await interaction.reply({
           content:
             "I couldn't find a recent message from you in this channel, please post a message before looking for a fill.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         })
         return
       }
@@ -77,41 +78,27 @@ export const fill: Command = {
     const fill: Document<IFill> = await Fill.findOneAndUpdate(
       { discordId: interaction.user.id },
       { $setOnInsert: { discordId: interaction.user.id } },
-      { new: true, setDefaultsOnInsert: true, upsert: true },
+      { returnDocument: 'after', setDefaultsOnInsert: true, upsert: true },
     )
 
-    if (command === 'on') {
-      fill.set('enabled', true)
+    if (command === 'on' || command === 'off') {
+      const enabled = command === 'on'
+      fill.set('enabled', enabled)
       await fill.save()
       await interaction.reply({
-        content: 'Turned fill notifications on.',
-        ephemeral: true,
+        content: `Turned fill notifications ${command}.`,
+        flags: MessageFlags.Ephemeral,
       })
       const member = await interaction.guild.members.fetch(interaction.user.id)
       const fillRole = interaction.guild.roles.cache.find(
-        (r) => r.name === 'Fill',
+        (r) => r.name === FILL_ROLE,
       )
       if (fillRole === undefined) {
-        strago.logger.error('Undefined role: Fill')
+        strago.logger.error(`Undefined role: ${FILL_ROLE}`)
         return
       }
-      await member.roles.add(fillRole)
-    } else if (command === 'off') {
-      fill.set('enabled', false)
-      await fill.save()
-      await interaction.reply({
-        content: 'Turned fill notifications off.',
-        ephemeral: true,
-      })
-      const member = await interaction.guild.members.fetch(interaction.user.id)
-      const fillRole = interaction.guild.roles.cache.find(
-        (r) => r.name === 'Fill',
-      )
-      if (fillRole === undefined) {
-        strago.logger.error('Undefined role: Fill')
-        return
-      }
-      await member.roles.remove(fillRole)
+      if (enabled) await member.roles.add(fillRole)
+      else await member.roles.remove(fillRole)
     } else if (command === 'roles') {
       await configureFillRoles(interaction, fill)
     }

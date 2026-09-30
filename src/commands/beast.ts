@@ -10,10 +10,12 @@ import {
   ThumbnailBuilder,
 } from 'discord.js'
 
+import { DATA_SOURCE_CREDIT } from '../constants/bot'
 import type { Beast, BeastAction } from '../interfaces/Beast'
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 import { PATHS } from '../utils/paths'
+import { collapseBlankLines, matchingChoices } from '../utils/text'
 
 const ELEMENT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -39,10 +41,6 @@ function elementEmoji(strago: Strago, element: string): string {
   const key = element.toLowerCase()
   const emoji = strago.data.emoji.get(ELEMENT_GLYPHS[key] ?? key)
   return emoji != null ? `${emoji} ` : ''
-}
-
-function cleanField(text: string): string {
-  return text.replace(/\n{2,}/g, '\n').trim()
 }
 
 /**
@@ -93,7 +91,7 @@ function actionText(
 
   const lines = [`### ${heading.join(' · ')}`]
   if (meta.length > 0) lines.push(meta.join(' · '))
-  lines.push(cleanField(action.description))
+  lines.push(collapseBlankLines(action.description))
 
   return lines.join('\n')
 }
@@ -128,7 +126,7 @@ export const beast: Command = {
     if (beast == null) {
       await interaction.reply({
         content: 'I could not locate that beast.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
       return
     }
@@ -151,7 +149,7 @@ export const beast: Command = {
                 `## ${beast.number}: ${beast.name}`,
                 `**Classification** ${beast.classification}`,
                 `**Auto-attack** ${elementEmoji(strago, beast.autoAttack.element)}${beast.autoAttack.element} · ${beast.autoAttack.range}y`,
-                `**Habitat** ${cleanField(beast.habitat)}`,
+                `**Habitat** ${collapseBlankLines(beast.habitat)}`,
                 statsText(beast, rank),
               ].join('\n'),
             ),
@@ -187,9 +185,7 @@ export const beast: Command = {
       )
       .addSeparatorComponents(new SeparatorBuilder())
       .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          '-# Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
-        ),
+        new TextDisplayBuilder().setContent(`-# ${DATA_SOURCE_CREDIT}`),
       )
 
     await interaction.reply({
@@ -199,8 +195,9 @@ export const beast: Command = {
     })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
-    strago.data.beastData
-      .map((b) => b.name)
-      .filter((n) => n.toLowerCase().includes(prefix.toLowerCase())),
+    matchingChoices(
+      strago.data.beastData.map((b) => b.name),
+      prefix,
+    ),
   guildCommand: false,
 }

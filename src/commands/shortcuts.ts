@@ -12,6 +12,7 @@ import type { Command } from '../interfaces/Command'
 import Shortcut from '../interfaces/models/Shortcut'
 import type { Strago } from '../interfaces/Strago'
 import { gridfs } from '../utils/connectDatabase'
+import { matchingChoices } from '../utils/text'
 
 async function uploadToGridFS(
   filename: string,
@@ -101,9 +102,7 @@ export const shortcuts: Command = {
     const type = interaction.options.getSubcommandGroup(true)
     const choices = strago.shortcutTitles.get(type)
     if (choices === undefined) return []
-    return Array.from(choices)
-      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase()))
-      .sort()
+    return matchingChoices(choices, prefix)
   },
 }
 

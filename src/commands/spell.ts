@@ -2,12 +2,15 @@ import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js'
 
+import { DATA_SOURCE_CREDIT } from '../constants/bot'
 import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 import { PATHS } from '../utils/paths'
+import { collapseBlankLines, matchingChoices } from '../utils/text'
 
 const ASPECT_COLORS: Record<string, number> = {
   Fire: 0xffaaaa,
@@ -30,8 +33,8 @@ const ASPECT_COLORS: Record<string, number> = {
  * spell's name when it builds the tooltip link, so resolve it the same way here.
  */
 function cleanField(text: string, strago: Strago): string {
-  return text
-    .replace(
+  return collapseBlankLines(
+    text.replace(
       /\{\{<\s*(\w+)\s+"?(.*?)"?\s*>\}\}/g,
       (_, kind: string, inner: string) => {
         const trimmed = inner.trim()
@@ -45,9 +48,8 @@ function cleanField(text: string, strago: Strago): string {
         // not render bold with a space against the delimiter, so it moves outside.
         return `**${label}**${inner.endsWith(' ') ? ' ' : ''}`
       },
-    )
-    .replace(/\n{2,}/g, '\n')
-    .trim()
+    ),
+  )
 }
 
 export const spell: Command = {
@@ -71,7 +73,7 @@ export const spell: Command = {
     if (spell == null) {
       await interaction.reply({
         content: 'I could not locate that spell.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
       return
     }
@@ -115,15 +117,15 @@ export const spell: Command = {
 
     embed.addFields({
       name: '​',
-      value:
-        'Information sourced from [Blue Academy](https://github.com/RoarkGit/Limited-Job-Data)',
+      value: DATA_SOURCE_CREDIT,
     })
 
     await interaction.reply({ embeds: [embed], files: [attachment] })
   },
   autocomplete: (strago: Strago, prefix: string): string[] =>
-    strago.data.spellData
-      .map((s) => s.name)
-      .filter((c) => c.toLowerCase().includes(prefix.toLowerCase())),
+    matchingChoices(
+      strago.data.spellData.map((s) => s.name),
+      prefix,
+    ),
   guildCommand: false,
 }

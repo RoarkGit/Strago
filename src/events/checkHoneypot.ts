@@ -1,12 +1,12 @@
 import { type Message } from 'discord.js'
 
+import { MORBLA_EMOJI } from '../constants/bot'
 import Stats from '../interfaces/models/Stats'
 import type { Strago } from '../interfaces/Strago'
-
-const MORBLA = '<:morbla:1066449552581865482>'
+import { kickAndPurge } from '../utils/kickAndPurge'
 
 /**
- * Publishes any announcements that are sent on the server.
+ * Kicks anyone who posts in the honeypot channel and deletes their last hour of messages.
  * @param message the message that triggered the event
  * @param strago Strago client instance
  */
@@ -24,18 +24,14 @@ export const checkHoneypot = async (
   )
     return
   const member = message.member
-  await member.ban({
-    deleteMessageSeconds: 60 * 60, // Delete last hour of messages
-    reason: 'User sent message to honeypot channel.',
-  })
-  await message.guild.members.unban(member)
+  await kickAndPurge(member, 'User sent message to honeypot channel.')
   const stats = await Stats.findOneAndUpdate(
     {},
     { $inc: { honeypotKills: 1 } },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true },
   )
   await message.channel.send(
-    `${MORBLA} Caught ${member.displayName} (${member.user.username} <${member.user.id}>) sticking their hand in the honeypot! Total honeypot kills: ${stats.honeypotKills} ${MORBLA}`,
+    `${MORBLA_EMOJI} Caught ${member.displayName} (${member.user.username} <${member.user.id}>) sticking their hand in the honeypot! Total honeypot kills: ${stats.honeypotKills} ${MORBLA_EMOJI}`,
   )
   strago.logger.info(
     `Kicked ${member.user.username} for sending message to honeypot channel.`,

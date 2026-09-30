@@ -1,11 +1,17 @@
 import {
   type ChatInputCommandInteraction,
   type GuildMemberRoleManager,
+  MessageFlags,
   SlashCommandBuilder,
   type TextChannel,
 } from 'discord.js'
 
-import { ACADEMY_LEGEND_EMOJI, BLUE_LEGEND_ROLE } from '../constants/bot'
+import {
+  ACADEMY_LEGEND_EMOJI,
+  BLUE_LEGEND_ROLE,
+  GENERAL_CHANNEL,
+  RATE_LIMITED_MESSAGE,
+} from '../constants/bot'
 import achievementData from '../data/achievementData.json'
 import type { Command } from '../interfaces/Command'
 import Character from '../interfaces/models/Character'
@@ -66,9 +72,8 @@ export const grant: Command = {
 
       if (strago.grantSpamSet.has(member.id)) {
         await interaction.reply({
-          content:
-            "You're doing that too quickly, wait at least ten minutes and try again.",
-          ephemeral: true,
+          content: RATE_LIMITED_MESSAGE,
+          flags: MessageFlags.Ephemeral,
         })
         return
       }
@@ -76,7 +81,7 @@ export const grant: Command = {
 
       await interaction.reply({
         content: 'Checking registration...',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       })
       const character = await Character.findOne({
         discordId: interaction.user.id,
@@ -164,7 +169,7 @@ export const grant: Command = {
 
         if (role.name === BLUE_LEGEND_ROLE) {
           const channel = guild.channels.cache.find(
-            (c) => c.name === 'general',
+            (c) => c.name === GENERAL_CHANNEL,
           ) as TextChannel
           await channel.send(
             `${ACADEMY_LEGEND_EMOJI} ${member.toString()} has ascended to the status of ${discordRole}! ${ACADEMY_LEGEND_EMOJI}`,

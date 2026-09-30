@@ -1,5 +1,6 @@
 import { EmbedBuilder } from 'discord.js'
 
+import { LOG_TARGET_EMOJI, PRIME_TARGET_EMOJI } from '../constants/bot'
 import { ONE_WEEK_MS } from '../constants/time'
 import type {
   CarnivaleTarget,
@@ -25,11 +26,11 @@ export const generateWeeklyTargetsEmbed = (
     (t) => t[numWeeks % t.length],
   )
   const duties = Object.values(weeklyTargets.duties)
-    .map((t) => `<:logTarget:943678198116384768> ${t[numWeeks % t.length]}`)
+    .map((t) => `${LOG_TARGET_EMOJI} ${t[numWeeks % t.length]}`)
     .filter((t) => !t.includes('???'))
     .join('\n')
   const primes = Object.values(weeklyTargets.primes)
-    .map((t) => `<:primeTarget:943678179007143947> ${t[numWeeks % t.length]}`)
+    .map((t) => `${PRIME_TARGET_EMOJI} ${t[numWeeks % t.length]}`)
     .filter((t) => !t.includes('???'))
     .join('\n')
   return new EmbedBuilder()

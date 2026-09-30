@@ -7,6 +7,7 @@ import {
 
 import { SPAM_CHANNEL_THRESHOLD, SPAM_WINDOW_MS } from '../constants/time'
 import type { Strago } from '../interfaces/Strago'
+import { kickAndPurge } from '../utils/kickAndPurge'
 
 interface RecentMessage {
   channelId: string
@@ -98,12 +99,7 @@ export const checkChannelSpam = async (
         .catch((err) => strago.logger.error(err))
     }
 
-    // Ban then immediately unban: acts as a kick that also deletes their last hour of messages.
-    await member.ban({
-      deleteMessageSeconds: 60 * 60,
-      reason: `Channel spam: ${reason}.`,
-    })
-    await message.guild.members.unban(member.id)
+    await kickAndPurge(member, `Channel spam: ${reason}.`)
     strago.logger.info(
       `Kicked ${member.user.username} for channel spam: ${reason}.`,
     )
