@@ -6,6 +6,7 @@ import {
 } from 'discord.js'
 
 import { SPAM_CHANNEL_THRESHOLD, SPAM_WINDOW_MS } from '../constants/time'
+import Stats from '../interfaces/models/Stats'
 import type { Strago } from '../interfaces/Strago'
 import { kickAndPurge } from '../utils/kickAndPurge'
 
@@ -100,6 +101,11 @@ export const checkChannelSpam = async (
     }
 
     await kickAndPurge(member, `Channel spam: ${reason}.`)
+    await Stats.findOneAndUpdate(
+      {},
+      { $inc: { channelSpamKills: 1 } },
+      { upsert: true, setDefaultsOnInsert: true },
+    )
     strago.logger.info(
       `Kicked ${member.user.username} for channel spam: ${reason}.`,
     )

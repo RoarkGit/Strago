@@ -18,8 +18,9 @@ export const botkills: Command = {
     const stats = await Stats.findOne()
     const honeypot = stats?.honeypotKills ?? 0
     const roleTrap = stats?.botTrapRoleKills ?? 0
+    const channelSpam = stats?.channelSpamKills ?? 0
     await interaction.reply(
-      `**Bot Trap Stats**\nHoneypot kills: ${honeypot}\nRole trap kills: ${roleTrap}\nTotal: ${honeypot + roleTrap}`,
+      `**Bot Trap Stats**\nHoneypot kills: ${honeypot}\nRole trap kills: ${roleTrap}\nChannel spam kills: ${channelSpam}\nTotal: ${honeypot + roleTrap + channelSpam}`,
     )
   },
   guildCommand: true,

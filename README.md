@@ -20,7 +20,7 @@
 - `/beastitem [name]`: returns info about a Beastmaster item (Beast Gear, Crucible Item, or Feed)
 - `/weeklytargets [weeks]`: returns weekly target info for current week or the week `weeks` away
 - `/fill on|off|roles|find`: toggles fill notifications, configures fill roles, or requests a fill from an LFG channel
-- `/botkills`: shows how many bots the honeypot and bot trap role have caught
+- `/botkills`: shows how many bots the honeypot, bot trap role, and channel spam check have caught
 - `/[type] [title]`: returns a shortcut previously saved under the `type` category
 
 ## Moderator commands
