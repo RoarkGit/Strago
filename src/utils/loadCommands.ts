@@ -36,7 +36,10 @@ export const loadCommands = async (
           `${file} has no export named '${name}'; found: ${Object.keys(module).join(', ')}`,
         )
       }
-      commands.set(name, command)
+      // Keyed by the command's own name, not the file's: interactionCreate looks
+      // commands up by interaction.commandName, and Discord requires those to be
+      // lowercase, so a camelCased filename must not decide the lookup key.
+      commands.set(command.data.name, command)
     }
 
     // Build subcommands for the shortcuts management command.
