@@ -9,6 +9,12 @@ import type {
 
 const ROTATION_START = new Date(Date.UTC(2021, 1, 2, 8))
 
+// Weeks can be requested far enough in the past to make numWeeks negative,
+// which a bare % would turn into a negative index.
+function rotate(numWeeks: number, length: number): number {
+  return ((numWeeks % length) + length) % length
+}
+
 function formatCarnivale(target: CarnivaleTarget): string {
   if (!target.bonuses?.length) return target.name
   return `${target.name} (${target.bonuses.join(', ')})`
@@ -23,14 +29,14 @@ export const generateWeeklyTargetsEmbed = (
       (Date.now().valueOf() - ROTATION_START.valueOf()) / ONE_WEEK_MS,
     ) + weeks
   const carnivaleTargets = Object.values(weeklyTargets.carnivale).map(
-    (t) => t[numWeeks % t.length],
+    (t) => t[rotate(numWeeks, t.length)],
   )
   const duties = Object.values(weeklyTargets.duties)
-    .map((t) => `${LOG_TARGET_EMOJI} ${t[numWeeks % t.length]}`)
+    .map((t) => `${LOG_TARGET_EMOJI} ${t[rotate(numWeeks, t.length)]}`)
     .filter((t) => !t.includes('???'))
     .join('\n')
   const primes = Object.values(weeklyTargets.primes)
-    .map((t) => `${PRIME_TARGET_EMOJI} ${t[numWeeks % t.length]}`)
+    .map((t) => `${PRIME_TARGET_EMOJI} ${t[rotate(numWeeks, t.length)]}`)
     .filter((t) => !t.includes('???'))
     .join('\n')
   return new EmbedBuilder()
