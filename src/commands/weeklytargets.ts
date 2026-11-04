@@ -7,7 +7,7 @@ import type { Command } from '../interfaces/Command'
 import type { Strago } from '../interfaces/Strago'
 import { generateWeeklyTargetsMessage } from '../modules/weeklyTargets'
 
-export const weeklyTargets: Command = {
+export const weeklytargets: Command = {
   data: new SlashCommandBuilder()
     .setName('weeklytargets')
     .setDescription(
