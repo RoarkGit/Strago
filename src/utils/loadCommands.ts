@@ -24,8 +24,19 @@ export const loadCommands = async (
 
     for (const file of files) {
       const name = file.split('.')[0]
-      const module = await import(join(commandsPath, file))
-      commands.set(name, module[name])
+      const module = (await import(join(commandsPath, file))) as Record<
+        string,
+        Command | undefined
+      >
+      const command = module[name]
+      // Without this the undefined lands in the collection and only surfaces
+      // later in registerCommands, as a TypeError naming no file.
+      if (command === undefined) {
+        throw new Error(
+          `${file} has no export named '${name}'; found: ${Object.keys(module).join(', ')}`,
+        )
+      }
+      commands.set(name, command)
     }
 
     // Build subcommands for the shortcuts management command.
