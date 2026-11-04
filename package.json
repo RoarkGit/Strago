@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Liam Galt",
   "license": "ISC",
+  "packageManager": "pnpm@11.9.0",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
     "@supercharge/promise-pool": "^3.3.0",
