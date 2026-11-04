@@ -1,4 +1,9 @@
-import { EmbedBuilder } from 'discord.js'
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} from 'discord.js'
 
 import { LOG_TARGET_EMOJI, PRIME_TARGET_EMOJI } from '../constants/bot'
 import { ONE_WEEK_MS } from '../constants/time'
@@ -15,15 +20,28 @@ function rotate(numWeeks: number, length: number): number {
   return ((numWeeks % length) + length) % length
 }
 
+// Thumbnails are addressed by bare video ID, but the data stores watch URLs.
+// Accepts both the youtu.be and the youtube.com/watch?v= forms.
+function youTubeThumbnail(url: string): string | undefined {
+  const id = /(?:youtu\.be\/|[?&]v=)([\w-]{11})(?![\w-])/.exec(url)?.[1]
+  // hqdefault exists for every upload; maxresdefault only for 720p and better.
+  return id && `https://img.youtube.com/vi/${id}/hqdefault.jpg`
+}
+
 function formatCarnivale(target: CarnivaleTarget): string {
   if (!target.bonuses?.length) return target.name
   return `${target.name} (${target.bonuses.join(', ')})`
 }
 
-export const generateWeeklyTargetsEmbed = (
+export interface WeeklyTargetsMessage {
+  embeds: EmbedBuilder[]
+  components: ActionRowBuilder<ButtonBuilder>[]
+}
+
+export const generateWeeklyTargetsMessage = (
   weeklyTargets: WeeklyTargets,
   weeks: number,
-): EmbedBuilder => {
+): WeeklyTargetsMessage => {
   const numWeeks =
     Math.floor(
       (Date.now().valueOf() - ROTATION_START.valueOf()) / ONE_WEEK_MS,
@@ -39,7 +57,9 @@ export const generateWeeklyTargetsEmbed = (
     .map((t) => `${PRIME_TARGET_EMOJI} ${t[rotate(numWeeks, t.length)]}`)
     .filter((t) => !t.includes('???'))
     .join('\n')
-  return new EmbedBuilder()
+  const videoUrl =
+    weeklyTargets.videos[rotate(numWeeks, weeklyTargets.videos.length)]
+  const embed = new EmbedBuilder()
     .setTitle('Blue Mage Weekly Targets')
     .setDescription(
       '[Challenge descriptions/explanations](https://discord.com/channels/762797677133561887/943624070069633085/970802848558350426)',
@@ -58,4 +78,25 @@ export const generateWeeklyTargetsEmbed = (
       { name: '__Blue Mage Log Targets__', value: duties, inline: false },
       { name: '__Blue Mage Prime Targets__', value: primes, inline: false },
     )
+
+  if (videoUrl) {
+    embed.setURL(videoUrl)
+    const thumbnail = youTubeThumbnail(videoUrl)
+    if (thumbnail) embed.setThumbnail(thumbnail)
+  }
+
+  // A link button needs no custom ID and no interaction handler: it just opens the URL.
+  const components = videoUrl
+    ? [
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
+            .setEmoji('▶️')
+            .setLabel("Watch this week's guide")
+            .setURL(videoUrl),
+        ),
+      ]
+    : []
+
+  return { embeds: [embed], components }
 }

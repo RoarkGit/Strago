@@ -65,7 +65,7 @@ void (async () => {
     itemData,
     emoji: new Collection<string, string>(),
     spellData,
-    weeklyTargets: { carnivale: {}, duties: {}, primes: {} },
+    weeklyTargets: { carnivale: {}, duties: {}, primes: {}, videos: [] },
   }
 
   await loadEmoji(strago)

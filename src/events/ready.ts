@@ -4,7 +4,7 @@ import { GuildTextBasedChannel, PermissionsBitField } from 'discord.js'
 import { ONE_WEEK_MS } from '../constants/time'
 import type { Strago } from '../interfaces/Strago'
 import { channelPrune } from '../modules/channelPrune'
-import { generateWeeklyTargetsEmbed } from '../modules/weeklyTargets'
+import { generateWeeklyTargetsMessage } from '../modules/weeklyTargets'
 
 // Populates Discord.js message cache so logDeletedMessage can log message content on delete.
 const cacheRecentMessages = async (
@@ -37,8 +37,9 @@ const postWeeklyTargets = async (strago: Strago): Promise<void> => {
   if (channel === null || !channel.isTextBased() || channel.isDMBased()) {
     throw new Error('Weekly targets channel is missing or not a text channel.')
   }
-  const embed = generateWeeklyTargetsEmbed(strago.data.weeklyTargets, 0)
-  const posted = await channel.send({ embeds: [embed] })
+  const posted = await channel.send(
+    generateWeeklyTargetsMessage(strago.data.weeklyTargets, 0),
+  )
   strago.logger.info('Posted weekly targets.')
 
   const messages = await channel.messages.fetch()
