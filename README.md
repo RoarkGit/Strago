@@ -32,7 +32,7 @@
 ## Moderation features
 - **Honeypot**: kicks anyone who posts in the honeypot channel and deletes their last hour of messages
 - **Bot trap role**: kicks anyone who gives themselves the `Bot Trap` role
-- **LFG ping spam**: times out users who ping roles in more than one LFG channel within five minutes
+- **LFG ping spam**: times out users who ping roles in LFG more than once within five minutes
 - **Channel spam**: kicks users who post the same message in three or more channels (text or voice) within 20 seconds and deletes their last hour of messages
 - **Deleted message log**: reposts deleted messages (and their attachments) from text and voice channels to a log channel
 
