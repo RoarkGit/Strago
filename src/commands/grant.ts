@@ -118,9 +118,32 @@ export const grant: Command = {
       )
 
       const granted = new Set<string>()
+      // Only announce rate limiting once, since up to 5 checks retry concurrently.
+      let notifiedRetry = false
+      const onRetry: xivlib.RetryCallback = async (
+        achievementId,
+        attempt,
+        reason,
+      ) => {
+        strago.logger.warn(
+          `Retrying achievement ${achievementId} (attempt ${attempt}): ${reason}`,
+        )
+        if (notifiedRetry) return
+        notifiedRetry = true
+        // A failed status edit shouldn't abort the scan.
+        const cause = reason.startsWith('429')
+          ? 'Lodestone is rate limiting requests'
+          : 'Lodestone is having trouble responding'
+        await updateState(
+          `${cause}, retrying. This may take a little longer...`,
+        ).catch((error) =>
+          strago.logger.error('Failed to post retry status', error),
+        )
+      }
       const characterAchievements = await xivlib.getAchievementsComplete(
         character.characterId,
         Object.keys(achievementData.achievementIds),
+        onRetry,
       )
       const memberRoles = member.roles as GuildMemberRoleManager
 
@@ -178,6 +201,12 @@ export const grant: Command = {
       }
     } catch (error) {
       strago.logger.error('Failed to grant roles', error)
+      if (error instanceof xivlib.RateLimitedError) {
+        await interaction.editReply(
+          'Lodestone is rate limiting requests right now, please try again in a few minutes.',
+        )
+        return
+      }
       await interaction.editReply(
         'I encountered an error trying to retrieve your achievements.\n' +
           'Please try again and if the issue persists contact Liam Galt.',

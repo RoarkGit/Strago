@@ -68,15 +68,45 @@ export const getCharacterInfo = async (
   return [res.Name, res.World]
 }
 
+const MAX_ATTEMPTS = 5
+const BASE_RETRY_DELAY_MS = 1000
+
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms))
+
+/**
+ * Called before each retry of a Lodestone request.
+ * @param achievementId The achievement being retried
+ * @param attempt The attempt about to be made (2 for the first retry)
+ * @param reason The HTTP status or error that caused the retry
+ */
+export type RetryCallback = (
+  achievementId: string,
+  attempt: number,
+  reason: string,
+) => void | Promise<void>
+
+/**
+ * Thrown when Lodestone keeps responding with 429 Too Many Requests after all retries.
+ */
+export class RateLimitedError extends Error {
+  constructor(url: string) {
+    super(`Rate limited by Lodestone after ${MAX_ATTEMPTS} attempts: ${url}`)
+    this.name = 'RateLimitedError'
+  }
+}
+
 /**
  * Determines which achievements in a given set of achievements a character has completed.
  * @param characterId The character's ID
  * @param achievementIds List of achievements to check
+ * @param onRetry Optional callback invoked before each retried request
  * @returns A Set representing the completed achievements from achievementIds.
  */
 export const getAchievementsComplete = async (
   characterId: string,
   achievementIds: string[],
+  onRetry?: RetryCallback,
 ): Promise<Set<string>> => {
   const achievementSet = new Set<string>()
   await PromisePool.for(achievementIds)
@@ -85,7 +115,7 @@ export const getAchievementsComplete = async (
       throw error // Throw any errors, we only want to execute on full achievement sets.
     })
     .process(async (achievementId) => {
-      if (await getAchievementComplete(characterId, achievementId)) {
+      if (await getAchievementComplete(characterId, achievementId, onRetry)) {
         achievementSet.add(achievementId)
       }
     })
@@ -94,22 +124,47 @@ export const getAchievementsComplete = async (
 
 /**
  * Checks if a given character has completed a specified achievement.
+ * Lodestone rate limits bursts of requests with a 429 (no Retry-After header),
+ * so transient failures are retried with exponential backoff. If the page still
+ * cannot be fetched, this throws rather than returning false, since a false
+ * negative would cause earned roles to be skipped or removed.
  * @param characterId The character's ID
  * @param achievementId The achievement's ID
+ * @param onRetry Optional callback invoked before each retried request
  * @returns Whether or not the character has completed the achievement.
+ * @throws RateLimitedError if every attempt was rate limited.
  */
 export const getAchievementComplete = async (
   characterId: string,
   achievementId: string,
+  onRetry?: RetryCallback,
 ): Promise<boolean> => {
   const url = getUrl([characterId, 'achievement', 'detail', achievementId])
-  try {
-    const response = await fetch(url)
-    if (!response.ok) return false
-    return (await response.text()).includes(ACHIEVEMENT_COMPLETE)
-  } catch {
-    return false
+  let lastError = ''
+  let lastStatus: number | undefined
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    if (attempt > 0) {
+      await onRetry?.(achievementId, attempt + 1, lastError)
+      const jitter = Math.random() * BASE_RETRY_DELAY_MS
+      await sleep(BASE_RETRY_DELAY_MS * 2 ** (attempt - 1) + jitter)
+    }
+    try {
+      const response = await fetch(url)
+      if (response.ok) {
+        return (await response.text()).includes(ACHIEVEMENT_COMPLETE)
+      }
+      // A 404 means there is no completion page for this achievement.
+      if (response.status === 404) return false
+      lastStatus = response.status
+      lastError = `${response.status} ${response.statusText}`.trim()
+      if (response.status !== 429 && response.status < 500) break
+    } catch (error) {
+      lastStatus = undefined
+      lastError = String(error)
+    }
   }
+  if (lastStatus === 429) throw new RateLimitedError(url)
+  throw new Error(`Failed to fetch ${url}: ${lastError}`)
 }
 
 /**
